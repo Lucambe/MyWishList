@@ -1,14 +1,8 @@
 <?php
 require_once (__DIR__ . '/vendor/autoload.php');
 
-$db = new \Illuminate\Database\Capsule\Manager();
-if(file_exists("src/config/database.ini")) {
-    $db->addConnection(parse_ini_file("src/config/database.ini"));
-    $db->setAsGlobal();
-    $db->bootEloquent();
-} else {
-    throw new Exception('Le fichier src/config/database.ini n\'existe pas');
-}
+\mywishlist\config\Database::connect();
+
 
 $app = new \Slim\Slim();
 
