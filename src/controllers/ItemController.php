@@ -15,6 +15,7 @@ class ItemController {
     public function getItems() {
         $item = \mywishlist\models\Item::get();
         $view = new \mywishlist\views\ItemView($item, "LIST_VIEW");
-        $view->render();
+        $template = new \mywishlist\views\TemplateView();
+        $template->render($view->render());
     }
 }
