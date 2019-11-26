@@ -33,6 +33,7 @@ class ItemView {
     }
 
     private function htmlOneItem() {
+        $rootUri = \Slim\Slim::getInstance()->request->getRootUri();
         $html = <<<END
 <table class="table table-hover">
     <thead>
@@ -72,6 +73,7 @@ END;
     }
 
     private function htmlListAllItems() {
+        $rootUri = \Slim\Slim::getInstance()->request->getRootUri();
         $html = <<<END
 <table class="table table-hover">
     <thead>
@@ -94,7 +96,7 @@ foreach($this->model as $item) {
             <td>{$item->liste_id}</td>
             <td>{$item->nom}</td>
             <td>{$item->descr}</td>
-            <td><img src="public/images/{$item->img}" class="img-fluid img-thumbnail"></td>
+            <td><img src="{$rootUri}/public/images/{$item->img}" class="img-fluid img-thumbnail"></td>
             <td>{$item->tarif}</td>
         </tr>
 END;
@@ -103,6 +105,6 @@ $html .= <<<END
     </tbody>
 </table>
 END;
-    return $html;
+        return $html;
     }
 }

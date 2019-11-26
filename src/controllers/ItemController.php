@@ -1,6 +1,11 @@
 <?php
 namespace mywishlist\controllers;
+
+use Slim\Http\Response;
+
 class ItemController {
+
+    protected $router;
 
     public function getItem($id) {
         $item = \mywishlist\models\Item::where('id','=',$id)->first();
@@ -9,13 +14,12 @@ class ItemController {
         } else {
             $view = new \mywishlist\views\ItemView($item, "ITEM_VIEW");
         }
-        $view->render();
+        $template = new \mywishlist\views\TemplateView();
+        $template->render($view->render());
     }
 
     public function getItems() {
         $item = \mywishlist\models\Item::get();
-        $view = new \mywishlist\views\ItemView($item, "LIST_VIEW");
-        $template = new \mywishlist\views\TemplateView();
-        $template->render($view->render());
+        return $items;
     }
 }
