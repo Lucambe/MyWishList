@@ -41,13 +41,15 @@ $app->get('/', function ($request, $response, array $args) {
 
 
 $app->get('/items', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ItemController($this->router);
-    $items = $c->getItems();
-    return $this->view->render($response, 'items.tpl', [
-        "items" => $items,
-        "router" => $this->router
-    ]);
+    $c = new \mywishlist\controllers\ItemController($this, $response);
+    return $c->getItems();
 });
+
+$app->get('/item/{id}', function ($request, $response, array $args) {
+    $c = new \mywishlist\controllers\ItemController($this, $response);
+    return $c->getItem($args['id']);
+});
+
 
 
 // Run app
