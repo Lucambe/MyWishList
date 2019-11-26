@@ -19,7 +19,6 @@ class ItemController {
     }
 
     public function getItems() {
-        $item = \mywishlist\models\Item::get();
-        return $items;
+        return \mywishlist\models\Item::get();
     }
 }

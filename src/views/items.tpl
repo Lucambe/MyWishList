@@ -10,15 +10,15 @@
         </tr>
     </thead>
     <tbody>
-<?= foreach($items as $item): ?>
+<?php foreach($items as $item): ?>
         <tr>
-            <th scope="row">{$item->id}</th>
-            <td>{$item->liste_id}</td>
-            <td>{$item->nom}</td>
-            <td>{$item->descr}</td>
-            <td><img src="{$rootUri}/public/images/{$item->img}" class="img-fluid img-thumbnail"></td>
-            <td>{$item->tarif}</td>
+            <th scope="row"><?= $item->id ?></th>
+            <td><?= $item->liste_id ?></td>
+            <td><?= $item->nom ?></td>
+            <td><?= $item->descr ?></td>
+            <td><img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="img-fluid img-thumbnail"></td>
+            <td><?= $item->tarif ?></td>
         </tr>
-<?= endforeach; ?>
+<?php endforeach; ?>
     </tbody>
 </table>

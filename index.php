@@ -27,7 +27,7 @@ $container['view'] = function ($container) {
         "rootUri" => $container->request->getUri()->getBasePath()
     ];
     $renderer = new \Slim\Views\PhpRenderer(__DIR__ . '/src/views', $vars);
-    $renderer->setLayout("layout.php");
+    $renderer->setLayout("layout.tpl");
     return $renderer;
 };
 
