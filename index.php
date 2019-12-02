@@ -34,21 +34,21 @@ $container['view'] = function ($container) {
 /**
  * Routes
  */
-
 $app->get('/', function ($request, $response, array $args) {
-    return $this->view->render($response, 'home.phtml');
-});
+    $c = new \mywishlist\controllers\HomeController($this->view);
+    return $c->showHome($request, $response, $args);
+})->setName('home');
 
 
 $app->get('/items', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ItemController($this->view);
     return $c->getItems($request, $response, $args);
-});
+})->setName('allItems');
 
 $app->get('/item/{id}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ItemController($this->view);
     return $c->getItem($request, $response, $args);
-});
+})->setName('showItem');
 
 
 
