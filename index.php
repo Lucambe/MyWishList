@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once (__DIR__ . '/vendor/autoload.php');
 
 \mywishlist\config\Database::connect();
@@ -24,7 +26,8 @@ $container = $app->getContainer();
  */
 $container['view'] = function ($container) {
     $vars = [
-        "rootUri" => $container->request->getUri()->getBasePath()
+        "rootUri" => $container->request->getUri()->getBasePath(),
+        "routeur" => $container->router
     ];
     $renderer = new \Slim\Views\PhpRenderer(__DIR__ . '/src/views', $vars);
     $renderer->setLayout("layout.phtml");
@@ -40,7 +43,7 @@ $app->get('/', function ($request, $response, array $args) {
 })->setName('home');
 
 
-$app->get('/item/{id}', function ($request, $response, array $args) {
+$app->get('/item/{id:[0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ItemController($this->view);
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
@@ -52,12 +55,12 @@ $app->get('/listes', function ($request, $response, array $args) {
 })->setName('listes');
 
 
-$app->get('/liste/{id}', function ($request, $response, array $args) {
+$app->get('/liste/{id:[0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ListeController($this->view);
     return $c->getListe($request, $response, $args);
 })->setName('showListe');
 
-$app->get('/error/{n}', function ($request, $response, array $args) {
+$app->get('/error/{n:[0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ErrorController($this->view);
     return $c->showError($request, $response, $args);
 })->setName('error');
