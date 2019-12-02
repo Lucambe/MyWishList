@@ -10,10 +10,11 @@ class ListeController {
     }
 
     public function getListe($request, $response, $args) {
-        $liste = \mywishlist\models\Liste::where('no','=',$args['id'])->first();
-
+        $liste = \mywishlist\models\Liste::where('no', '=', $args['id'])->first();
+        $items = \mywishlist\models\Item::where('liste_id', '=', $args['id'])->get();
         $this->view->render($response, 'liste.phtml', [
-            "liste" => !is_null($liste) ? $liste : new \mywishlist\models\Liste()
+            "liste" => !is_null($liste) ? $liste : new \mywishlist\models\Liste(),
+            "items" => !is_null($items) ? $items : array()
         ]);
         return $response;
     }
