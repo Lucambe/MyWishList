@@ -3,25 +3,26 @@ namespace mywishlist\controllers;
 
 class ListController {
 
-    protected $app;
-    protected $response;
+    protected $view;
 
-    public function __construct($app, $response) {
-        $this->app = $app;
-        $this->response = $response;
+    public function __construct($viewRenderer) {
+        $this->view = $viewRenderer;
     }
 
-    public function getList($id) {
-        $list = \mywishlist\models\Item::where('no','=',$id)->first();
-        return $this->app->view->render($this->response, 'list.phtml', [
+    public function getList($request, $response, $args) {
+        $list = \mywishlist\models\Item::where('no','=',$args['id'])->first();
+
+        $this->view->render($response, 'list.phtml', [
             "liste" => !is_null($list) ? $list : new \mywishlist\models\Liste()
         ]);
+        return $response;
     }
 
-    public function getLists() {
+    public function getLists($request, $response, $args) {
         $lists = \mywishlist\models\Item::get();
-        return $this->app->view->render($this->response, 'lists.phtml', [
+        $this->view->render($response, 'lists.phtml', [
             "listes" => $lists
         ]);
+        return $response;
     }
 }
