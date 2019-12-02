@@ -12,10 +12,14 @@ class ListeController {
     public function getListe($request, $response, $args) {
         $liste = \mywishlist\models\Liste::where('no', '=', $args['id'])->first();
         $items = \mywishlist\models\Item::where('liste_id', '=', $args['id'])->get();
-        $this->view->render($response, 'liste.phtml', [
-            "liste" => !is_null($liste) ? $liste : $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301),
-            "items" => !is_null($items) ? $items : array()
-        ]);
+        if(!is_null($liste) && !is_null($items)) {
+            $this->view->render($response, 'liste.phtml', [
+                "liste" => $liste,
+                "items" => $items
+            ]);
+        } else {
+            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
+        }
         return $response;
     }
 
