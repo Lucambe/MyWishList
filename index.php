@@ -27,7 +27,7 @@ $container['view'] = function ($container) {
         "rootUri" => $container->request->getUri()->getBasePath()
     ];
     $renderer = new \Slim\Views\PhpRenderer(__DIR__ . '/src/views', $vars);
-    $renderer->setLayout("layout.tpl");
+    $renderer->setLayout("layout.phtml");
     return $renderer;
 };
 
@@ -36,7 +36,7 @@ $container['view'] = function ($container) {
  */
 
 $app->get('/', function ($request, $response, array $args) {
-    return $this->view->render($response, 'home.tpl');
+    return $this->view->render($response, 'home.phtml');
 });
 
 
