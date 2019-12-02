@@ -40,26 +40,27 @@ $app->get('/', function ($request, $response, array $args) {
 })->setName('home');
 
 
-$app->get('/items', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ItemController($this->view);
-    return $c->getItems($request, $response, $args);
-})->setName('allItems');
-
 $app->get('/item/{id}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ItemController($this->view);
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
+
 $app->get('/listes', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ListeController($this->view);
     return $c->getListes($request, $response, $args);
-})->setName('allListes');
+})->setName('listes');
+
 
 $app->get('/liste/{id}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ListeController($this->view);
     return $c->getListe($request, $response, $args);
 })->setName('showListe');
 
+$app->get('/error/{n}', function ($request, $response, array $args) {
+    $c = new \mywishlist\controllers\ErrorController($this->view);
+    return $c->showError($request, $response, $args);
+})->setName('error');
 
 // Run app
 $app->run();
