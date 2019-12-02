@@ -13,7 +13,7 @@ class ListeController {
         $liste = \mywishlist\models\Liste::where('no', '=', $args['id'])->first();
         $items = \mywishlist\models\Item::where('liste_id', '=', $args['id'])->get();
         $this->view->render($response, 'liste.phtml', [
-            "liste" => !is_null($liste) ? $liste : new \mywishlist\models\Liste(),
+            "liste" => !is_null($liste) ? $liste : $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301),
             "items" => !is_null($items) ? $items : array()
         ]);
         return $response;

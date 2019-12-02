@@ -3,32 +3,27 @@
     <?= $liste->titre ?>
   </div>
   <div class="card-body">
-  <p class="card-text"><?= $liste->user_id ?></p>
+    <p class="card-text"><?= $liste->user_id ?></p>
     <p class="card-text"><?= $liste->description ?></p>
     <p class="card-text"><?= $liste->expiration ?></p>
   </div>
 </div>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">n° Liste</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Description</th>
-            <th scope="col">Image</th>
-            <th scope="col">Tarif</th>
-        </tr>
-    </thead>
-    <tbody>
-<?php foreach($items as $item): ?>
-        <tr>
-            <th scope="row"><?= $item->id ?></th>
-            <td><?= $item->liste_id ?></td>
-            <td><?= $item->nom ?></td>
-            <td><?= $item->descr ?></td>
-            <td><img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="img-fluid img-thumbnail"></td>
-            <td><?= $item->tarif ?></td>
-        </tr>
-<?php endforeach; ?>
-    </tbody>
-</table>
+<div class="row row-cols-1 row-cols-md-3">
+  <?php foreach ($items as $item) : ?>
+    <div class="col mb-4">
+      <div class="card h-100 my-2">
+        <img class="card-img-top" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Card image cap">
+        <div class="card-img-overlay">
+          <p class="card-text badge badge-warning"><?= $item->tarif ?> €</p>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title"><?= $item->nom ?></h3>
+          <p class="card-text"><?= $item->descr ?></p>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Liste n°<?= $item->liste_id ?>, objet n°<?= $item->id ?></small>
+        </div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>

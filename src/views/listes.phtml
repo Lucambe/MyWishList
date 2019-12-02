@@ -10,15 +10,15 @@
         </tr>
     </thead>
     <tbody>
-<?php foreach($listes as $liste): ?>
-        <tr>
-            <th scope="row"><?= $liste->no ?></th>
-            <td><?= $liste->user_id ?></td>
-            <td><?= $liste->titre ?></td>
-            <td><?= $liste->description ?></td>
-            <td><?= $liste->expiration ?></td> 
-            <td><?= $liste->token ?></td>
-        </tr>
-<?php endforeach; ?>
+        <?php foreach ($listes as $liste) : ?>
+            <tr>
+                <th scope="row"><?= $liste->no ?></th>
+                <td><?= $liste->user_id ?></td>
+                <td><?= $liste->titre ?></td>
+                <td><?= $liste->description ?></td>
+                <td><?= $liste->expiration ?></td>
+                <td><?= $liste->token ?></td>
+            </tr>
+        <?php endforeach; ?>
     </tbody>
 </table>
