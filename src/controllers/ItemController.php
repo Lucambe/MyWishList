@@ -11,18 +11,13 @@ class ItemController {
 
     public function getItem($request, $response, $args) {
         $item = \mywishlist\models\Item::where('id','=',$args['id'])->first();
-
-        $this->view->render($response, 'item.phtml', [
-            "item" => !is_null($item) ? $item : new \mywishlist\models\Item()
-        ]);
-        return $response;
-    }
-
-    public function getItems($request, $response, $args) {
-        $items = \mywishlist\models\Item::get();
-        $this->view->render($response, 'items.phtml', [
-            "items" => $items
-        ]);
+        if(!is_null($item)) {
+            $this->view->render($response, 'item.phtml', [
+                "item" => $item
+            ]);
+        } else {
+            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
+        }
         return $response;
     }
 }
