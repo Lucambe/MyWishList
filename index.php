@@ -50,6 +50,15 @@ $app->get('/item/{id}', function ($request, $response, array $args) {
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
+$app->get('/lists', function ($request, $response, array $args) {
+    $c = new \mywishlist\controllers\ListController($this->view);
+    return $c->getLists($request, $response, $args);
+})->setName('allLists');
+
+$app->get('/list/{id}', function ($request, $response, array $args) {
+    $c = new \mywishlist\controllers\ListController($this->view);
+    return $c->getList($request, $response, $args);
+})->setName('showList');
 
 
 // Run app
