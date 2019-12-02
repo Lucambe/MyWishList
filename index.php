@@ -41,13 +41,13 @@ $app->get('/', function ($request, $response, array $args) {
 
 
 $app->get('/items', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ItemController($this, $response);
-    return $c->getItems();
+    $c = new \mywishlist\controllers\ItemController($this->view);
+    return $c->getItems($request, $response, $args);
 });
 
 $app->get('/item/{id}', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ItemController($this, $response);
-    return $c->getItem($args['id']);
+    $c = new \mywishlist\controllers\ItemController($this->view);
+    return $c->getItem($request, $response, $args);
 });
 
 
