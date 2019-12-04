@@ -17,7 +17,7 @@
           <h3 class="card-title"><?= $item->nom ?></h3>
           <p class="card-text badge badge-warning"><?= $item->tarif ?> €</p>
           <p class="card-text"><?= $item->descr ?></p>
-          <a class="btn btn-block btn-primary" href="<?= $routeur->pathFor('showItem', ['id' => $item->id ]) ?>" role="button">Plus d'infos</a>
+          <a class="btn btn-block btn-primary" href="<?= $router->pathFor('showItem', ['id' => $item->id ]) ?>" role="button">Plus d'infos</a>
         </div>
         <div class="card-footer">
           <small class="text-muted">Statut: </small>
