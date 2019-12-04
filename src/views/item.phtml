@@ -1,13 +1,21 @@
-<div class="card text-center my-2">
-  <div class="card-header">
-    <?= $item->nom ?>
-  </div>
-  <div class="card-body">
-    <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="img-fluid img-thumbnail">
-    <p class="card-text"><?= $item->descr ?></p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-  <div class="card-footer text-muted">
-    <?= $item->tarif ?> €
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="<?= $router->pathFor('home') ?>">Accueil</a></li>
+    <li class="breadcrumb-item">Objet</li>
+    <li class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></li>
+  </ol>
+</nav>
+<div class="card mb-3">
+  <div class="row no-gutters">
+    <div class="col-md-3">
+      <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><?= $item->nom ?></h5>
+        <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span></p>
+        <p class="card-text"><?= $item->descr ?></p>
+      </div>
+    </div>
   </div>
 </div>

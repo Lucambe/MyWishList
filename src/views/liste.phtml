@@ -9,7 +9,7 @@
   <div class="card-body">
     <blockquote class="blockquote mb-0">
       <p><?= $liste->description ?></p>
-      <footer class="blockquote-footer">Expire le <cite title="Source Title"><?= $liste->expiration ?></cite></footer>
+      <footer class="blockquote-footer">Expire le <cite title="Source Title"><?= date("d/m/Y", strtotime($liste->expiration)) ?></cite></footer>
     </blockquote>
   </div>
 </div>
@@ -24,7 +24,7 @@
           <p class="card-text"><?= $item->descr ?></p>
         </div>
         <div class="card-footer">
-          <a class="btn btn-block btn-primary" href="<?= $router->pathFor('showItem', ['id' => $item->id]) ?>" role="button">Plus d'infos</a>
+          <a class="btn btn-block btn-primary" href="<?= $router->pathFor('showItem', ['token' => $liste->token, 'id' => $item->id]) ?>" role="button">Plus d'infos</a>
         </div>
       </div>
     </div>
