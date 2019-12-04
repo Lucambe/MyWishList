@@ -66,8 +66,7 @@ $app->get('/error/{n:[0-9]+}', function ($request, $response, array $args) {
 })->setName('error');
 
 $app->get('/about', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\AboutController($this->view);
-    return $c->showAbout($request, $response, $args);
+    $this->view->render($response, 'about.phtml');
 })->setName('about');
 
 // Run app
