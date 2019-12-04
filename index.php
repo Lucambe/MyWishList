@@ -69,5 +69,10 @@ $app->get('/about', function ($request, $response, array $args) {
     $this->view->render($response, 'about.phtml');
 })->setName('about');
 
+$app->get('/reservation', function ($request, $response, array $args) {
+    $c = new \mywishlist\controllers\ReservationController($this->view);
+    return $c->reservItem($request, $response, $args);
+})->setName('reserver');
+
 // Run app
 $app->run();
