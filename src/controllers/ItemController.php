@@ -10,14 +10,22 @@ class ItemController {
     }
 
     public function getItem($request, $response, $args) {
-        $item = \mywishlist\models\Item::where('id','=',$args['id'])->first();
-        if(!is_null($item)) {
+        try {
+            $liste = \mywishlist\models\Liste::where('token', '=', $args['token'])->first();
+            if(is_null($liste)) {
+                throw new \Exception();
+            }
+            $item = \mywishlist\models\Item::where('id', '=', $args['id'])->where('liste_id', '=', $liste->no)->first();
+            if(is_null($item)) {
+                throw new \Exception();
+            }
             $this->view->render($response, 'item.phtml', [
                 "item" => $item
             ]);
-        } else {
+        } catch (\Exception $e) {
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
+
         return $response;
     }
 }

@@ -34,6 +34,7 @@ $container['view'] = function ($container) {
     return $renderer;
 };
 
+
 /**
  * Routes
  */
@@ -43,22 +44,15 @@ $app->get('/', function ($request, $response, array $args) {
 })->setName('home');
 
 
-$app->get('/item/{id:[0-9]+}', function ($request, $response, array $args) {
+$app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ItemController($this->view);
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
-
-$app->get('/listes', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ListeController($this->view);
-    return $c->getListes($request, $response, $args);
-})->setName('listes');
-
-
-$app->get('/liste/{token:[a-zA-Z0-9]+}', function ($request, $response, array $args) {
+$app->get('/l/{token:[a-zA-Z0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ListeController($this->view);
     return $c->getListe($request, $response, $args);
-})->setName('showListe');
+})->setName('showList');
 
 $app->get('/error/{n:[0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ErrorController($this->view);

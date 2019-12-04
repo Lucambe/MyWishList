@@ -10,24 +10,22 @@ class ListeController {
     }
 
     public function getListe($request, $response, $args) {
-        $liste = \mywishlist\models\Liste::where('token', '=', $args['token'])->first();
-        $items = \mywishlist\models\Item::where('liste_id', '=', $liste->no)->get();
-        if(!is_null($liste) && !is_null($items)) {
+        try {
+            $liste = \mywishlist\models\Liste::where('token', '=', $args['token'])->first();
+            if(is_null($liste)) {
+                throw new \Exception();
+            }
+            $items = \mywishlist\models\Item::where('liste_id', '=', $liste->no)->get();
+            if(is_null($items)) {
+                throw new \Exception();
+            }
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
                 "items" => $items
             ]);
-        } else {
+        } catch(\Exception $e) {
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
-        return $response;
-    }
-
-    public function getListes($request, $response, $args) {
-        $listes = \mywishlist\models\Liste::get();
-        $this->view->render($response, 'listes.phtml', [
-            "listes" => $listes
-        ]);
         return $response;
     }
 }
