@@ -27,7 +27,7 @@ $container = $app->getContainer();
 $container['view'] = function ($container) {
     $vars = [
         "rootUri" => $container->request->getUri()->getBasePath(),
-        "routeur" => $container->router
+        "router" => $container->router
     ];
     $renderer = new \Slim\Views\PhpRenderer(__DIR__ . '/src/views', $vars);
     $renderer->setLayout("layout.phtml");
@@ -55,7 +55,7 @@ $app->get('/listes', function ($request, $response, array $args) {
 })->setName('listes');
 
 
-$app->get('/liste/{id:[0-9]+}', function ($request, $response, array $args) {
+$app->get('/liste/{token:[a-zA-Z0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ListeController($this->view);
     return $c->getListe($request, $response, $args);
 })->setName('showListe');

@@ -10,8 +10,8 @@ class ListeController {
     }
 
     public function getListe($request, $response, $args) {
-        $liste = \mywishlist\models\Liste::where('no', '=', $args['id'])->first();
-        $items = \mywishlist\models\Item::where('liste_id', '=', $args['id'])->get();
+        $liste = \mywishlist\models\Liste::where('token', '=', $args['token'])->first();
+        $items = \mywishlist\models\Item::where('liste_id', '=', $liste->no)->get();
         if(!is_null($liste) && !is_null($items)) {
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
