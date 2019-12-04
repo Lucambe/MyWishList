@@ -12,10 +12,9 @@ class ReservationController{
     public function reservItem($request, $response, $args){
         session_start();
         
-        if(isset($_SESSION['name']) && isset($_SESSION['item'])){
+        if(isset($_SESSION['name'])){
             $nom = $_SESSION['name'];
-            $numItem = $_SESSION['item'];
-            $item = \mywishlist\models\Item::where('id','=',$numItem)->first();
+            $item = \mywishlist\models\Item::where('id','=',$args['id'])->first();
             $liste = \mywishlist\models\Item::where('liste_id','=',$item)->get();
             if(!is_null($item) && !is_null($liste)){
                 $reserv = new \mywishlist\models\Reservation();

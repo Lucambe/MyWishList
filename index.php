@@ -69,7 +69,7 @@ $app->get('/about', function ($request, $response, array $args) {
     $this->view->render($response, 'about.phtml');
 })->setName('about');
 
-$app->get('/reservation', function ($request, $response, array $args) {
+$app->get('/reservation/{id:[0-9]+}', function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ReservationController($this->view);
     return $c->reservItem($request, $response, $args);
 })->setName('reserver');
