@@ -1,3 +1,9 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<?= $router->pathFor('home') ?>">Accueil</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Listes</li>
+    </ol>
+</nav>
 <table class="table table-hover table-striped">
     <thead>
         <br>
@@ -7,7 +13,6 @@
             <th scope="col">Titre</th>
             <th scope="col">Description</th>
             <th scope="col">Expiration</th>
-            <!--<th scope="col">Token</th>-->
         </tr>
     </thead>
     <tbody>
@@ -18,7 +23,6 @@
                 <td><?= $liste->titre ?></td>
                 <td><?= $liste->description ?></td>
                 <td><?= $liste->expiration ?></td>
-                <!--<td><?= $liste->token ?></td>-->
             </tr>
         <?php endforeach; ?>
     </tbody>
