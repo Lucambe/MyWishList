@@ -1,14 +1,19 @@
-<div class="card text-center my-2">
-  <div class="card-header">
-    <?= $liste->titre ?>
-  </div>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="<?= $router->pathFor('home') ?>">Accueil</a></li>
+    <li class="breadcrumb-item">Liste</li>
+    <li class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></li>
+  </ol>
+</nav>
+<div class="card text-center mt-2">
   <div class="card-body">
-    <p class="card-text"><?= $liste->user_id ?></p>
-    <p class="card-text"><?= $liste->description ?></p>
-    <p class="card-text"><?= $liste->expiration ?></p>
+    <blockquote class="blockquote mb-0">
+      <p><?= $liste->description ?></p>
+      <footer class="blockquote-footer">Expire le <cite title="Source Title"><?= $liste->expiration ?></cite></footer>
+    </blockquote>
   </div>
 </div>
-<div class="row row-cols-1 row-cols-md-3">
+<div class="row row-cols-1 row-cols-md-2">
   <?php foreach ($items as $item) : ?>
     <div class="col mb-4">
       <div class="card h-100 my-2">
@@ -17,10 +22,9 @@
           <h3 class="card-title"><?= $item->nom ?></h3>
           <p class="card-text badge badge-warning"><?= $item->tarif ?> €</p>
           <p class="card-text"><?= $item->descr ?></p>
-          <a class="btn btn-block btn-primary" href="<?= $router->pathFor('showItem', ['id' => $item->id ]) ?>" role="button">Plus d'infos</a>
         </div>
         <div class="card-footer">
-          <small class="text-muted">Statut: </small>
+          <a class="btn btn-block btn-primary" href="<?= $router->pathFor('showItem', ['id' => $item->id]) ?>" role="button">Plus d'infos</a>
         </div>
       </div>
     </div>
