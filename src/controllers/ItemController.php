@@ -15,11 +15,12 @@ class ItemController {
             if(is_null($liste)) {
                 throw new \Exception();
             }
-            $item = \mywishlist\models\Item::where('id', '=', $args['id'])->where('liste_id', '=', $liste->no)->first();
+            $item = \mywishlist\models\Item::where(['id' => $args['id'], 'liste_id' => $liste->no])->first();
             if(is_null($item)) {
                 throw new \Exception();
             }
             $this->view->render($response, 'item.phtml', [
+                "liste" => $liste,
                 "item" => $item
             ]);
         } catch (\Exception $e) {

@@ -15,7 +15,7 @@ class ListeController {
             if(is_null($liste)) {
                 throw new \Exception();
             }
-            $items = \mywishlist\models\Item::where('liste_id', '=', $liste->no)->get();
+            $items = $liste->items()->get();
             if(is_null($items)) {
                 throw new \Exception();
             }
