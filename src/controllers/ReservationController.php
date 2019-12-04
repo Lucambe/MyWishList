@@ -22,6 +22,7 @@ class ReservationController{
                 $reserv->nom = $nom;
                 $reserv->item_id = $item;
                 $reserv->liste_id = $liste;
+                $reserv->save();
                 $this->view->render($response, 'reserver.phtml', [
                     "nom" => $nom,
                     "numero item" => $item
