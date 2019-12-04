@@ -30,3 +30,18 @@
     </div>
   <?php endforeach; ?>
 </div>
+<form id="lmsg" method="get">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Entrez votre prénom/pseudo ici</span>
+        </div>
+        <input type="text" name="prn" placeholder="Indiquez votre prénom ici">
+    </div>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Écrivez votre message ici</span>
+        </div>
+        <input type="textarea" id="lmsg_txt" name="txt" class="form-control" aria-label="With textarea" placeholder="..." required>
+    </div>
+    <button class="btn btn-primary" type="submit" name="valider_message" value="valid_lmsg">Envoyer</button>
+</form>
