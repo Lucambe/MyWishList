@@ -1,7 +1,6 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="<?= $router->pathFor('home') ?>">Accueil</a></li>
-    <li class="breadcrumb-item">Liste</li>
+    <li class="breadcrumb-item"><i class="fas fa-home"></i></li>
     <li class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></li>
   </ol>
 </nav>
@@ -30,6 +29,7 @@
     </div>
   <?php endforeach; ?>
 </div>
+<!--
 <form id="lmsg" method="get">
     <div class="input-group">
         <div class="input-group-prepend">
@@ -45,3 +45,4 @@
     </div>
     <button class="btn btn-primary" type="submit" name="valider_message" value="valid_lmsg">Envoyer</button>
 </form>
+  -->

@@ -1,7 +1,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="<?= $router->pathFor('home') ?>">Accueil</a></li>
-    <li class="breadcrumb-item">Objet</li>
+    <li class="breadcrumb-item"><i class="fas fa-home"></i></li>
+    <li class="breadcrumb-item"><a href="<?= $router->pathFor('showList', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></li>
     <li class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></li>
   </ol>
 </nav>
