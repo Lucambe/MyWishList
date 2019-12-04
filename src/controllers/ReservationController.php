@@ -16,7 +16,7 @@ class ReservationController{
             $nom = $_SESSION['name'];
             $numItem = $_SESSION['item'];
             $item = \mywishlist\models\Item::where('id','=',$numItem)->first();
-            $liste = \mywishlist\models\Item::where('liste_id','=',$item)->first();
+            $liste = \mywishlist\models\Item::where('liste_id','=',$item)->get();
             if(!is_null($item) && !is_null($liste)){
                 $reserv = new \mywishlist\models\Reservation();
                 $reserv->nom = $nom;
