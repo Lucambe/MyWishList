@@ -67,6 +67,10 @@ $app->get('/reservation', function ($request, $response, array $args) {
     $this->view->render($response, 'reservation.phtml');
 })->setName('reservation');
 
+$app->get('/reservation2', function ($request, $response, array $args) {
+    $this->view->render($response, 'ReservationController.php');
+})->setName('reservation2');
+
 $app->get('/reserverItem/'/*{id:[0-9]+}'*/, function ($request, $response, array $args) {
     $c = new \mywishlist\controllers\ReservationController($this->view);
     return $c->reservItem($request, $response, $args);

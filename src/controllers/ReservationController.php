@@ -16,7 +16,7 @@ class ReservationController{
             $this->creatCookies("name", $n);
             if(isset($_COOKIE['name']) ){
                 $nom = $_COOKIE['name'];
-                $item = \mywishlist\models\Item::where('id','=',$args['id'])->first();
+                $item = \mywishlist\models\Item::where('id','=',$i)->first();
                 if(!is_null($item)){ 
                     $reserv = new \mywishlist\models\Reservation();
                     $reserv->nom = $nom;
