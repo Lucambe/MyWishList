@@ -11,10 +11,11 @@ class ReservationController{
 
     public function reservItem($request, $response, $args){
        try{
-            if($this->getSessionName() != null){
-                $nom = $this->getSessionName();
+           $this->creatCookies("name", "huberteuh");
+            if(isset($_COOKIE['name']) ){//$this->getSessionName() != null){
+                $nom = $_COOKIE['name'];//$this->getSessionName();
                 $item = \mywishlist\models\Item::where('id','=',$args['id'])->first();
-                $liste = \mywishlist\models\Item::where('liste_id','=',$item)->get();
+                $liste = \mywishlist\models\Item::where('liste_id','=',$item)->first();
                 if(!is_null($item) && !is_null($liste)){
                     $reserv = new \mywishlist\models\Reservation();
                     $reserv->nom = $nom;
@@ -22,8 +23,9 @@ class ReservationController{
                     $reserv->liste_id = $liste;
                     $reserv->message = "";
                     $reserv->save();
+                   // echo "Effctué";
                     $this->view->render($response, 'reserver.phtml', [
-                        "nom" => $nom,
+                        "nom" => $reserv->nom,
                         "numero item" => $item
                     ]);
                 }
@@ -35,7 +37,12 @@ class ReservationController{
         return $response;
        } 
 
-    public function getSessionName(){
+
+    public function creatCookies($name, $value){
+        setcookie($name, $value, time() + 60*60*30);
+    }
+
+    /*public function getSessionName(){
         $nom=null;
         try{
             if(isset($_SESSION['name'])){
@@ -46,10 +53,9 @@ class ReservationController{
             La session n'existe pas 
             EOD
         );
-        }
-           
+        }  
         return $nom;
-    }
+    }*/
 
 }
 
