@@ -11,26 +11,26 @@ class ReservationController{
 
     public function reservItem($request, $response, $args){
        try{
-           $this->creatCookies("name", "huberteuh");
-            if(isset($_COOKIE['name']) ){//$this->getSessionName() != null){
-                $nom = $_COOKIE['name'];//$this->getSessionName();
+           if(isset($_POST['valid_freserv']) && $_POST['valid_freserv']=='valid_f1'){
+           $n = $_POST['nom']; $i = $_POST['numItem'];
+            $this->creatCookies("name", $n);
+            if(isset($_COOKIE['name']) ){
+                $nom = $_COOKIE['name'];
                 $item = \mywishlist\models\Item::where('id','=',$args['id'])->first();
-                $liste = \mywishlist\models\Item::where('liste_id','=',$item)->first();
-                if(!is_null($item) && !is_null($liste)){
+                if(!is_null($item)){ 
                     $reserv = new \mywishlist\models\Reservation();
                     $reserv->nom = $nom;
-                    $reserv->item_id = $item;
-                    $reserv->liste_id = $liste;
+                    $reserv->item_id = $item->id;
+                    $reserv->liste_id = $item->liste_id;
                     $reserv->message = "";
                     $reserv->save();
-                   // echo "Effctué";
-                    $this->view->render($response, 'reserver.phtml', [
+                    $this->view->render($response, 'reserverItem.phtml', [
                         "nom" => $reserv->nom,
                         "numero item" => $item
                     ]);
                 }
             }
-            
+          } 
         }catch(\Exception $e){
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
@@ -42,7 +42,7 @@ class ReservationController{
         setcookie($name, $value, time() + 60*60*30);
     }
 
-    /*public function getSessionName(){
+    public function getSessionName(){
         $nom=null;
         try{
             if(isset($_SESSION['name'])){
@@ -55,7 +55,7 @@ class ReservationController{
         );
         }  
         return $nom;
-    }*/
+    }
 
 }
 
