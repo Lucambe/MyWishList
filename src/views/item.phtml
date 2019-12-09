@@ -24,7 +24,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            <button type="submit" class="btn btn-primary" href="">Réserver</button>
+            <button type="submit" class="btn btn-primary">Réserver</button>
           </div>
         </form>
       </div>
@@ -33,9 +33,9 @@
 <?php endif; ?>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><i class="fas fa-home"></i></li>
-    <li class="breadcrumb-item"><a href="<?= $router->pathFor('showList', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></li>
-    <li class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></li>
+    <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
+    <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showList', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></h5>
+    <h5 class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></h5>
   </ol>
 </nav>
 <div class="card mb-3">

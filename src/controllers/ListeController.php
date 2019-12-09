@@ -16,7 +16,7 @@ class ListeController extends Controller {
             }
             $items = $liste->items()->get();
             $messages = $liste->messages()->get();
-            if(is_null($items)||is_null($messages)) {
+            if(is_null($items) || is_null($messages)) {
                 throw new Exception();
             }
             foreach ($items as $i) {

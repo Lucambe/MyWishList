@@ -1,17 +1,50 @@
+<!-- Modal -->
+<div class="modal fade" id="redigerMessage" tabindex="-1" role="dialog" aria-labelledby="redigerMessageLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="redigerMessageLabel"><?= $liste->titre ?> - Réservation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_message" method="POST" action="<?= $router->pathFor('message') ?>">
+                <div class="modal-body">
+                    <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                    <div class="form-group">
+                        <label for="inputName">Inscrivez votre nom</label>
+                        <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier">
+                    </div>
+                    <div class="form-group">
+                        <label for="textarea">Ajoutez votre message</label>
+                        <textarea class="form-control" id="textarea" rows="3" name="message"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><i class="fas fa-home"></i></li>
-    <li class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></li>
+      <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
+      <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
+      <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">Rédiger un message</button>
   </ol>
 </nav>
-<div class="card text-center mt-2">
-  <div class="card-body">
-    <blockquote class="blockquote mb-0">
-      <p><?= $liste->description ?></p>
-      <footer class="blockquote-footer">Expire le <cite title="Source Title"><?= date("d/m/Y", strtotime($liste->expiration)) ?></cite></footer>
-    </blockquote>
-  </div>
+<div class="card text-center mb-2">
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p><?= $liste->description ?></p>
+            <footer class="blockquote-footer">Expire le <cite
+                    title="Source Title"><?= date("d/m/Y", strtotime($liste->expiration)) ?></cite></footer>
+        </blockquote>
+    </div>
 </div>
+
 <div class="row row-cols-1 row-cols-md-2">
   <?php foreach ($items as $item) : ?>
     <div class="col mb-4">
@@ -32,9 +65,19 @@
 
 <div class="row row-cols-1 row-cols-md-2">
     <?php foreach ($messages as $message) : ?>
-        <span class="border border-primary">
-            <p class="card-text"><?= $message->message ?></p>
-        </span>
+    <div class="col mb-4">
+        <div class="card h-100 my-2">
+            <div class="card-header">
+                Un message de <?= $message->messager ?> !
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p><?= $message->message ?></p>
+                    <footer class="blockquote-footer"><?= $message->messager ?></footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
     <?php endforeach; ?>
 </div>
 

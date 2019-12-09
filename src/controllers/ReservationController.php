@@ -11,7 +11,6 @@ use mywishlist\models\Reservation;
 class ReservationController extends Controller {
 
     /**
-     * @todo Flash Message
      * @todo Sécurité filter_var
      */
     public function bookItem($request, $response, $args) {

@@ -4,6 +4,7 @@ use mywishlist\config\Database;
 use mywishlist\controllers\HomeController;
 use mywishlist\controllers\ItemController;
 use mywishlist\controllers\ListeController;
+use mywishlist\controllers\MessageController;
 use mywishlist\controllers\ReservationController;
 use Slim\App;
 use Slim\Flash\Messages;
@@ -83,6 +84,12 @@ $app->post('/book', function ($request, $response, $args) {
     $c = new ReservationController($container);
     return $c->bookItem($request, $response, $args);
 })->setName('book');
+
+$app->post('/message', function ($request, $response, $args) {
+    global $container;
+    $c = new MessageController($container);
+    return $c->addMessage($request, $response, $args);
+})->setName('message');
 
 // Run app
 $app->run();
