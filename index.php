@@ -63,22 +63,10 @@ $app->get('/about', function ($request, $response, array $args) {
     $this->view->render($response, 'about.phtml');
 })->setName('about');
 
-// pour se rendre au formulaire
-$app->get('/reservation', function ($request, $response, array $args) {
-    $this->view->render($response, 'reserverItem.phtml');
-})->setName('reservation');
-
-// pour executer le script php correspondant à reserver item
-/*$app->post('/reservation2', function ($request, $response, array $args) {
+$app->post('/book', function ($request, $response, $args) {
     $c = new \mywishlist\controllers\ReservationController($this->view);
-    return $c->reservItem($request, $response, $args);
-})->setName('reservation2');*/
-
-// pour avoir le message de confirmation de la reservation
-$app->post('/reserverItem/'/*{id:[0-9]+}*/, function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ReservationController($this->view);
-    return $c->reservItem($request, $response, $args);
-})->setName('reserverItem');
+    return $c->bookItem($request, $response, $args);
+})->setName('book');
 
 // Run app
 $app->run();

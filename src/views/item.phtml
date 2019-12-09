@@ -1,33 +1,35 @@
-<?php if(!$reservation): ?>
-<!-- Modal -->
-<div class="modal fade" id="reserver" tabindex="-1" role="dialog" aria-labelledby="reserverLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reserverLabel"><?= $item->nom ?> - Réservation</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="form_reservation" method="POST" action="reserver">
-          <div class="form-group">
-            <label for="inputName">Inscrivez votre nom</label>
-            <input type="text" name="nom" class="form-control" id="inputName" placeholder="Xavier">
+<?php if (!$reservation) : ?>
+  <!-- Modal -->
+  <div class="modal fade" id="reserver" tabindex="-1" role="dialog" aria-labelledby="reserverLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reserverLabel"><?= $item->nom ?> - Réservation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="form_reservation" method="POST" action="<?= $router->pathFor('book') ?>">
+          <div class="modal-body">
+            <input type="hidden" value="<?= $liste->token ?>" name="token" />
+            <input type="hidden" value="<?= $item->id ?>" name="item_id" />
+            <div class="form-group">
+              <label for="inputName">Inscrivez votre nom</label>
+              <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $nom ?>">
+            </div>
+            <div class="form-group">
+              <label for="textarea">Ajoutez un message à votre réservation</label>
+              <textarea class="form-control" id="textarea" rows="3" name="message"></textarea>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="textarea">Ajoutez un message à votre réservation</label>
-            <textarea class="form-control" id="textarea" rows="3"></textarea>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary" href="">Réserver</button>
           </div>
+        </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-        <button type="submit" name="valid_freserv" value="valid_f1" class="btn btn-primary" href="">Réserver</button>
-      </div>
-      </form>
     </div>
   </div>
-</div>
 <?php endif; ?>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -44,16 +46,16 @@
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title"><?= $item->nom ?></h5>
-        <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if($reservation): ?> <span class="card-text badge badge-danger">Reservé</span> <?php else: ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
+        <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if ($reservation) : ?> <span class="card-text badge badge-danger">Reservé</span> <?php else : ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
         <p class="card-text"><?= $item->descr ?></p>
-        <?php if($reservation): ?>
-        <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
-          Réserver
-        </button>
-        <?php else: ?>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
-          Réserver
-        </button>
+        <?php if ($reservation) : ?>
+          <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
+            Réserver
+          </button>
+        <?php else : ?>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
+            Réserver
+          </button>
         <?php endif; ?>
       </div>
     </div>
