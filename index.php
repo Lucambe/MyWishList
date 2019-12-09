@@ -34,28 +34,39 @@ $container['view'] = function ($container) {
     return $renderer;
 };
 
+/**
+ * Setup Flash Message with Slim
+ */
+$container['flash'] = function () {
+    return new \Slim\Flash\Messages();
+};
+
 
 /**
  * Routes
  */
 $app->get('/', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\HomeController($this->view);
+    global $container;
+    $c = new \mywishlist\controllers\HomeController($container);
     return $c->showHome($request, $response, $args);
 })->setName('home');
 
 
 $app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ItemController($this->view);
+    global $container;
+    $c = new \mywishlist\controllers\ItemController($container);
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
 $app->get('/l/{token:[a-zA-Z0-9]+}', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ListeController($this->view);
+    global $container;
+    $c = new \mywishlist\controllers\ListeController($container);
     return $c->getListe($request, $response, $args);
 })->setName('showList');
 
 $app->get('/error/{n:[0-9]+}', function ($request, $response, array $args) {
-    $c = new \mywishlist\controllers\ErrorController($this->view);
+    global $container;
+    $c = new \mywishlist\controllers\ErrorController($container);
     return $c->showError($request, $response, $args);
 })->setName('error');
 
@@ -64,7 +75,8 @@ $app->get('/about', function ($request, $response, array $args) {
 })->setName('about');
 
 $app->post('/book', function ($request, $response, $args) {
-    $c = new \mywishlist\controllers\ReservationController($this->view);
+    global $container;
+    $c = new \mywishlist\controllers\ReservationController($container);
     return $c->bookItem($request, $response, $args);
 })->setName('book');
 
