@@ -33,13 +33,14 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 
 ### Participant
 
-- [ ] *Afficher une liste de souhaits*
-- [ ] *Afficher un item d'une liste*
-- [ ] *Réserver un item*
-- [ ] *Ajouter un message avec sa réservation*
+- [ ] *Afficher une liste de souhaits* (Jules)
+- [ ] *Afficher un item d'une liste* (Jules)
+- [ ] *Réserver un item* (Anthony, Jules)
+- [ ] *Ajouter un message avec sa réservation* (Anthony, Jules)
+- [ ] *Ajouter un message sur une liste* (Nathan)
 
 ### Créateur
-- [ ] *Créer une liste*
+- [ ] *Créer une liste* (Anthony)
 - [ ] *Modifier les informations générales d'une de ses listes*
 - [ ] *Ajouter des items*
 - [ ] *Modifier un item*
