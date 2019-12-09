@@ -36,4 +36,40 @@ class ListeController {
     }
 
 
+    public function createListe($request, $response, $args){
+        try{
+
+            if(isset($_POST['valid_fcreateListe']) && $_POST['valid_fcreateListe'] == 'valid_f2'){
+                $titre = $_POST['titre'];      $description = $_POST['descr'];    
+                $dateExp = $_POST['dateExpi'];       $idUser = $_POST['id'];
+                if(isset($titre) && isset($dateExp) && isset($description) && isset($idUser)){
+                    if( filter_var($titre, FILTER_SANITIZE_STRING) || filter_var($description, FILTER_SANITIZE_STRING) || filter_var($dateExp, FILTER_SANITIZE_STRING) ){
+                        echo " Votre saisie a échouée, veuillez réessayer. ";
+                    }else{
+                        $liste = \mywishlist\models\Liste();
+                        $searchIdUser = $liste::where('user_id','=', $idUser)->first();
+                        
+                        $liste->no = $liste::count('no')+1;
+                        $liste->titre = $titre;
+                        $liste->description = $description;
+                        $liste->expiration = $dateExp;
+                        $liste->token = 'nosecure'+($liste::count('token')+1);
+                        
+                        if(is_null($searchIdUser)){
+                            $searchIdUser = $liste::select('user_id')->get() + 1;
+                            $liste->user_id = $searchIdUser;
+                        }else{
+                            $liste->user_id = $searchIdUser;
+                        }
+                        $liste->save();
+    
+                    }
+                }
+            }
+                
+        } catch(\Exception $e){
+            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
+        }
+    }
+
 }
