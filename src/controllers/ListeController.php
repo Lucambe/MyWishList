@@ -1,21 +1,26 @@
 <?php
 namespace mywishlist\controllers;
 
+use Exception;
+use mywishlist\models\Liste;
+use mywishlist\models\Reservation;
+use function mywishlist\models\Liste;
+
 class ListeController extends Controller {
 
     public function getListe($request, $response, $args) {
         try {
-            $liste = \mywishlist\models\Liste::where('token', '=', $args['token'])->first();
+            $liste = Liste::where('token', '=', $args['token'])->first();
             if(is_null($liste)) {
-                throw new \Exception();
+                throw new Exception();
             }
             $items = $liste->items()->get();
             $messages = $liste->messages()->get();
             if(is_null($items)||is_null($messages)) {
-                throw new \Exception();
+                throw new Exception();
             }
             foreach ($items as $i) {
-                $reservations[$i->id] = !is_null(\mywishlist\models\Reservation::where('item_id', '=', $i->id)->first());
+                $reservations[$i->id] = !is_null(Reservation::where('item_id', '=', $i->id)->first());
             }
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
@@ -23,7 +28,7 @@ class ListeController extends Controller {
                 "messages" => $messages,
                 "reservations" => $reservations
             ]);
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
         return $response;
@@ -40,7 +45,7 @@ class ListeController extends Controller {
                     if( filter_var($titre, FILTER_SANITIZE_STRING) || filter_var($description, FILTER_SANITIZE_STRING) || filter_var($dateExp, FILTER_SANITIZE_STRING) ){
                         echo " Votre saisie a échouée, veuillez réessayer. ";
                     }else{
-                        $liste = \mywishlist\models\Liste();
+                        $liste = Liste();
                         $searchIdUser = $liste::where('user_id','=', $idUser)->first();
                         
                         $liste->no = $liste::count('no')+1;
@@ -61,7 +66,7 @@ class ListeController extends Controller {
                 }
             }
                 
-        } catch(\Exception $e){
+        } catch(Exception $e){
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
     }
