@@ -1,5 +1,6 @@
 <?php
 namespace mywishlist\config;
+use Exception;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Database {
@@ -8,7 +9,7 @@ class Database {
         if(file_exists('src/config/database.ini')) {
             $data = parse_ini_file('src/config/database.ini');
         } else {
-            throw new \Exception("Fichier src/config/database.ini manquant");
+            throw new Exception("Fichier src/config/database.ini manquant");
         }
 
         $db = new DB();

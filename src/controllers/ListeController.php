@@ -29,7 +29,8 @@ class ListeController extends Controller {
                 "reservations" => $reservations
             ]);
         } catch(Exception $e) {
-            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
+            $this->flash->addMessage('error', "Cette liste n'existe pas");
+            $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
     }
@@ -67,7 +68,8 @@ class ListeController extends Controller {
             }
                 
         } catch(Exception $e){
-            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
+            $this->flash->addMessage('error', "Impossible de créer la liste.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
         }
     }
 

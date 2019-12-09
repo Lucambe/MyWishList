@@ -38,9 +38,11 @@ class ReservationController extends Controller {
             $r->nom = $name;
             $r->save();
             $response = FigResponseCookies::set($response, SetCookie::create("nom")->withValue($name)->rememberForever());
-            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/200" , 301);
+            $this->flash->addMessage('success', "$name, votre réservation a été enregistrée !");
+            $response = $response->withRedirect($this->router->pathFor('home'));
         } catch(Exception $e) {
-            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/406" , 301);
+           $this->flash->addMessage('error', 'Nous n\'avons pas pu enregistrer votre réservation.');
+           $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
     }

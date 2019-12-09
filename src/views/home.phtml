@@ -1,3 +1,19 @@
+<?php if(isset($messages['error'])) foreach($messages['error'] as $m): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Mince!</strong> <?= $m ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<?php endforeach; ?>
+<?php if(isset($messages['success'])) foreach($messages['success'] as $m): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Super!</strong> <?= $m ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<?php endforeach; ?>
 <div class="jumbotron my-2">
     <h1 class="display-4">Bienvenue sur MyWishList!</h1>
     <p class="lead">Ce projet a été réalisé dans le cadre du module de Prog. Web/Serveur @IUT-NC 2019.</p>

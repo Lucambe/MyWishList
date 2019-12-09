@@ -27,7 +27,8 @@ class ItemController extends Controller {
                 "nom" => is_null(FigRequestCookies::get($request, 'nom')) ? "" : explode("=", FigRequestCookies::get($request, 'nom'))[1]
             ]);
         } catch (Exception $e) {
-            $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
+            $this->flash->addMessage('error', "Impossible de récupérer cet objet.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
     }
