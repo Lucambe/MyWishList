@@ -49,7 +49,12 @@
         </div>
 
         <script src="<?= $rootUri ?>/public/js/jquery.slim.min.js"></script>
+        <script src="<?= $rootUri ?>/public/js/popper.min.js"></script>
         <script src="<?= $rootUri ?>/public/js/bootstrap.min.js"></script>
+        <script>
+        $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})</script>
     </body>
 
 </html>

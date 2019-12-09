@@ -17,7 +17,7 @@ class ReservationController{
             if(isset($_COOKIE['name']) ){
                 $nom = $_COOKIE['name'];
                 $item = \mywishlist\models\Item::where('id','=',$i)->first();
-                if(!is_null($item)){ 
+                if(!is_null($item)){
                     $reserv = new \mywishlist\models\Reservation();
                     $reserv->nom = $nom;
                     $reserv->item_id = $item->id;
@@ -29,41 +29,24 @@ class ReservationController{
                         "numero item" => $item
                         <<<EOD
                         <div class="card text-center my-2">
-                             <div class="card-body">  
+                             <div class="card-body">
                             La réservation s'est bien enregistré.
-                             </div> 
+                             </div>
                         </div>
                         EOD;
                     ]);
                 }
             }
-          } 
+          }
         }catch(\Exception $e){
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
         return $response;
-       } 
+       }
 
 
     public function creatCookies($name, $value){
         setcookie($name, $value, time() + 60*60*30);
     }
-
-    public function getSessionName(){
-        $nom=null;
-        try{
-            if(isset($_SESSION['name'])){
-                $nom = $_SESSION['name'];
-            }
-        }catch(Exception $e){
-            throw new Exception(<<<EOD
-            La session n'existe pas 
-            EOD
-        );
-        }  
-        return $nom;
-    }
-
 }
-
 ?>
