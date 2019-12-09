@@ -16,16 +16,20 @@ class ListeController {
                 throw new \Exception();
             }
             $items = $liste->items()->get();
-            if(is_null($items)) {
+            $messages = $liste->messages()->get();
+            if(is_null($items)||is_null($messages)) {
                 throw new \Exception();
             }
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
-                "items" => $items
+                "items" => $items,
+                "messages" => $messages
             ]);
         } catch(\Exception $e) {
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
         return $response;
     }
+
+
 }

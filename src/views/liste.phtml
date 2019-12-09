@@ -29,20 +29,32 @@
     </div>
   <?php endforeach; ?>
 </div>
-<!--
+
+<div class="row row-cols-1 row-cols-md-2">
+    <?php foreach ($messages as $message) : ?>
+        <span class="border border-primary">
+            <p class="card-text"><?= $message->message ?></p>
+        </span>
+    <?php endforeach; ?>
+</div>
+
 <form id="lmsg" method="get">
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Entrez votre prénom/pseudo ici</span>
+    <fieldset>
+        <legend>Envoyer un message</legend>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Entrez votre prénom/pseudo ici</span>
+            </div>
+            <input type="text" name="prn" class="form-control" placeholder="Indiquez votre prénom ici">
         </div>
-        <input type="text" name="prn" placeholder="Indiquez votre prénom ici">
-    </div>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Écrivez votre message ici</span>
+            <small id="emailHelp" class="form-text text-muted">Il ne sera pas visible par le créateur de la liste.</small>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Écrivez votre message ici</span>
+            </div>
+            <input type="textarea" id="lmsg_txt" name="txt" class="form-control" aria-label="With textarea" placeholder="..." required>
         </div>
-        <input type="textarea" id="lmsg_txt" name="txt" class="form-control" aria-label="With textarea" placeholder="..." required>
-    </div>
-    <button class="btn btn-primary" type="submit" name="valider_message" value="valid_lmsg">Envoyer</button>
+        <button class="btn btn-primary" type="submit" name="valider_message" value="valid_lmsg">Envoyer</button>
+    </fieldset>
 </form>
-  -->
+
