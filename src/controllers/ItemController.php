@@ -1,13 +1,7 @@
 <?php
 namespace mywishlist\controllers;
 
-class ItemController {
-
-    protected $view;
-
-    public function __construct($viewRenderer) {
-        $this->view = $viewRenderer;
-    }
+class ItemController extends Controller {
 
     public function getItem($request, $response, $args) {
         try {

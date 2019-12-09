@@ -1,13 +1,7 @@
 <?php
 namespace mywishlist\controllers;
 
-class ListeController {
-
-    protected $view;
-
-    public function __construct($viewRenderer) {
-        $this->view = $viewRenderer;
-    }
+class ListeController extends Controller {
 
     public function getListe($request, $response, $args) {
         try {

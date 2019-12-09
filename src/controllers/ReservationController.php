@@ -1,14 +1,7 @@
 <?php
 namespace mywishlist\controllers;
 
-class ReservationController{
-
-    protected $view;
-
-    public function __construct($viewRenderer) {
-        $this->view = $viewRenderer;
-    }
-
+class ReservationController extends Controller {
 
     /**
      * @todo Flash Message

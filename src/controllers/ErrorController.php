@@ -1,9 +1,7 @@
 <?php
 namespace mywishlist\controllers;
 
-class ErrorController {
-
-    protected $view;
+class ErrorController extends Controller {
 
     public static $statuscode = [
         "HTTP_CONTINUE" => 100,
@@ -71,10 +69,6 @@ class ErrorController {
         "HTTP_NETWORK_AUTHENTICATION_REQUIRED" => 511,
         "HTTP_NETWORK_CONNECTION_TIMEOUT_ERROR" => 599
     ];
-
-    public function __construct($viewRenderer) {
-        $this->view = $viewRenderer;
-    }
 
     public function showError($request, $response, $args) {
         if(!in_array($args['n'], ErrorController::$statuscode)) {
