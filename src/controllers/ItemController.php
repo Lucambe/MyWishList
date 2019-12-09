@@ -19,9 +19,16 @@ class ItemController {
             if(is_null($item)) {
                 throw new \Exception();
             }
+            $reservation = \mywishlist\models\Reservation::where('item_id', '=', $args['id'])->first();
+            if(is_null($reservation)) {
+                $reservation = false;
+            } else {
+                $reservation = true;
+            }
             $this->view->render($response, 'item.phtml', [
                 "liste" => $liste,
-                "item" => $item
+                "item" => $item,
+                "reservation" => $reservation
             ]);
         } catch (\Exception $e) {
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);

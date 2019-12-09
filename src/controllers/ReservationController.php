@@ -12,12 +12,12 @@ class ReservationController{
     public function reservItem($request, $response, $args){
        try{
            if(isset($_POST['valid_freserv']) && $_POST['valid_freserv']=='valid_f1'){
-           $n = $_POST['nom']; $i = $_POST['numItem'];
+            $n = $_POST['nom']; $i = $_POST['numItem'];
             $this->creatCookies("name", $n);
             if(isset($_COOKIE['name']) ){
                 $nom = $_COOKIE['name'];
                 $item = \mywishlist\models\Item::where('id','=',$i)->first();
-                if(!is_null($item)){ 
+                if(!is_null($item)){
                     $reserv = new \mywishlist\models\Reservation();
                     $reserv->nom = $nom;
                     $reserv->item_id = $item->id;
@@ -30,33 +30,16 @@ class ReservationController{
                     ]);
                 }
             }
-          } 
+          }
         }catch(\Exception $e){
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);
         }
         return $response;
-       } 
+       }
 
 
     public function creatCookies($name, $value){
         setcookie($name, $value, time() + 60*60*30);
     }
-
-    public function getSessionName(){
-        $nom=null;
-        try{
-            if(isset($_SESSION['name'])){
-                $nom = $_SESSION['name'];
-            }
-        }catch(Exception $e){
-            throw new Exception(<<<EOD
-            La session n'existe pas 
-            EOD
-        );
-        }  
-        return $nom;
-    }
-
 }
-
 ?>
