@@ -19,9 +19,13 @@ class ListeController {
             if(is_null($items)) {
                 throw new \Exception();
             }
+            foreach ($items as $i) {
+                $reservations[$i->id] = !is_null(\mywishlist\models\Reservation::where('item_id', '=', $i->id)->first());
+            }
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
-                "items" => $items
+                "items" => $items,
+                "reservations" => $reservations
             ]);
         } catch(\Exception $e) {
             $response = $response->withRedirect($request->getUri()->getBaseUrl() . "/error/404" , 301);

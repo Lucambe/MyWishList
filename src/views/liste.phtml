@@ -19,7 +19,7 @@
         <img class="card-img-top" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet">
         <div class="card-body">
           <h3 class="card-title"><?= $item->nom ?></h3>
-          <p class="card-text badge badge-warning"><?= $item->tarif ?> €</p>
+          <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if($reservations[$item->id]): ?> <span class="card-text badge badge-danger">Reservé</span> <?php else: ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
           <p class="card-text"><?= $item->descr ?></p>
         </div>
         <div class="card-footer">
