@@ -7,11 +7,5 @@
         <label for="inputItem">Entrez le numéro de l'item à réserver :</label>
         <input type="number" name ="numItem" class="form-control" id="inputItem" placeholder="5">
     </div>
-    <button type="submit" name="valid_freserv" value="valid_f1" class="btn btn-primary" href="<?= $router->pathFor('reservation2') ?>">Envoyer</button>
+    <button type="submit" name="valid_freserv" value="valid_f1" class="btn btn-primary" href="<?= $router->pathFor('reserverItem') ?>">Envoyer</button>
 </form>
-
-<div class="card text-center my-2">
-  <div class="card-body">  
-    La réservation s'est bien enregistré.
-  </div> 
-</div>

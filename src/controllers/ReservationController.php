@@ -27,6 +27,13 @@ class ReservationController{
                     $this->view->render($response, 'reserverItem.phtml', [
                         "nom" => $reserv->nom,
                         "numero item" => $item
+                        <<<EOD
+                        <div class="card text-center my-2">
+                             <div class="card-body">  
+                            La réservation s'est bien enregistré.
+                             </div> 
+                        </div>
+                        EOD;
                     ]);
                 }
             }
