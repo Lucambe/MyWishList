@@ -12,7 +12,7 @@ class ReservationController{
     public function reservItem($request, $response, $args){
        try{
            if(isset($_POST['valid_freserv']) && $_POST['valid_freserv']=='valid_f1'){
-           $n = $_POST['nom']; $i = $_POST['numItem'];
+            $n = $_POST['nom']; $i = $_POST['numItem'];
             $this->creatCookies("name", $n);
             if(isset($_COOKIE['name']) ){
                 $nom = $_COOKIE['name'];

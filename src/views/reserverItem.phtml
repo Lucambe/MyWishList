@@ -1,3 +1,15 @@
+<form id="form_reservation" method="POST" action="/add">
+    <div class="form-group">
+        <label for="inputName">Entrez votre nom :</label>
+        <input type="text" name="nom" class="form-control" id="inputName" placeholder="Xavier">
+    </div>
+    <div class="form-group">
+        <label for="inputItem">Entrez le numéro de l'item à réserver :</label>
+        <input type="number" name ="numItem" class="form-control" id="inputItem" placeholder="5">
+    </div>
+    <button type="submit" name="valid_freserv" value="valid_f1" class="btn btn-primary" href="<?= $router->pathFor('reservation2') ?>">Envoyer</button>
+</form>
+
 <div class="card text-center my-2">
   <div class="card-body">  
     La réservation s'est bien enregistré.
