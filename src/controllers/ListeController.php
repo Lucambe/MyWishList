@@ -75,8 +75,9 @@ class ListeController extends Controller {
             $this->flash->addMessage('error', "Impossible de créer la liste.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
+        return $response;
     }
 
-    return $response;
+    
 
 }
