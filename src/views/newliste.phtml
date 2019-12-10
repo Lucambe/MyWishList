@@ -1,6 +1,5 @@
 
- <form id="form_message" method="POST" action="/add">
-            <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+ <form id="form_message" method="POST" action="<?= $router->pathFor('message') ?>">
                  <div class="form-group">
                      <label for="inputName">Insérez un titre</label>
                      <input type="text" name="titre" class="form-control" id="inputTitle">

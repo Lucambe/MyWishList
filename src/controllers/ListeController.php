@@ -44,9 +44,10 @@ class ListeController extends Controller {
                 $dateExp = $request->getParseBody()['dateExpi'];      
                 $idUser = $request->getParseBody()['id'];
                 if(isset($titre) && isset($dateExp) && isset($description) && isset($idUser)){
-                    if( filter_var($titre, FILTER_SANITIZE_STRING) || filter_var($description, FILTER_SANITIZE_STRING) || filter_var($dateExp, FILTER_SANITIZE_STRING) ){
-                        echo " Votre saisie a échouée, veuillez réessayer. ";
-                    }else{
+                    /*if( filter_var($titre, FILTER_SANITIZE_STRING) || filter_var($description, FILTER_SANITIZE_STRING) || filter_var($dateExp, FILTER_SANITIZE_STRING) ){
+                        $this->flash->addMessage('error', "Votre enregistrement a échoué, vuillez réessayer.");
+                        $response = $response->withRedirect($this->router->pathFor('home'));
+                    }else{*/
                         $liste = Liste();
                         $searchIdUser = $liste::where('user_id','=', $idUser)->first();
                         
@@ -56,16 +57,17 @@ class ListeController extends Controller {
                         $liste->expiration = $dateExp;
                         $liste->token = 'nosecure'+($liste::count('token')+1);
                         
-                        if(is_null($searchIdUser)){
+                        /*if(is_null($searchIdUser)){
                             $searchIdUser = $liste::select('user_id')->get() + 1;
                             $liste->user_id = $searchIdUser;
                         }else{
                             $liste->user_id = $searchIdUser;
-                        }
+                        }*/
+                        $liste->user_id = $searchIdUser;
                         $liste->save();
-                        $this->flash->addMessage('success', "$name, votre réservation a été enregistrée !");
+                        $this->flash->addMessage('success', "votre réservation a été enregistrée !");
                         $response = $response->withRedirect($this->router->pathFor('home'));
-                    }
+                  //  }
                 }
             
                 
@@ -74,5 +76,7 @@ class ListeController extends Controller {
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
     }
+
+    return $response;
 
 }
