@@ -91,5 +91,9 @@ $app->post('/message', function ($request, $response, $args) {
     return $c->addMessage($request, $response, $args);
 })->setName('message');
 
+$app->get('/newliste', function ($request, $response, array $args) {
+    $this->view->render($response, 'newliste.phtml');
+})->setName('newliste');
+
 // Run app
 $app->run();

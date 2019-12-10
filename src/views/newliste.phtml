@@ -1,0 +1,24 @@
+
+ <form id="form_message" method="POST" action="/add">
+            <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                 <div class="form-group">
+                     <label for="inputName">Insérez un titre</label>
+                     <input type="text" name="titre" class="form-control" id="inputTitle">
+                 </div>
+                 <div class="form-group">
+                     <label for="inputName">Indiquez votre id</label>
+                     <input type="text" name="id" class="form-control" id="inputId">
+                 </div>
+                 <div class="form-group">
+                     <label for="inputName">Indiquez une date d'expiration</label>
+                     <input type="date" name="dateExpi" class="form-control" id="inputDateExpi">
+                 </div>
+                 <div class="form-group">
+                    <label for="textarea">Ajoutez une description</label>
+                    <textarea class="form-control" id="textarea" rows="3" name="descr"></textarea>
+                </div>
+             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+             </div>
+ </form>

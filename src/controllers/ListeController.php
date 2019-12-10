@@ -38,10 +38,11 @@ class ListeController extends Controller {
 
     public function createListe($request, $response, $args){
         try{
-
-            if(isset($_POST['valid_fcreateListe']) && $_POST['valid_fcreateListe'] == 'valid_f2'){
-                $titre = $_POST['titre'];      $description = $_POST['descr'];    
-                $dateExp = $_POST['dateExpi'];       $idUser = $_POST['id'];
+            
+                $titre = $request->getParseBody()['titre'];      
+                $description = $request->getParseBody()['descr'];    
+                $dateExp = $request->getParseBody()['dateExpi'];      
+                $idUser = $request->getParseBody()['id'];
                 if(isset($titre) && isset($dateExp) && isset($description) && isset($idUser)){
                     if( filter_var($titre, FILTER_SANITIZE_STRING) || filter_var($description, FILTER_SANITIZE_STRING) || filter_var($dateExp, FILTER_SANITIZE_STRING) ){
                         echo " Votre saisie a échouée, veuillez réessayer. ";
@@ -62,10 +63,11 @@ class ListeController extends Controller {
                             $liste->user_id = $searchIdUser;
                         }
                         $liste->save();
-    
+                        $this->flash->addMessage('success', "$name, votre réservation a été enregistrée !");
+                        $response = $response->withRedirect($this->router->pathFor('home'));
                     }
                 }
-            }
+            
                 
         } catch(Exception $e){
             $this->flash->addMessage('error', "Impossible de créer la liste.");
