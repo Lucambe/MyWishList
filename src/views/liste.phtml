@@ -1,4 +1,4 @@
-<!-- Modal -->
+<!-- Modal rediger un message -->
 <div class="modal fade" id="redigerMessage" tabindex="-1" role="dialog" aria-labelledby="redigerMessageLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -28,11 +28,59 @@
         </div>
     </div>
 </div>
+<!-- Modal modifier une liste-->
+<div class="modal fade" id="modifierListe" tabindex="-1" role="dialog" aria-labelledby="modifierListeLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="redigerMessageLabel"><?= $liste->titre ?> - Modification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_message" method="POST" action="<?= $router->pathFor('update') ?>">
+                <div class="modal-body">
+                    <input type="hidden" value="<?= $liste->token ?>" name="tokenFound"/>
+                    <div class="form-group">
+                        <label for="inputName">Indiquez votre Id </label>
+                        <input type="text" name="idUpdate" class="form-control" id="inputTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">Indiquez le nouveau titre </label>
+                        <div class="alert alert-dark" role="alert">
+                            Titre actuel : <?= $liste->titre ?>
+                        </div>
+                        <input type="text" name="newTitle" class="form-control" id="inputTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">Indiquez la nouvelle date d'expiration </label>
+                        <div class="alert alert-dark" role="alert">
+                            Date actuelle : <?= $liste->expiration ?>
+                        </div>
+                        <input type="date" name="newDate" class="form-control" id="inputDateExpi">
+                    </div>
+                    <div class="form-group">
+                        <label for="textarea">Insérez votre nouvelle description</label>
+                        <div class="alert alert-dark" role="alert">
+                            Date actuelle : <?= $liste->description ?>
+                        </div>
+                        <textarea class="form-control" id="textarea" rows="3" name="newDescription"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
       <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
       <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
       <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">Rédiger un message</button>
+      <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#modifierListe" role="button">Modifier la liste</button>
   </ol>
 </nav>
 <div class="card text-center mb-2">

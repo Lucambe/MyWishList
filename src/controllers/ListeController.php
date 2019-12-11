@@ -79,6 +79,26 @@ class ListeController extends Controller {
     }
 
     public function updateListe($request,$response, $args){
+        try{
+            $id = $request->getParsedBody()['idUpdate'];
+            $titre = $request->getParsedBody()['newTitle'];
+            $description = $request->getParsedBody()['newDescription'];
+            $date = $request->getParsedBody()['newDate'];
+            $token = $args['token'];
+
+            $liste  = Liste::where('user_id','',$id)->first();
+            $liste->titre = $titre;
+            $liste->description = $description;
+            $liste->expiration = $date;
+            $liste->token = $token;
+            $liste->save();
+            $this->flash->addMessage('success', "votre modification a été enregistrée !");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(Exception $e){
+            $this->flash->addMessage('error', "Impossible de modifier la liste.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+
 
         return $response;
     }
