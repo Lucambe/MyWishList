@@ -43,9 +43,9 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 
 - [ ] *Afficher une liste de souhaits* (Jules)
 - [ ] *Afficher un item d'une liste* (Jules)
-- [ ] *Réserver un item* (Anthony, Jules)
-- [ ] *Ajouter un message avec sa réservation* (Anthony, Jules)
-- [ ] *Ajouter un message sur une liste* (Nathan, Jules)
+- [x] *Réserver un item* (Anthony, Jules)
+- [x] *Ajouter un message avec sa réservation* (Anthony, Jules)
+- [x] *Ajouter un message sur une liste* (Nathan, Jules)
 
 ### Créateur
 - [ ] *Créer une liste* (Anthony)
