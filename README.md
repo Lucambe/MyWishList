@@ -29,6 +29,14 @@ En insérant:
 
 Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 
+## Disparités avec le sujet
+
+- [x] *Nous utilisons Slim 3*
+- [x] *Nous utilisons [FIG Cookies](https://github.com/dflydev/dflydev-fig-cookies) 1.0.2 pour gérer les cookies*
+- [x] *Nous utilisons [PHPView](https://github.com/slimphp/PHP-View) 2.2 pour gérer les vues et les layouts*
+- [x] *Nous utilisons [Flash](https://github.com/slimphp/Slim-Flash) pour gérer les messages Flash (erreurs,succès..)*
+
+
 ## Fonctionnalités
 
 ### Participant
