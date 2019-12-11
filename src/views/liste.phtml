@@ -80,24 +80,3 @@
     </div>
     <?php endforeach; ?>
 </div>
-
-<form id="lmsg" method="get">
-    <fieldset>
-        <legend>Envoyer un message</legend>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Entrez votre prénom/pseudo ici</span>
-            </div>
-            <input type="text" name="prn" class="form-control" placeholder="Indiquez votre prénom ici">
-        </div>
-            <small id="emailHelp" class="form-text text-muted">Il ne sera pas visible par le créateur de la liste.</small>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Écrivez votre message ici</span>
-            </div>
-            <input type="textarea" id="lmsg_txt" name="txt" class="form-control" aria-label="With textarea" placeholder="..." required>
-        </div>
-        <button class="btn btn-primary" type="submit" name="valider_message" value="valid_lmsg">Envoyer</button>
-    </fieldset>
-</form>
-
