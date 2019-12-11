@@ -44,21 +44,21 @@
                     <div class="form-group">
                         <label for="inputName">Indiquez le nouveau titre </label>
                         <div class="alert alert-dark" role="alert">
-                            Titre actuel : <?= $liste->titre ?>
+                            Actuel: <?= $liste->titre ?>
                         </div>
                         <input type="text" name="newTitle" class="form-control" id="inputTitle">
                     </div>
                     <div class="form-group">
                         <label for="inputName">Indiquez la nouvelle date d'expiration </label>
                         <div class="alert alert-dark" role="alert">
-                            Date actuelle : <?= $liste->expiration ?>
+                            Actuel: <?= date("d/m/Y", strtotime($liste->expiration)) ?>
                         </div>
                         <input type="date" name="newDate" class="form-control" id="inputDateExpi">
                     </div>
                     <div class="form-group">
                         <label for="textarea">Insérez votre nouvelle description</label>
                         <div class="alert alert-dark" role="alert">
-                            Date actuelle : <?= $liste->description ?>
+                            Actuel: <?= $liste->description ?>
                         </div>
                         <textarea class="form-control" id="textarea" rows="3" name="newDescription"></textarea>
                     </div>
@@ -72,12 +72,14 @@
     </div>
 </div>
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-      <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
-      <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
-  </ol>
-  <button type="button" class="btn btn-secondary btn-lg btn-block" data-toggle="modal" data-target="#redigerMessage" role="button">Rédiger un message</button>
-  <button type="button" class="btn btn-secondary btn-lg btn-block" data-toggle="modal" data-target="#modifierListe" role="button">Modifier la liste</button><br>
+    <ol class="breadcrumb">
+        <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
+        <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
+        <div class="ml-auto">
+            <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">Rédiger un message</button>
+            <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#modifierListe" role="button">Modifier la liste</button>
+        </div>
+    </ol>
 </nav>
 <div class="card text-center mb-2">
     <div class="card-body">

@@ -5,7 +5,7 @@ class HomeController extends Controller {
 
     public function showHome($request, $response, $args) {
         $this->view->render($response, 'home.phtml', [
-            "messages" => $this->flash->getMessages()
+            "flash" => $this->flash->getMessages()
         ]);
         return $response;
     }
