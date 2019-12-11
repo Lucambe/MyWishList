@@ -24,7 +24,7 @@ class ItemController extends Controller {
                 "liste" => $liste,
                 "item" => $item,
                 "reservation" => !is_null(Reservation::where('item_id', '=', $item->id)->first()),
-                "nom" => is_null(FigRequestCookies::get($request, 'nom')) ? "" : explode("=", FigRequestCookies::get($request, 'nom'))[1]
+                "nom" => urldecode(FigRequestCookies::get($request, 'nom', '')->getValue())
             ]);
         } catch (Exception $e) {
             $this->flash->addMessage('error', "Impossible de récupérer cet objet.");
