@@ -95,5 +95,11 @@ $app->get('/newliste', function ($request, $response, array $args) {
     $this->view->render($response, 'newliste.phtml');
 })->setName('newliste');
 
+$app->post('/create', function ($request, $response, $args) {
+    global $container;
+    $c = new ListeController($container);
+    return $c->createListe($request, $response, $args);
+})->setName('create');
+
 // Run app
 $app->run();
