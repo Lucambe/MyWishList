@@ -1,9 +1,9 @@
 <br>
-<h2 class="text-center">Création de liste</h2>
+<h2 class="text-center">Modification d'une liste</h2>
 <br>
- <form id="form_message" method="POST" action="<?= $router->pathFor('create') ?>">
+ <form id="form_message" method="POST" action="<?= $router->pathFor('update') ?>">
                  <div class="form-group">
-                     <label for="inputName">Insérez un titre</label>
+                     <label for="inputName"></label>
                      <input type="text" name="titre" class="form-control" id="inputTitle">
                  </div>
                 <div class="form-group">
@@ -23,9 +23,3 @@
                 <button type="submit" class="btn btn-primary">Envoyer</button>
              </div>
  </form>
-
-<div class="jumbotron">
-  <p class="lead">Pour modifier les informations générales d'une liste,  <a href="<?= $router->pathFor('updateliste') ?>">cliquez-ici</a></p>
-  <hr class="my-4">
-  <p>N'oubliez pas de vous munir de votre identifiant de créateur de liste ainsi que du token de la liste correspondant.</p>
-</div>

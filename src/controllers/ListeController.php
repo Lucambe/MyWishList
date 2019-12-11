@@ -78,6 +78,11 @@ class ListeController extends Controller {
         return $response;
     }
 
+    public function updateListe($request,$response, $args){
+
+        return $response;
+    }
+
     
 
 }

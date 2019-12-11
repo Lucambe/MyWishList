@@ -101,5 +101,15 @@ $app->post('/create', function ($request, $response, $args) {
     return $c->createListe($request, $response, $args);
 })->setName('create');
 
+$app->get('/updateliste', function ($request, $response, array $args) {
+    $this->view->render($response, 'updateliste.phtml');
+})->setName('updateliste');
+
+$app->post('/update', function ($request, $response, $args) {
+    global $container;
+    $c = new ListeController($container);
+    return $c->updateListe($request, $response, $args);
+})->setName('update');
+
 // Run app
 $app->run();
