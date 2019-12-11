@@ -37,25 +37,28 @@ class ListeController extends Controller {
 
 
     public function createListe($request, $response, $args){
-        try{
-            
-                $titre = $request->getParseBody()['titre'];      
-                $description = $request->getParseBody()['descr'];    
-                $dateExp = $request->getParseBody()['dateExpi'];      
-                $idUser = $request->getParseBody()['id'];
-                if(isset($titre) && isset($dateExp) && isset($description) && isset($idUser)){
-                    /*if( filter_var($titre, FILTER_SANITIZE_STRING) || filter_var($description, FILTER_SANITIZE_STRING) || filter_var($dateExp, FILTER_SANITIZE_STRING) ){
-                        $this->flash->addMessage('error', "Votre enregistrement a échoué, vuillez réessayer.");
+             try{
+                $titre = $request->getParsedBody()['titre'];      
+                $description = $request->getParsedBody()['descr'];    
+                $dateExp = $request->getParsedBody()['dateExpi'];      
+                $idUser = $request->getParsedBody()['id'];
+                    if( ! filter_var($idUser, FILTER_VALIDATE_INT)  ){
+                        $this->flash->addMessage('error', "Votre enregistrement a échoué, veuillez réessayer.");
                         $response = $response->withRedirect($this->router->pathFor('home'));
-                    }else{*/
-                        $liste = Liste();
-                        $searchIdUser = $liste::where('user_id','=', $idUser)->first();
-                        
-                        $liste->no = $liste::count('no')+1;
+                    }else{
+
+                        $titre = filter_var($titre, FILTER_SANITIZE_STRING);
+                        $description = filter_var($description, FILTER_SANITIZE_STRING);
+
+                        $liste = new Liste();
+                       // $searchIdUser = $liste::where('user_id','=', $idUser)->first();
+                        $nb = $liste::count('no');
+                        $liste->no = $nb+1;
+                        $liste->user_id = $idUser;
                         $liste->titre = $titre;
                         $liste->description = $description;
                         $liste->expiration = $dateExp;
-                        $liste->token = 'nosecure'+($liste::count('token')+1);
+                        $liste->token = "nosecure".($nb+1);
                         
                         /*if(is_null($searchIdUser)){
                             $searchIdUser = $liste::select('user_id')->get() + 1;
@@ -63,18 +66,15 @@ class ListeController extends Controller {
                         }else{
                             $liste->user_id = $searchIdUser;
                         }*/
-                        $liste->user_id = $searchIdUser;
+                      
                         $liste->save();
                         $this->flash->addMessage('success', "votre réservation a été enregistrée !");
                         $response = $response->withRedirect($this->router->pathFor('home'));
-                  //  }
-                }
-            
-                
-        } catch(Exception $e){
-            $this->flash->addMessage('error', "Impossible de créer la liste.");
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }
+                    }
+            } catch(Exception $e){
+                $this->flash->addMessage('error', "Impossible de créer la liste.");
+                $response = $response->withRedirect($this->router->pathFor('home'));
+            }
         return $response;
     }
 
