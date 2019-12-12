@@ -1,4 +1,4 @@
-<?php if (!$reservation) : ?>
+<?php if ($reservation->isEmpty()) : ?>
   <!-- Modal -->
   <div class="modal fade" id="reserver" tabindex="-1" role="dialog" aria-labelledby="reserverLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -46,9 +46,9 @@
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title"><?= $item->nom ?></h5>
-        <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if ($reservation) : ?> <span class="card-text badge badge-danger">Reservé</span> <?php else : ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
+        <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if (!$reservation->isEmpty()) : ?> <span class="card-text badge badge-danger">Reservé</span> <?php else : ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
         <p class="card-text"><?= $item->descr ?></p>
-        <?php if ($reservation) : ?>
+        <?php if (!$reservation->isEmpty()) : ?>
           <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
             Réserver
           </button>

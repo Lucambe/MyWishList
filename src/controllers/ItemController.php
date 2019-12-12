@@ -2,34 +2,41 @@
 namespace mywishlist\controllers;
 
 use Dflydev\FigCookies\FigRequestCookies;
-use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Item;
 use mywishlist\models\Liste;
-use mywishlist\models\Reservation;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+/**
+ * Class ItemController
+ * @author Jules Sayer <jules.sayer@protonmail.com>
+ * @package mywishlist\controllers
+ */
 class ItemController extends Controller {
 
+    /**
+     * Appel item.phtml, permet d'afficher les informations
+     * d'un item, l'état de sa réservation, et le nom stocké
+     * en cookies de l'utilisateur
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function getItem(Request $request, Response $response, array $args) : Response {
         try {
-            $liste = Liste::where('token', '=', $args['token'])->first();
-            if(is_null($liste)) {
-                throw new Exception();
-            }
-            $item = Item::where(['id' => $args['id'], 'liste_id' => $liste->no])->first();
-            if(is_null($item)) {
-                throw new Exception();
-            }
-
+            $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
+            $item = Item::where(['id' => $args['id'], 'liste_id' => $liste->no])->firstOrFail();
             $this->view->render($response, 'item.phtml', [
                 "liste" => $liste,
                 "item" => $item,
-                "reservation" => !is_null(Reservation::where('item_id', '=', $item->id)->first()),
+                "reservation" => $item->reservation()->get(),
                 "nom" => urldecode(FigRequestCookies::get($request, 'nom', '')->getValue())
             ]);
-        } catch (Exception $e) {
-            $this->flash->addMessage('error', "Impossible de récupérer cet objet.");
+        } catch(ModelNotFoundException $e) {
+            $this->flash->addMessage('error', "Cet objet n'existe pas...");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
