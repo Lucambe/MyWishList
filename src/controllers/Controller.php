@@ -1,9 +1,11 @@
 <?php
-
-
 namespace mywishlist\controllers;
 
-
+/**
+ * Class Controller
+ * @author Jules Sayer <jules.sayer@protonmail.com>
+ * @package mywishlist\controllers
+ */
 abstract class Controller {
     protected $view;
     protected $router;

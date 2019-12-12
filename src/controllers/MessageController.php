@@ -1,8 +1,5 @@
 <?php
-
-
 namespace mywishlist\controllers;
-
 
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
@@ -11,6 +8,11 @@ use mywishlist\models\Message;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+/**
+ * Class MessageController
+ * @author Nathan Chevalier <nat.che@gmail.com>
+ * @package mywishlist\controllers
+ */
 class MessageController extends Controller {
 
     /**

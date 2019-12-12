@@ -10,6 +10,11 @@ use mywishlist\models\Reservation;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+/**
+ * Class ReservationController
+ * @author Anthony Pernot <anthony.pernot9@etu.univ-lorraine.fr>
+ * @package mywishlist\controllers
+ */
 class ReservationController extends Controller {
 
     /**
