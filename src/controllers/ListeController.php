@@ -2,41 +2,48 @@
 namespace mywishlist\controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Liste;
 use mywishlist\models\Reservation;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use function mywishlist\models\Liste;
 
+/**
+ * Class ListeController
+ * @author Jules Sayer <jules.sayer@protonmail.com>
+ * @author Anthony Pernot <anthony.pernot9@etu.univ-lorraine.fr>
+ * @package mywishlist\controllers
+ */
 class ListeController extends Controller {
 
-    public function getListe($request, $response, $args) {
+    /**
+     * Appel liste.phtml, permet d'afficher les informations
+     * d'une liste, ses items, ses messages et l'état des réservations
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function getListe(Request $request, Response $response, array $args) : Response {
         try {
-            $liste = Liste::where('token', '=', $args['token'])->first();
-            if(is_null($liste)) {
-                throw new Exception();
-            }
-            $items = $liste->items()->get();
-            $messages = $liste->messages()->get();
-            if(is_null($items) || is_null($messages)) {
-                throw new Exception();
-            }
-            foreach ($items as $i) {
-                $reservations[$i->id] = !is_null(Reservation::where('item_id', '=', $i->id)->first());
-            }
+            $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
-                "items" => $items,
-                "messages" => $messages,
-                "reservations" => $reservations
+                "items" => $liste->items()->get(),
+                "messages" => $liste->messages()->get(),
+                "reservations" => Reservation::get()
             ]);
-        } catch(Exception $e) {
-            $this->flash->addMessage('error', "Cette liste n'existe pas");
+        } catch(ModelNotFoundException $e) {
+            $this->flash->addMessage('error', "Cette liste n'existe pas...");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
     }
 
 
-    public function createListe($request, $response, $args){
+    public function createListe(Request $request, Response $response, array $args) : Response {
              try{
                 $titre = $request->getParsedBody()['titre'];      
                 $description = $request->getParsedBody()['descr'];    
@@ -78,7 +85,7 @@ class ListeController extends Controller {
         return $response;
     }
 
-    public function updateListe($request,$response, $args){
+    public function updateListe(Request $request, Response $response, array $args) : Response {
         try{
             $titre = $request->getParsedBody()['newTitle'];
             $description = $request->getParsedBody()['newDescription'];

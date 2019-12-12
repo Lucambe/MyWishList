@@ -90,7 +90,7 @@
         </blockquote>
     </div>
 </div>
-
+<?php if(!$items->isEmpty()): ?>
 <div class="row row-cols-1 row-cols-md-2">
   <?php foreach ($items as $item) : ?>
     <div class="col mb-4">
@@ -98,7 +98,7 @@
         <img class="card-img-top" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet">
         <div class="card-body">
           <h3 class="card-title"><?= $item->nom ?></h3>
-          <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if($reservations[$item->id]): ?> <span class="card-text badge badge-danger">Reservé</span> <?php else: ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
+          <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if(!$item->reservation()->get()->isEmpty()): ?> <span class="card-text badge badge-danger">Reservé</span> <?php else: ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
           <p class="card-text"><?= $item->descr ?></p>
         </div>
         <div class="card-footer">
@@ -108,6 +108,14 @@
     </div>
   <?php endforeach; ?>
 </div>
+<?php else: ?>
+    <div class="alert alert-dark text-center" role="alert">
+        <h4 class="alert-heading">Bien joué!</h4>
+        <p>Cette liste a été créée, mais elle est actuellement vide. Il ne vous manque plus qu'a ajouter des objets!</p>
+        <hr>
+        <p class="mb-0">Une fois les objets ajoutés, vous pourrez la partager à vos proches.</p>
+    </div>
+<?php endif; ?>
 
 <div class="row row-cols-1 row-cols-md-2">
     <?php foreach ($messages as $message) : ?>

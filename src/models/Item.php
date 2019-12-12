@@ -12,6 +12,6 @@ class Item extends Model {
     }
 
     public function reservation() {
-        return $this->belongsTo('\mywishlist\models\Reservation', 'item_id');
+        return $this->hasOne('\mywishlist\models\Reservation', 'item_id');
     }
 }
