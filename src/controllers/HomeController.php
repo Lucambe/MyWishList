@@ -11,6 +11,15 @@ use Slim\Http\Response;
  */
 class HomeController extends Controller {
 
+    /**
+     * Appel home.phtml, permet d'afficher les accueils
+     * et les messages flash.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function showHome(Request $request, Response $response, array $args) : Response {
         $this->view->render($response, 'home.phtml', [
             "flash" => $this->flash->getMessages()

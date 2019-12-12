@@ -4,6 +4,7 @@ namespace mywishlist\controllers;
 /**
  * Class Controller
  * @author Jules Sayer <jules.sayer@protonmail.com>
+ * @abstract
  * @package mywishlist\controllers
  */
 abstract class Controller {
