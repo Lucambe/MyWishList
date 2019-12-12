@@ -24,10 +24,10 @@
                             <a class="nav-link" href="<?= $rootUri ?>">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $router->pathFor('about') ?>">A propos</a>
+                            <a class="nav-link" href="<?= $router->pathFor('newliste') ?>">Créer une liste</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $router->pathFor('newliste') ?>">Créer une liste</a>
+                            <a class="nav-link" href="<?= $router->pathFor('about') ?>">A propos</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Espace membres</a>
@@ -49,9 +49,10 @@
         <script src="<?= $rootUri ?>/public/js/popper.min.js"></script>
         <script src="<?= $rootUri ?>/public/js/bootstrap.min.js"></script>
         <script>
-        $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})</script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
     </body>
 
 </html>

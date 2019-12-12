@@ -7,13 +7,15 @@ use Exception;
 use mywishlist\models\Item;
 use mywishlist\models\Liste;
 use mywishlist\models\Reservation;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class ReservationController extends Controller {
 
     /**
      * @todo Sécurité filter_var
      */
-    public function bookItem($request, $response, $args) {
+    public function bookItem(Request $request, Response $response, array $args) : Response {
        try {
             $name = $request->getParsedBody()['name'];
             $message = $request->getParsedBody()['message'];

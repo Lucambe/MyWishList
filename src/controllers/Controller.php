@@ -4,7 +4,7 @@
 namespace mywishlist\controllers;
 
 
-class Controller {
+abstract class Controller {
     protected $view;
     protected $router;
     protected $flash;

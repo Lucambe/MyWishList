@@ -6,10 +6,12 @@ use Exception;
 use mywishlist\models\Item;
 use mywishlist\models\Liste;
 use mywishlist\models\Reservation;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class ItemController extends Controller {
 
-    public function getItem($request, $response, $args) {
+    public function getItem(Request $request, Response $response, array $args) : Response {
         try {
             $liste = Liste::where('token', '=', $args['token'])->first();
             if(is_null($liste)) {

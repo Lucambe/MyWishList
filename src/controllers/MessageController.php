@@ -8,13 +8,15 @@ use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 use mywishlist\models\Liste;
 use mywishlist\models\Message;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class MessageController extends Controller {
 
     /**
      * @todo: Sécurité avec FILTER_VAR
      */
-    public function addMessage($request, $response, $args) {
+    public function addMessage(Request $request, Response $response, array $args) : Response {
         try {
             $name = $request->getParsedBody()['name'];
             $message = $request->getParsedBody()['message'];
