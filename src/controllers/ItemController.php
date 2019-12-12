@@ -28,7 +28,7 @@ class ItemController extends Controller {
     public function getItem(Request $request, Response $response, array $args) : Response {
         try {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
-            $item = Item::where(['id' => $args['id'], 'liste_id' => $liste->no])->firstOrFail();
+            $item = Item::find($args['id'])->where('liste_id', $liste->no)->firstOrFail();
             $this->view->render($response, 'item.phtml', [
                 "liste" => $liste,
                 "item" => $item,
