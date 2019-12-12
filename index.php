@@ -8,6 +8,8 @@ use mywishlist\controllers\MessageController;
 use mywishlist\controllers\ReservationController;
 use Slim\App;
 use Slim\Flash\Messages;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\PhpRenderer;
 
 session_start();
@@ -56,52 +58,52 @@ $container['flash'] = function () {
 /**
  * Routes
  */
-$app->get('/', function ($request, $response, array $args) {
+$app->get('/', function (Request $request, Response $response, array $args) {
     global $container;
     $c = new HomeController($container);
     return $c->showHome($request, $response, $args);
 })->setName('home');
 
 
-$app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function ($request, $response, array $args) {
+$app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
     global $container;
     $c = new ItemController($container);
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
-$app->get('/l/{token:[a-zA-Z0-9]+}', function ($request, $response, array $args) {
+$app->get('/l/{token:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) {
     global $container;
     $c = new ListeController($container);
     return $c->getListe($request, $response, $args);
 })->setName('showList');
 
-$app->get('/about', function ($request, $response, array $args) {
+$app->get('/about', function (Request $request, Response $response, array $args) {
     $this->view->render($response, 'about.phtml');
 })->setName('about');
 
-$app->post('/book', function ($request, $response, $args) {
+$app->post('/book', function (Request $request, Response $response, array $args) {
     global $container;
     $c = new ReservationController($container);
     return $c->bookItem($request, $response, $args);
 })->setName('book');
 
-$app->post('/message', function ($request, $response, $args) {
+$app->post('/message', function (Request $request, Response $response, array $args) {
     global $container;
     $c = new MessageController($container);
     return $c->addMessage($request, $response, $args);
 })->setName('message');
 
-$app->get('/newliste', function ($request, $response, array $args) {
+$app->get('/newliste', function (Request $request, Response $response, array $args) {
     $this->view->render($response, 'newliste.phtml');
 })->setName('newliste');
 
-$app->post('/create', function ($request, $response, $args) {
+$app->post('/create', function (Request $request, Response $response, array $args) {
     global $container;
     $c = new ListeController($container);
     return $c->createListe($request, $response, $args);
 })->setName('create');
 
-$app->post('/update', function ($request, $response, $args) {
+$app->post('/update', function (Request $request, Response $response, array $args) {
     global $container;
     $c = new ListeController($container);
     return $c->updateListe($request, $response, $args);
