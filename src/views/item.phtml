@@ -1,5 +1,5 @@
-<?php if ($reservation->isEmpty()) : ?>
-  <!-- Modal -->
+<?php if ($reservation->isEmpty() && (!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue())))): ?>
+  <!-- Modal Réserver -->
   <div class="modal fade" id="reserver" tabindex="-1" role="dialog" aria-labelledby="reserverLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -15,7 +15,7 @@
             <input type="hidden" value="<?= $item->id ?>" name="item_id" />
             <div class="form-group">
               <label for="inputName">Inscrivez votre nom</label>
-              <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $nom ?>">
+              <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $cookies->has('nom') ? $cookies->get('nom')->getValue() : '' ?>">
             </div>
             <div class="form-group">
               <label for="textarea">Ajoutez un message à votre réservation</label>
@@ -46,8 +46,18 @@
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title"><?= $item->nom ?></h5>
-        <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if (!$reservation->isEmpty()) : ?> <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span> <?php else : ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
+        <p class="card-text">
+            <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
+            <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
+            <?php if (!$reservation->isEmpty()) : ?>
+            <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
+            <?php else : ?>
+            <span class="card-text badge badge-success">Disponible</span>
+            <?php endif; ?>
+            <?php endif; ?>
+        </p>
         <p class="card-text"><?= $item->descr ?></p>
+        <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
         <?php if (!$reservation->isEmpty()) : ?>
           <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
             Réserver
@@ -56,6 +66,7 @@
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
             Réserver
           </button>
+        <?php endif; ?>
         <?php endif; ?>
       </div>
     </div>

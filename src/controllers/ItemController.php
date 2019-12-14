@@ -1,7 +1,7 @@
 <?php
 namespace mywishlist\controllers;
 
-use Dflydev\FigCookies\FigRequestCookies;
+use Dflydev\FigCookies\Cookies;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Item;
 use mywishlist\models\Liste;
@@ -33,7 +33,7 @@ class ItemController extends Controller {
                 "liste" => $liste,
                 "item" => $item,
                 "reservation" => $item->reservation()->get(),
-                "nom" => urldecode(FigRequestCookies::get($request, 'nom', '')->getValue())
+                "cookies" => Cookies::fromRequest($request)
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Cet objet n'existe pas...");

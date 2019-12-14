@@ -85,6 +85,15 @@ class ListeController extends Controller {
         return $response;
     }
 
+    /**
+     * Modifie la liste, vérifie que l'utilisateur a créé la liste
+     * et qu'elle existe bel et bien.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function updateListe(Request $request, Response $response, array $args) : Response {
         try {
             $titre = $request->getParsedBodyParam('newTitle');
@@ -111,8 +120,6 @@ class ListeController extends Controller {
             $this->flash->addMessage('error', "Vous ne pouvez pas modifier cette liste.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
-
-
         return $response;
     }
 }

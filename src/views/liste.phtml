@@ -28,7 +28,8 @@
         </div>
     </div>
 </div>
-<!-- Modal modifier une liste-->
+<?php if($cookies->has('created') && in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
+<!-- Modal modifier une liste -->
 <div class="modal fade" id="modifierListe" tabindex="-1" role="dialog" aria-labelledby="modifierListeLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -71,13 +72,18 @@
         </div>
     </div>
 </div>
+<?php endif; ?>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
         <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
         <div class="ml-auto">
+            <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
             <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">Rédiger un message</button>
+            <?php endif; ?>
+            <?php if($cookies->has('created') && in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
             <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#modifierListe" role="button">Modifier la liste</button>
+            <?php endif; ?>
         </div>
     </ol>
 </nav>
@@ -98,7 +104,16 @@
         <img class="card-img-top" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet">
         <div class="card-body">
           <h3 class="card-title"><?= $item->nom ?></h3>
-          <p class="card-text"><span class="card-text badge badge-warning"><?= $item->tarif ?> €</span><?php if(!$item->reservation()->get()->isEmpty()): ?> <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span> <?php else: ?> <span class="card-text badge badge-success">Disponible</span> <?php endif; ?></p>
+          <p class="card-text">
+              <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
+              <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
+              <?php if(!$item->reservation()->get()->isEmpty()): ?>
+              <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
+              <?php else: ?>
+              <span class="card-text badge badge-success">Disponible</span>
+              <?php endif; ?>
+              <?php endif; ?>
+          </p>
           <p class="card-text"><?= $item->descr ?></p>
         </div>
         <div class="card-footer">
@@ -118,6 +133,7 @@
 <?php endif; ?>
 
 <div class="row row-cols-1 row-cols-md-2">
+    <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
     <?php foreach ($messages as $message) : ?>
     <div class="col mb-4">
         <div class="card h-100 my-2">
@@ -133,4 +149,5 @@
         </div>
     </div>
     <?php endforeach; ?>
+    <?php endif; ?>
 </div>
