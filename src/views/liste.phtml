@@ -40,7 +40,7 @@
             </div>
             <form id="form_message" method="POST" action="<?= $router->pathFor('update') ?>">
                 <div class="modal-body">
-                    <input type="hidden" value="<?= $liste->token ?>" name="tokenFound"/>
+                    <input type="hidden" value="<?= $liste->token ?>" name="token"/>
                     <div class="form-group">
                         <label for="inputName">Indiquez le nouveau titre </label>
                         <div class="alert alert-dark" role="alert">

@@ -86,13 +86,17 @@ class ListeController extends Controller {
     }
 
     public function updateListe(Request $request, Response $response, array $args) : Response {
-        try{
-            $titre = $request->getParsedBody()['newTitle'];
-            $description = $request->getParsedBody()['newDescription'];
-            $date = $request->getParsedBody()['newDate'];
-            $token = $request->getParsedBody()['tokenFound'];
+        try {
+            $titre = $request->getParsedBodyParam('newTitle');
+            $description = $request->getParsedBodyParam('newDescription');
+            $date = $request->getParsedBodyParam('newDate');
+            $token = $request->getParsedBodyParam('token');
+            $created = Cookies::fromRequest($request)->has("created") ? json_decode(Cookies::fromRequest($request)->get("created")->getValue()) : [];
+            if(!in_array($token, $created)) {
+                throw new Exception();
+            }
 
-            $liste  = Liste::where('token','=',$token)->first();
+            $liste = Liste::where('token', '=', $token)->firstOrFail();
             $liste->titre = $titre;
             $liste->description = $description;
             $liste->expiration = $date;
@@ -100,15 +104,15 @@ class ListeController extends Controller {
             $liste->save();
             $this->flash->addMessage('success', "votre modification a été enregistrée !");
             $response = $response->withRedirect($this->router->pathFor('home'));
-        }catch(Exception $e){
+        } catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Impossible de modifier la liste.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        } catch (Exception $e) {
+            $this->flash->addMessage('error', "Vous ne pouvez pas modifier cette liste.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
 
 
         return $response;
     }
-
-
-
 }
