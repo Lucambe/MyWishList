@@ -1,6 +1,9 @@
 <?php
 namespace mywishlist\controllers;
 
+use Dflydev\FigCookies\Cookies;
+use Dflydev\FigCookies\SetCookie;
+use Dflydev\FigCookies\SetCookies;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Liste;
@@ -33,7 +36,8 @@ class ListeController extends Controller {
                 "liste" => $liste,
                 "items" => $liste->items()->get(),
                 "messages" => $liste->messages()->get(),
-                "reservations" => Reservation::get()
+                "reservations" => Reservation::get(),
+                "cookies" => Cookies::fromRequest($request)
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Cette liste n'existe pas...");
@@ -43,45 +47,41 @@ class ListeController extends Controller {
     }
 
 
-    public function createListe(Request $request, Response $response, array $args) : Response {
-             try{
-                $titre = $request->getParsedBody()['titre'];      
-                $description = $request->getParsedBody()['descr'];    
-                $dateExp = $request->getParsedBody()['dateExpi'];      
-                $idUser = $request->getParsedBody()['id'];
-                    if( ! filter_var($idUser, FILTER_VALIDATE_INT)  ){
-                        $this->flash->addMessage('error', "Votre enregistrement a échoué, veuillez réessayer.");
-                        $response = $response->withRedirect($this->router->pathFor('home'));
-                    }else{
+    /**
+     * Créer une liste a partir d'une requête POST, retourne sur
+     * l'accueil avec un flahs message, et ajoute le cookie de création
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function createListe(Request $request, Response $response, array $args): Response {
+        try {
+            $titre = $request->getParsedBodyParam('titre');
+            $description = $request->getParsedBodyParam('descr');
+            $dateExp = $request->getParsedBodyParam('dateExpi');
+            $titre = filter_var($titre, FILTER_SANITIZE_STRING);
+            $description = filter_var($description, FILTER_SANITIZE_STRING);
 
-                        $titre = filter_var($titre, FILTER_SANITIZE_STRING);
-                        $description = filter_var($description, FILTER_SANITIZE_STRING);
+            $liste = new Liste();
+            $liste->user_id = 0;
+            $liste->titre = $titre;
+            $liste->description = $description;
+            $liste->expiration = $dateExp;
+            $liste->token = bin2hex(openssl_random_pseudo_bytes(32));
+            $liste->save();
 
-                        $liste = new Liste();
-                       // $searchIdUser = $liste::where('user_id','=', $idUser)->first();
-                        $nb = $liste::count('no');
-                        $liste->no = $nb+1;
-                        $liste->user_id = $idUser;
-                        $liste->titre = $titre;
-                        $liste->description = $description;
-                        $liste->expiration = $dateExp;
-                        $liste->token = "nosecure".($nb+1);
-                        
-                        /*if(is_null($searchIdUser)){
-                            $searchIdUser = $liste::select('user_id')->get() + 1;
-                            $liste->user_id = $searchIdUser;
-                        }else{
-                            $liste->user_id = $searchIdUser;
-                        }*/
-                      
-                        $liste->save();
-                        $this->flash->addMessage('success', "votre réservation a été enregistrée !");
-                        $response = $response->withRedirect($this->router->pathFor('home'));
-                    }
-            } catch(Exception $e){
-                $this->flash->addMessage('error', "Impossible de créer la liste.");
-                $response = $response->withRedirect($this->router->pathFor('home'));
-            }
+            $created = Cookies::fromRequest($request)->has("created") ? json_decode(Cookies::fromRequest($request)->get("created")->getValue()) : [];
+            array_push($created, $liste->token);
+            $newCreated = SetCookie::createRememberedForever('created')->withValue(json_encode($created));
+            $response = SetCookies::fromResponse($response)->with($newCreated)->renderIntoSetCookieHeader($response);
+            $this->flash->addMessage('success', "Votre liste a été créée!");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        } catch (Exception $e) {
+            $this->flash->addMessage('error', "Impossible de créer la liste.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
         return $response;
     }
 
@@ -96,7 +96,7 @@ class ListeController extends Controller {
             $liste->titre = $titre;
             $liste->description = $description;
             $liste->expiration = $date;
-          
+
             $liste->save();
             $this->flash->addMessage('success', "votre modification a été enregistrée !");
             $response = $response->withRedirect($this->router->pathFor('home'));
@@ -109,6 +109,6 @@ class ListeController extends Controller {
         return $response;
     }
 
-    
+
 
 }

@@ -1,6 +1,8 @@
 <?php
 namespace mywishlist\controllers;
 
+use Slim\Container;
+
 /**
  * Class Controller
  * @author Jules Sayer <jules.sayer@protonmail.com>
@@ -12,7 +14,11 @@ abstract class Controller {
     protected $router;
     protected $flash;
 
-    public function __construct($container) {
+    /**
+     * Controller constructor.
+     * @param $container
+     */
+    public function __construct(Container $container) {
         $this->flash = $container->flash;
         $this->router = $container->router;
         $this->view = $container->view;
