@@ -1,4 +1,5 @@
 <?php
+
 namespace mywishlist\controllers;
 
 use Dflydev\FigCookies\FigResponseCookies;
@@ -36,7 +37,7 @@ class MessageController extends Controller {
             $response = FigResponseCookies::set($response, SetCookie::create("nom")->withValue($name)->rememberForever());
             $this->flash->addMessage('success', "$name, Votre message a été envoyé");
             $response = $response->withRedirect($this->router->pathFor('home'));
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->flash->addMessage('error', 'Nous n\'avons pas pu envoyer votre message.');
             $response = $response->withRedirect($this->router->pathFor('home'));
         }

@@ -1,6 +1,7 @@
 <?php
 namespace mywishlist\controllers;
 
+use DateTime;
 use Dflydev\FigCookies\Cookies;
 use Dflydev\FigCookies\SetCookie;
 use Dflydev\FigCookies\SetCookies;
@@ -32,12 +33,24 @@ class ListeController extends Controller {
     public function getListe(Request $request, Response $response, array $args) : Response {
         try {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
+
+            $cookies = Cookies::fromRequest($request);
+            $haveCreated = $cookies->has('created') ? in_array($liste->token, json_decode($cookies->get('created')->getValue())) : false;
+            $haveExpired = new DateTime() > new DateTime($liste->expiration);
+            $canSee = $haveExpired || !$haveCreated;
+            $infos = [
+                "canSee" => $canSee,
+                "haveExpired" => $haveExpired,
+                "haveCreated" => $haveCreated
+            ];
+
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
                 "items" => $liste->items()->get(),
-                "messages" => $liste->messages()->get(),
                 "reservations" => Reservation::get(),
-                "cookies" => Cookies::fromRequest($request)
+                "messages" => $liste->messages()->get(),
+                "cookies" => $cookies,
+                "infos" => $infos
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Cette liste n'existe pas...");
@@ -76,6 +89,7 @@ class ListeController extends Controller {
             array_push($created, $liste->token);
             $newCreated = SetCookie::createRememberedForever('created')->withValue(json_encode($created));
             $response = SetCookies::fromResponse($response)->with($newCreated)->renderIntoSetCookieHeader($response);
+
             $this->flash->addMessage('success', "Votre liste a été créée!");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (Exception $e) {
@@ -100,6 +114,7 @@ class ListeController extends Controller {
             $description = $request->getParsedBodyParam('newDescription');
             $date = $request->getParsedBodyParam('newDate');
             $token = $request->getParsedBodyParam('token');
+
             $created = Cookies::fromRequest($request)->has("created") ? json_decode(Cookies::fromRequest($request)->get("created")->getValue()) : [];
             if(!in_array($token, $created)) {
                 throw new Exception();
@@ -109,8 +124,8 @@ class ListeController extends Controller {
             $liste->titre = $titre;
             $liste->description = $description;
             $liste->expiration = $date;
-
             $liste->save();
+
             $this->flash->addMessage('success', "votre modification a été enregistrée !");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
