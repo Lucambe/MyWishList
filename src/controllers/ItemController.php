@@ -72,10 +72,10 @@ class ItemController extends Controller {
      */
     public function bookItem(Request $request, Response $response, array $args) : Response {
         try {
-            $name = $request->getParsedBody()['name'];
-            $message = $request->getParsedBody()['message'];
-            $item_id = $request->getParsedBody()['item_id'];
-            $token = $request->getParsedBody()['token'];
+            $name = $request->getParsedBodyParam('name');
+            $message = $request->getParsedBodyParam('message');
+            $item_id = $request->getParsedBodyParam('item_id');
+            $token = $request->getParsedBodyParam('token');
 
             $liste = Liste::where('token', '=', $token)->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
