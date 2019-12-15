@@ -79,7 +79,7 @@ $app->get('/about', function (Request $request, Response $response, array $args)
 })->setName('about');
 
 $app->post('/book', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new ReservationController($container);
+    $c = new ItemController($container);
     return $c->bookItem($request, $response, $args);
 })->setName('book');
 
@@ -88,7 +88,7 @@ $app->post('/message', function (Request $request, Response $response, array $ar
     return $c->addMessage($request, $response, $args);
 })->setName('message');
 
-$app->get('/newliste', function (Request $request, Response $response, array $args) use ($container) {
+$app->get('/newliste', function (Request $request, Response $response, array $args) {
     $this->view->render($response, 'newliste.phtml');
 })->setName('newliste');
 

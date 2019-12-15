@@ -1,88 +1,95 @@
-<!-- Modal rediger un message -->
-<div class="modal fade" id="redigerMessage" tabindex="-1" role="dialog" aria-labelledby="redigerMessageLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="redigerMessageLabel"><?= $liste->titre ?> - Réservation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<?php if (!$infos["haveCreated"] && !$infos["haveExpired"]): ?>
+    <!-- Modal rediger un message -->
+    <div class="modal fade" id="redigerMessage" tabindex="-1" role="dialog" aria-labelledby="redigerMessageLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="redigerMessageLabel"><?= $liste->titre ?> - Réservation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_message" method="POST" action="<?= $router->pathFor('message') ?>">
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <div class="form-group">
+                            <label for="inputName">Inscrivez votre nom</label>
+                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $cookies->has('nom') ? $cookies->get('nom')->getValue() : '' ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="textarea">Ajoutez votre message</label>
+                            <textarea class="form-control" id="textarea" rows="3" name="message"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </div>
+                </form>
             </div>
-            <form id="form_message" method="POST" action="<?= $router->pathFor('message') ?>">
-                <div class="modal-body">
-                    <input type="hidden" value="<?= $liste->token ?>" name="token"/>
-                    <div class="form-group">
-                        <label for="inputName">Inscrivez votre nom</label>
-                        <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier">
-                    </div>
-                    <div class="form-group">
-                        <label for="textarea">Ajoutez votre message</label>
-                        <textarea class="form-control" id="textarea" rows="3" name="message"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-primary">Envoyer</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
-<?php if($cookies->has('created') && in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
-<!-- Modal modifier une liste -->
-<div class="modal fade" id="modifierListe" tabindex="-1" role="dialog" aria-labelledby="modifierListeLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="redigerMessageLabel"><?= $liste->titre ?> - Modification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<?php endif; ?>
+<?php if ($infos["haveCreated"]): ?>
+    <!-- Modal modifier une liste -->
+    <div class="modal fade" id="modifierListe" tabindex="-1" role="dialog" aria-labelledby="modifierListeLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="redigerMessageLabel"><?= $liste->titre ?> - Modification</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_message" method="POST" action="<?= $router->pathFor('update') ?>">
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <div class="form-group">
+                            <label for="inputName">Indiquez le nouveau titre </label>
+                            <div class="alert alert-dark" role="alert">
+                                Actuel: <?= $liste->titre ?>
+                            </div>
+                            <input type="text" name="newTitle" class="form-control" id="inputTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">Indiquez la nouvelle date d'expiration </label>
+                            <div class="alert alert-dark" role="alert">
+                                Actuel: <?= date("d/m/Y", strtotime($liste->expiration)) ?>
+                            </div>
+                            <input type="date" name="newDate" class="form-control" id="inputDateExpi">
+                        </div>
+                        <div class="form-group">
+                            <label for="textarea">Insérez votre nouvelle description</label>
+                            <div class="alert alert-dark" role="alert">
+                                Actuel: <?= $liste->description ?>
+                            </div>
+                            <textarea class="form-control" id="textarea" rows="3" name="newDescription"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </div>
+                </form>
             </div>
-            <form id="form_message" method="POST" action="<?= $router->pathFor('update') ?>">
-                <div class="modal-body">
-                    <input type="hidden" value="<?= $liste->token ?>" name="token"/>
-                    <div class="form-group">
-                        <label for="inputName">Indiquez le nouveau titre </label>
-                        <div class="alert alert-dark" role="alert">
-                            Actuel: <?= $liste->titre ?>
-                        </div>
-                        <input type="text" name="newTitle" class="form-control" id="inputTitle">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputName">Indiquez la nouvelle date d'expiration </label>
-                        <div class="alert alert-dark" role="alert">
-                            Actuel: <?= date("d/m/Y", strtotime($liste->expiration)) ?>
-                        </div>
-                        <input type="date" name="newDate" class="form-control" id="inputDateExpi">
-                    </div>
-                    <div class="form-group">
-                        <label for="textarea">Insérez votre nouvelle description</label>
-                        <div class="alert alert-dark" role="alert">
-                            Actuel: <?= $liste->description ?>
-                        </div>
-                        <textarea class="form-control" id="textarea" rows="3" name="newDescription"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-primary">Envoyer</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
 <?php endif; ?>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
         <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
         <div class="ml-auto">
-            <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
-            <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">Rédiger un message</button>
+            <?php if (!$infos["haveCreated"] && !$infos["haveExpired"]): ?>
+                <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">
+                    Rédiger un message
+                </button>
             <?php endif; ?>
-            <?php if($cookies->has('created') && in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
-            <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#modifierListe" role="button">Modifier la liste</button>
+            <?php if ($infos["haveCreated"]): ?>
+                <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#modifierListe" role="button">
+                    Modifier la liste
+                </button>
             <?php endif; ?>
         </div>
     </ol>
@@ -91,38 +98,39 @@
     <div class="card-body">
         <blockquote class="blockquote mb-0">
             <p><?= $liste->description ?></p>
-            <footer class="blockquote-footer">Expire le <cite
-                    title="Source Title"><?= date("d/m/Y", strtotime($liste->expiration)) ?></cite></footer>
+            <footer class="blockquote-footer">Expire le <cite title="Source Title"><?= date("d/m/Y", strtotime($liste->expiration)) ?></cite></footer>
         </blockquote>
     </div>
 </div>
-<?php if(!$items->isEmpty()): ?>
-<div class="row row-cols-1 row-cols-md-2">
-  <?php foreach ($items as $item) : ?>
-    <div class="col mb-4">
-      <div class="card h-100 my-2">
-        <img class="card-img-top" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet">
-        <div class="card-body">
-          <h3 class="card-title"><?= $item->nom ?></h3>
-          <p class="card-text">
-              <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
-              <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
-              <?php if(!$item->reservation()->get()->isEmpty()): ?>
-              <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
-              <?php else: ?>
-              <span class="card-text badge badge-success">Disponible</span>
-              <?php endif; ?>
-              <?php endif; ?>
-          </p>
-          <p class="card-text"><?= $item->descr ?></p>
-        </div>
-        <div class="card-footer">
-          <a class="btn btn-block btn-primary" href="<?= $router->pathFor('showItem', ['token' => $liste->token, 'id' => $item->id]) ?>" role="button">Plus d'infos</a>
-        </div>
-      </div>
+<?php if (!$items->isEmpty()): ?>
+    <div class="row row-cols-1 row-cols-md-2">
+        <?php foreach ($items as $item) : ?>
+            <div class="col mb-4">
+                <div class="card h-100 my-2">
+                    <img class="card-img-top" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet">
+                    <div class="card-body">
+                        <h3 class="card-title"><?= $item->nom ?></h3>
+                        <p class="card-text">
+                            <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
+                            <?php if ($infos["canSee"]): ?>
+                                <?php if (!$item->reservation()->get()->isEmpty()): ?>
+                                    <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
+                                <?php elseif(!$infos["haveExpired"]) : ?>
+                                    <span class="card-text badge badge-success">Disponible</span>
+                                <?php else: ?>
+                                    <span class="card-text badge badge-dark">Expiré</span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </p>
+                        <p class="card-text"><?= $item->descr ?></p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-block btn-primary" href="<?= $router->pathFor('showItem', ['token' => $liste->token, 'id' => $item->id]) ?>" role="button">Plus d'infos</a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
-  <?php endforeach; ?>
-</div>
 <?php else: ?>
     <div class="alert alert-dark text-center" role="alert">
         <h4 class="alert-heading">Bien joué!</h4>
@@ -132,11 +140,9 @@
     </div>
 <?php endif; ?>
 
-<div class="row row-cols-1 row-cols-md-2">
-    <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
+<?php if (!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
     <?php foreach ($messages as $message) : ?>
-    <div class="col mb-4">
-        <div class="card h-100 my-2">
+        <div class="card my-3">
             <div class="card-header">
                 Un message de <?= $message->messager ?> !
             </div>
@@ -147,7 +153,5 @@
                 </blockquote>
             </div>
         </div>
-    </div>
     <?php endforeach; ?>
-    <?php endif; ?>
-</div>
+<?php endif; ?>

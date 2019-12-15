@@ -1,74 +1,94 @@
-<?php if ($reservation->isEmpty() && (!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue())))): ?>
-  <!-- Modal Réserver -->
-  <div class="modal fade" id="reserver" tabindex="-1" role="dialog" aria-labelledby="reserverLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reserverLabel"><?= $item->nom ?> - Réservation</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<?php
+if ($reservation->isEmpty() && $canSee && !$haveExpired): ?>
+    <!-- Modal Réserver -->
+    <div class="modal fade" id="reserver" tabindex="-1" role="dialog" aria-labelledby="reserverLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reserverLabel"><?= $item->nom ?> - Réservation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_reservation" method="POST" action="<?= $router->pathFor('book') ?>">
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                        <div class="form-group">
+                            <label for="inputName">Inscrivez votre nom</label>
+                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $cookies->has('nom') ? $cookies->get('nom')->getValue() : '' ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="textarea">Ajoutez un message à votre réservation</label>
+                            <textarea class="form-control" id="textarea" rows="3" name="message"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Réserver</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form id="form_reservation" method="POST" action="<?= $router->pathFor('book') ?>">
-          <div class="modal-body">
-            <input type="hidden" value="<?= $liste->token ?>" name="token" />
-            <input type="hidden" value="<?= $item->id ?>" name="item_id" />
-            <div class="form-group">
-              <label for="inputName">Inscrivez votre nom</label>
-              <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $cookies->has('nom') ? $cookies->get('nom')->getValue() : '' ?>">
-            </div>
-            <div class="form-group">
-              <label for="textarea">Ajoutez un message à votre réservation</label>
-              <textarea class="form-control" id="textarea" rows="3" name="message"></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            <button type="submit" class="btn btn-primary">Réserver</button>
-          </div>
-        </form>
-      </div>
     </div>
-  </div>
 <?php endif; ?>
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
-    <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showList', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></h5>
-    <h5 class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></h5>
-  </ol>
+    <ol class="breadcrumb">
+        <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
+        <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showList', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></h5>
+        <h5 class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></h5>
+    </ol>
 </nav>
 <div class="card mb-3">
-  <div class="row no-gutters">
-    <div class="col-md-3">
-      <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+    <div class="row no-gutters">
+        <div class="col-md-3">
+            <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title"><?= $item->nom ?></h5>
+                <p class="card-text">
+                    <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
+                    <?php if ($canSee): ?>
+                        <?php if (!$reservation->isEmpty()) : ?>
+                            <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
+                        <?php elseif(!$haveExpired) : ?>
+                            <span class="card-text badge badge-success">Disponible</span>
+                        <?php else: ?>
+                            <span class="card-text badge badge-dark">Expiré</span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </p>
+                <p class="card-text"><?= $item->descr ?></p>
+                <?php if ($canSee): ?>
+                    <?php if (!$reservation->isEmpty()) : ?>
+                        <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
+                            Réserver
+                        </button>
+                    <?php elseif(!$haveExpired) : ?>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
+                            Réserver
+                        </button>
+                    <?php else: ?>
+                        <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="La liste a expiré" disabled>
+                            Réserver
+                        </button>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title"><?= $item->nom ?></h5>
-        <p class="card-text">
-            <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
-            <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
-            <?php if (!$reservation->isEmpty()) : ?>
-            <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
-            <?php else : ?>
-            <span class="card-text badge badge-success">Disponible</span>
-            <?php endif; ?>
-            <?php endif; ?>
-        </p>
-        <p class="card-text"><?= $item->descr ?></p>
-        <?php if(!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
-        <?php if (!$reservation->isEmpty()) : ?>
-          <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
-            Réserver
-          </button>
-        <?php else : ?>
-          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
-            Réserver
-          </button>
-        <?php endif; ?>
-        <?php endif; ?>
-      </div>
-    </div>
-  </div>
 </div>
+<?php if (!$reservation->isEmpty() && ($canSee || $haveExpired)) : ?>
+    <div class="card">
+        <div class="card-header">
+            <?= $reservation->first()->nom ?> a ajouté un message à sa réservation!
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p><?= $reservation->first()->message ?></p>
+                <footer class="blockquote-footer"><?= $reservation->first()->nom ?>, <cite title="Source de la Réservation">pour la réservation de <?= $item->nom ?> dans <?= $liste->titre ?></cite></footer>
+            </blockquote>
+        </div>
+    </div>
+<?php endif; ?>
