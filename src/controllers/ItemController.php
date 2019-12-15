@@ -37,8 +37,8 @@ class ItemController extends Controller {
             $item = Item::where(['id' => $args['id'], 'liste_id' => $liste->no])->firstOrFail();
 
             $cookies = Cookies::fromRequest($request);
-            $haveCreated = $cookies->has('created') ? in_array($liste->token, json_decode($cookies->get('created')->getValue())) : false;
-            $haveExpired = new DateTime() > new DateTime($liste->expiration);
+            $haveCreated = $liste->haveCreated($request);
+            $haveExpired = $liste->haveExpired();
             $canSee = $haveExpired || !$haveCreated;
 
             $this->view->render($response, 'item.phtml', [
@@ -80,9 +80,8 @@ class ItemController extends Controller {
             $liste = Liste::where('token', '=', $token)->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
 
-            $haveCreated = Cookies::fromRequest($request)->has('created') ? in_array($liste->token, json_decode(Cookies::fromRequest($request)->get('created')->getValue())) : false;
-            if($haveCreated) throw new Exception("Le créateur de la liste ne peut pas réserver d'objet.");
-            if(new DateTime() > new DateTime($liste->expiration)) throw new Exception("Cette liste a déjà expiré, il n'est plus possible de réserver des objets.");
+            if($liste->haveCreated($request)) throw new Exception("Le créateur de la liste ne peut pas réserver d'objet.");
+            if($liste->haveExpired()) throw new Exception("Cette liste a déjà expiré, il n'est plus possible de réserver des objets.");
             if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé.");
 
 

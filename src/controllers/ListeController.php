@@ -35,13 +35,10 @@ class ListeController extends Controller {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
 
             $cookies = Cookies::fromRequest($request);
-            $haveCreated = $cookies->has('created') ? in_array($liste->token, json_decode($cookies->get('created')->getValue())) : false;
-            $haveExpired = new DateTime() > new DateTime($liste->expiration);
-            $canSee = $haveExpired || !$haveCreated;
             $infos = [
-                "canSee" => $canSee,
-                "haveExpired" => $haveExpired,
-                "haveCreated" => $haveCreated
+                "canSee" => $liste->haveExpired() || !$liste->haveCreated($request),
+                "haveExpired" => $liste->haveExpired(),
+                "haveCreated" => $liste->haveCreated($request)
             ];
 
             $this->view->render($response, 'liste.phtml', [
