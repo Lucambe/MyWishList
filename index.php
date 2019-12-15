@@ -102,5 +102,13 @@ $app->post('/update', function (Request $request, Response $response, array $arg
     return $c->updateListe($request, $response, $args);
 })->setName('update');
 
+$app->post('/inscription', function (Request $request, Response $response, array $args) use ($container) {
+    $this->view->render($response, 'inscription.phtml');
+})->setName('inscription');
+
+$app->post('/connection', function (Request $request, Response $response, array $args) use ($container) {
+    $this->view->render($response, 'connection.phtml');
+})->setName('connect');
+
 // Run app
 $app->run();
