@@ -16,7 +16,7 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                         <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
                         <div class="form-group">
                             <label for="inputName">Inscrivez votre nom</label>
-                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $cookies->has('nom') ? $cookies->get('nom')->getValue() : '' ?>">
+                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $nom ?>">
                         </div>
                         <div class="form-group">
                             <label for="textarea">Ajoutez un message à votre réservation</label>

@@ -1,11 +1,9 @@
 <?php
 namespace mywishlist\controllers;
 
-use DateTime;
-use Dflydev\FigCookies\Cookies;
+use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Dflydev\FigCookies\SetCookies;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Liste;
@@ -36,8 +34,7 @@ class ListeController extends Controller {
         try {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
 
-            $cookies = Cookies::fromRequest($request);
-            $created = $cookies->has('created') && is_object(json_decode($cookies->get('created')->getValue())) ? json_decode($cookies->get('created')->getValue()) : [];
+            $created = is_object(json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue())) ? json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue()) : [];
             $infos = [
                 "canSee" => $liste->haveExpired() || !in_array($liste->creationToken, $created),
                 "haveExpired" => $liste->haveExpired(),
@@ -49,7 +46,7 @@ class ListeController extends Controller {
                 "items" => $liste->items()->get(),
                 "reservations" => Reservation::get(),
                 "messages" => $liste->messages()->get(),
-                "cookies" => $cookies,
+                "nom" => FigRequestCookies::get($request, 'nom', ''),
                 "infos" => $infos
             ]);
         } catch(ModelNotFoundException $e) {
@@ -90,28 +87,29 @@ class ListeController extends Controller {
      * @param array $args
      * @return Response
      * @todo: Sécurité avec FILTER_VAR
-     * @todo: refactor cookies, Exceptions, getParsedBody
      */
     public function addMessage(Request $request, Response $response, array $args) : Response {
         try {
-            $name = $request->getParsedBody()['name'];
-            $message = $request->getParsedBody()['message'];
-            $token = $request->getParsedBody()['token'];
-            $liste = Liste::where('token', '=', $token)->first();
-            if(is_null($liste)) {
-                throw new Exception();
+            $name = $request->getParsedBody('name');
+            $message = $request->getParsedBody('message');
+            $token = $request->getParsedBody('token');
+            if(!isset($name, $message, $token)) {
+                throw new Exception("Un des paramètres est manquant.");
             }
+
+            $liste = Liste::where('token', '=', $token)->firstOrFail();
 
             $m = new Message();
             $m->idListe = $liste->no;
             $m->message = $message;
             $m->messager = $name;
             $m->save();
+
             $response = FigResponseCookies::set($response, SetCookie::create("nom")->withValue($name)->rememberForever());
             $this->flash->addMessage('success', "$name, Votre message a été envoyé");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (Exception $e) {
-            $this->flash->addMessage('error', 'Nous n\'avons pas pu envoyer votre message.');
+            $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
@@ -125,6 +123,7 @@ class ListeController extends Controller {
      * @param Response $response
      * @param array $args
      * @return Response
+     * @todo Check si la date d'expi est déjà passée
      */
     public function createListe(Request $request, Response $response, array $args) : Response {
         try {
@@ -148,10 +147,10 @@ class ListeController extends Controller {
             $liste->validated = false;
             $liste->save();
 
-            $created = Cookies::fromRequest($request)->has('created') && is_object(json_decode(Cookies::fromRequest($request)->get('created')->getValue())) ? json_decode(Cookies::fromRequest($request)->get('created')->getValue()) : [];
+
+            $created = is_object(json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue())) ? json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue()) : [];
             array_push($created, $liste->creationToken);
-            $newCreated = SetCookie::createRememberedForever('created')->withValue(json_encode($created));
-            $response = SetCookies::fromResponse($response)->with($newCreated)->renderIntoSetCookieHeader($response);
+            $response = FigResponseCookies::set($response, SetCookie::create("created")->withValue(json_encode($created))->rememberForever());
 
             $this->flash->addMessage('success', "Votre liste a été créée!");
             $response = $response->withRedirect($this->router->pathFor('home'));
@@ -170,6 +169,7 @@ class ListeController extends Controller {
      * @param Response $response
      * @param array $args
      * @return Response
+     * @todo check si la date d'expi est déjà passée
      */
     public function updateListe(Request $request, Response $response, array $args) : Response {
         try {

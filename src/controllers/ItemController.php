@@ -1,10 +1,9 @@
 <?php
 namespace mywishlist\controllers;
 
-use DateTime;
-use Dflydev\FigCookies\Cookies;
+use Dflydev\FigCookies\FigResponseCookies;
+use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\SetCookie;
-use Dflydev\FigCookies\SetCookies;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Item;
@@ -36,19 +35,18 @@ class ItemController extends Controller {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
             $item = Item::where(['id' => $args['id'], 'liste_id' => $liste->no])->firstOrFail();
 
-            $cookies = Cookies::fromRequest($request);
-            $created = $cookies->has('created') && is_object(json_decode($cookies->get('created')->getValue())) ? json_decode($cookies->get('created')->getValue()) : [];
+            $created = is_object(json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue())) ? json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue()) : [];
             $infos = [
-                "canSee" => $liste->haveExpired() || !in_array($liste->token, $created),
+                "canSee" => $liste->haveExpired() || !in_array($liste->tokenCreation, $created),
                 "haveExpired" => $liste->haveExpired(),
-                "haveCreated" => in_array($liste->token, $created)
+                "haveCreated" => in_array($liste->tokenCreation, $created)
             ];
 
             $this->view->render($response, 'item.phtml', [
                 "liste" => $liste,
                 "item" => $item,
                 "reservation" => $item->reservation()->get(),
-                "cookies" => $cookies,
+                "nom" => FigRequestCookies::get($request, 'nom', '')->getValue(),
                 "infos" => $infos
             ]);
         } catch(ModelNotFoundException $e) {
@@ -82,7 +80,7 @@ class ItemController extends Controller {
             $liste = Liste::where('token', '=', $token)->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
 
-            $created = Cookies::fromRequest($request)->has('created') && is_object(json_decode(Cookies::fromRequest($request)->get('created')->getValue())) ? json_decode(Cookies::fromRequest($request)->get('created')->getValue()) : [];
+            $created = is_object(json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue())) ? json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue()) : [];
             if(in_array($liste->token, $created)) throw new Exception("Le créateur de la liste ne peut pas réserver d'objet.");
             if($liste->haveExpired()) throw new Exception("Cette liste a déjà expiré, il n'est plus possible de réserver des objets.");
             if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé.");
@@ -94,8 +92,7 @@ class ItemController extends Controller {
             $r->nom = $name;
             $r->save();
 
-            $nom = SetCookie::createRememberedForever('nom')->withValue($name);
-            $response = SetCookies::fromResponse($response)->with($nom)->renderIntoSetCookieHeader($response);
+            $response = FigResponseCookies::set($response, SetCookie::create("nom")->withValue($name)->rememberForever());
             $this->flash->addMessage('success', "$name, votre réservation a été enregistrée !");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch(ModelNotFoundException $e) {

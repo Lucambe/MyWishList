@@ -15,7 +15,7 @@
                         <input type="hidden" value="<?= $liste->token ?>" name="token"/>
                         <div class="form-group">
                             <label for="inputName">Inscrivez votre nom</label>
-                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $cookies->has('nom') ? $cookies->get('nom')->getValue() : '' ?>">
+                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Xavier" value="<?= $nom ?>">
                         </div>
                         <div class="form-group">
                             <label for="textarea">Ajoutez votre message</label>
