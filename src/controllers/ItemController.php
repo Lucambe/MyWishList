@@ -104,4 +104,32 @@ class ItemController extends Controller {
         }
         return $response;
     }
+
+    public function createItem(Request $request, Response $response, array $args) : Response {
+        try{
+
+            $nom = $request->getParsedBodyParam('nom');
+            $description = $request->getParsedBodyParam('descr');
+            $file = $request->getParsedBodyParam('file');
+            $url = $request->getParsedBodyParam('url');
+            $prix = $request->getParsedBodyParam('prix');
+            $token = $request->getParsedBodyParam('token');
+            $createToken = $request->getParsedBodyParam('creationToken');
+            if(!isset($nom, $description, $file, $url, $prix, $token, $creationToken)){
+                throw new Exception("Un des paramètres est manquant.");
+            }
+            $nom = filter_var($nom, FILTER_SANITIZE_STRING);
+            $description = filter_var($description, FILTER_SANITIZE_STRING);
+            $url = filter_var($url, FILTER_SANITIZE_URL);
+            $prix = filter_var($prix, FILTER_SANITIZE_NUMBER_FLOAT);
+
+
+
+        }catch(Exception $e){
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
 }

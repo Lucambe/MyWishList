@@ -118,10 +118,19 @@ $app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Res
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
+$app->get('/create/item', function (Request $request, Response $response, array $args) {
+    $this->view->render($response, 'createitem.phtml');
+})->setName('showCreateItem');
+
 $app->post('/book', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->bookItem($request, $response, $args);
 })->setName('bookItem');
+
+$app->post('/create/item', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->createItem($request, $response, $args);
+})->setName('createItem');
 
 $app->post('/modification', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
