@@ -35,10 +35,11 @@ class ListeController extends Controller {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
 
             $cookies = Cookies::fromRequest($request);
+            $created = $cookies->has('created') && is_object(json_decode($cookies->get('created')->getValue())) ? json_decode($cookies->get('created')->getValue()) : [];
             $infos = [
-                "canSee" => $liste->haveExpired() || !$liste->haveCreated($request),
+                "canSee" => $liste->haveExpired() || !in_array($liste->token, $created),
                 "haveExpired" => $liste->haveExpired(),
-                "haveCreated" => $liste->haveCreated($request)
+                "haveCreated" => in_array($liste->token, $created)
             ];
 
             $this->view->render($response, 'liste.phtml', [
@@ -66,7 +67,7 @@ class ListeController extends Controller {
      * @param array $args
      * @return Response
      */
-    public function createListe(Request $request, Response $response, array $args): Response {
+    public function createListe(Request $request, Response $response, array $args) : Response {
         try {
             $titre = $request->getParsedBodyParam('titre');
             $description = $request->getParsedBodyParam('descr');
@@ -82,7 +83,7 @@ class ListeController extends Controller {
             $liste->token = bin2hex(openssl_random_pseudo_bytes(32));
             $liste->save();
 
-            $created = Cookies::fromRequest($request)->has("created") ? json_decode(Cookies::fromRequest($request)->get("created")->getValue()) : [];
+            $created = Cookies::fromRequest($request)->has('created') && is_object(json_decode(Cookies::fromRequest($request)->get('created')->getValue())) ? json_decode(Cookies::fromRequest($request)->get('created')->getValue()) : [];
             array_push($created, $liste->token);
             $newCreated = SetCookie::createRememberedForever('created')->withValue(json_encode($created));
             $response = SetCookies::fromResponse($response)->with($newCreated)->renderIntoSetCookieHeader($response);
