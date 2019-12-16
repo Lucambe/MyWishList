@@ -32,6 +32,44 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
         </div>
     </div>
 <?php endif; ?>
+<?php
+if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
+    <!-- Modal Modification -->
+    <div class="modal fade" id="modifier" tabindex="-1" role="dialog" aria-labelledby="modifierLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifierLabel"><?= $item->nom ?> - Modification</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_reservation" method="POST" action="<?= $router->pathFor('modification') ?>">
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                        <div class="form-group">
+                            <label for="inputName">Changer le nom</label>
+                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Nom de l'objet" value="<?= $item->descr ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="textarea">Changer la description</label>
+                            <textarea class="form-control" id="textarea" rows="3" name="desc" value="<?= $item->descr ?>"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="textarea">Changer le prix</label>
+                            <textarea class="form-control" id="textarea" rows="3" name="desc" value="<?= $item->tarif ?>"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Appliquer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>

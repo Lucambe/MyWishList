@@ -123,5 +123,10 @@ $app->post('/book', function (Request $request, Response $response, array $args)
     return $c->bookItem($request, $response, $args);
 })->setName('bookItem');
 
+$app->post('/modification', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->modifItem($request, $response, $args);
+})->setName('modifItem');
+
 // Run app
 $app->run();
