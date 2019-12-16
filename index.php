@@ -118,8 +118,9 @@ $app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Res
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
-$app->get('/create/item', function (Request $request, Response $response, array $args) {
-    $this->view->render($response, 'createitem.phtml');
+$app->get('/i/{token:[a-zA-Z0-9]+}/create/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->getCreateItem($request, $response, $args);
 })->setName('showCreateItem');
 
 $app->post('/book', function (Request $request, Response $response, array $args) use ($container) {

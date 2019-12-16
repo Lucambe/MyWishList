@@ -59,6 +59,20 @@ class ItemController extends Controller {
         return $response;
     }
 
+    public function getCreateItem(Request $request, Response $response, array $args) : Response {
+        try {
+            $liste = Liste::where(['token' => $args['token'], 'creationToken' => $args['creationToken']])->firstOrFail();
+
+            $this->view->render($response, 'createitem.phtml', [
+                "liste" => $liste
+            ]);
+        } catch(ModelNotFoundException $e) {
+            $this->flash->addMessage('error', "Token invalide.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
     /**
      * Cette fonction permet de réserver un item
      * Elle vérifie que l'objet n'est pas déjà reservé
@@ -115,7 +129,7 @@ class ItemController extends Controller {
             $prix = $request->getParsedBodyParam('prix');
             $token = $request->getParsedBodyParam('token');
             $createToken = $request->getParsedBodyParam('creationToken');
-            if(!isset($nom, $description, $file, $url, $prix, $token, $creationToken)){
+            if(!isset($nom, $description, $file, $prix, $token, $createToken)){
                 throw new Exception("Un des paramètres est manquant.");
             }
             $nom = filter_var($nom, FILTER_SANITIZE_STRING);
@@ -123,8 +137,21 @@ class ItemController extends Controller {
             $url = filter_var($url, FILTER_SANITIZE_URL);
             $prix = filter_var($prix, FILTER_SANITIZE_NUMBER_FLOAT);
 
+            $i = Liste::where(['token' => filter_var($token, FILTER_SANITIZE_STRING), 'creationToken' => filter_var($createToken, FILTER_SANITIZE_STRING)])->firstOrFail();
+            $item = new Item();
+            $item->liste_id = $i->no;
+            $item->nom = $nom;
+            $item->descr=$description;
+            $item->img=$file;
+            $item->url=$url;
+            $item->tarif=$prix;
+            $item->save();
 
-
+            $this->flash->addMessage('success', "Votre item a été enregistrée !");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(ModelNotFoundException $e){
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu créer cet item.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
         }catch(Exception $e){
             $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('home'));
