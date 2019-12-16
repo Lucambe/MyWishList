@@ -37,9 +37,9 @@ class ListeController extends Controller {
             $cookies = Cookies::fromRequest($request);
             $created = $cookies->has('created') && is_object(json_decode($cookies->get('created')->getValue())) ? json_decode($cookies->get('created')->getValue()) : [];
             $infos = [
-                "canSee" => $liste->haveExpired() || !in_array($liste->token, $created),
+                "canSee" => $liste->haveExpired() || !in_array($liste->creationToken, $created),
                 "haveExpired" => $liste->haveExpired(),
-                "haveCreated" => in_array($liste->token, $created)
+                "haveCreated" => in_array($liste->creationToken, $created)
             ];
 
             $this->view->render($response, 'liste.phtml', [
@@ -52,6 +52,29 @@ class ListeController extends Controller {
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Cette liste n'existe pas...");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
+    /**
+     * Appel updateliste.phtml, permet d'afficher le
+     * formulaire de modification d'une liste
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function getUpdateListe(Request $request, Response $response, array $args) : Response {
+        try {
+            $liste = Liste::where('token', '=', $args['token'])->where('creationToken', '=', $args['creationToken'])->firstOrFail();
+
+            $this->view->render($response, 'updateliste.phtml', [
+                "liste" => $liste
+            ]);
+        } catch(ModelNotFoundException $e) {
+            $this->flash->addMessage('error', "Token invalide :/");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
@@ -72,6 +95,10 @@ class ListeController extends Controller {
             $titre = $request->getParsedBodyParam('titre');
             $description = $request->getParsedBodyParam('descr');
             $dateExp = $request->getParsedBodyParam('dateExpi');
+            if(!isset($titre, $description, $dateExp)) {
+                throw new Exception("Un des paramètres est manquant.");
+            }
+
             $titre = filter_var($titre, FILTER_SANITIZE_STRING);
             $description = filter_var($description, FILTER_SANITIZE_STRING);
 
@@ -81,17 +108,19 @@ class ListeController extends Controller {
             $liste->description = $description;
             $liste->expiration = $dateExp;
             $liste->token = bin2hex(openssl_random_pseudo_bytes(32));
+            $liste->creationToken = bin2hex(openssl_random_pseudo_bytes(12));
+            $liste->validated = false;
             $liste->save();
 
             $created = Cookies::fromRequest($request)->has('created') && is_object(json_decode(Cookies::fromRequest($request)->get('created')->getValue())) ? json_decode(Cookies::fromRequest($request)->get('created')->getValue()) : [];
-            array_push($created, $liste->token);
+            array_push($created, $liste->creationToken);
             $newCreated = SetCookie::createRememberedForever('created')->withValue(json_encode($created));
             $response = SetCookies::fromResponse($response)->with($newCreated)->renderIntoSetCookieHeader($response);
 
             $this->flash->addMessage('success', "Votre liste a été créée!");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (Exception $e) {
-            $this->flash->addMessage('error', "Impossible de créer la liste.");
+            $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
@@ -112,25 +141,25 @@ class ListeController extends Controller {
             $description = $request->getParsedBodyParam('newDescription');
             $date = $request->getParsedBodyParam('newDate');
             $token = $request->getParsedBodyParam('token');
-
-            $created = Cookies::fromRequest($request)->has("created") ? json_decode(Cookies::fromRequest($request)->get("created")->getValue()) : [];
-            if(!in_array($token, $created)) {
-                throw new Exception();
+            $createToken = $request->getParsedBodyParam('creationToken');
+            if(!isset($titre, $description, $date, $token, $createToken)) {
+                throw new Exception("Un des paramètres est manquant.");
             }
 
-            $liste = Liste::where('token', '=', $token)->firstOrFail();
+            $liste = Liste::where('token', '=', $token)->where('creationToken', '=', $createToken)->firstOrFail();
+
             $liste->titre = $titre;
             $liste->description = $description;
             $liste->expiration = $date;
             $liste->save();
 
-            $this->flash->addMessage('success', "votre modification a été enregistrée !");
+            $this->flash->addMessage('success', "Votre modification a été enregistrée!");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Impossible de modifier la liste.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (Exception $e) {
-            $this->flash->addMessage('error', "Vous ne pouvez pas modifier cette liste.");
+            $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;

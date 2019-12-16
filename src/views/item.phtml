@@ -35,7 +35,7 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
-        <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showList', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></h5>
+        <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showListe', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></h5>
         <h5 class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></h5>
     </ol>
 </nav>
@@ -79,7 +79,7 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
         </div>
     </div>
 </div>
-<?php if (!$reservation->isEmpty() && ($infos["canSee"] || $infos["haveExpired"])) : ?>
+<?php if (!$reservation->isEmpty() && ($infos["haveExpired"])) : ?>
     <div class="card">
         <div class="card-header">
             <?= $reservation->first()->nom ?> a ajouté un message à sa réservation!

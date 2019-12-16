@@ -56,59 +56,72 @@ $container['flash'] = function () {
 
 
 /**
- * Routes
+ * Accueil
  */
 $app->get('/', function (Request $request, Response $response, array $args) use ($container) {
     $c = new HomeController($container);
     return $c->showHome($request, $response, $args);
 })->setName('home');
 
+/**
+ * Pages annexe
+ */
+$app->get('/about', function (Request $request, Response $response, array $args) use ($container) {
+    $this->view->render($response, 'about.phtml');
+})->setName('showAbout');
 
+$app->get('/register', function (Request $request, Response $response, array $args) {
+    $this->view->render($response, 'register.phtml');
+})->setName('showRegister');
+
+$app->get('/login', function (Request $request, Response $response, array $args) {
+    $this->view->render($response, 'login.phtml');
+})->setName('showLogin');
+
+/**
+ * Listes
+ */
+$app->get('/l/{token:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ListeController($container);
+    return $c->getListe($request, $response, $args);
+})->setName('showListe');
+
+$app->get('/l/{token:[a-zA-Z0-9]+}/update/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ListeController($container);
+    return $c->getUpdateListe($request, $response, $args);
+})->setName('showUpdateListe');
+
+$app->get('/create/liste', function (Request $request, Response $response, array $args) {
+    $this->view->render($response, 'createliste.phtml');
+})->setName('showCreateListe');
+
+$app->post('/create/liste', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ListeController($container);
+    return $c->createListe($request, $response, $args);
+})->setName('createListe');
+
+$app->post('/addMessage', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new MessageController($container);
+    return $c->addMessage($request, $response, $args);
+})->setName('addMessage');
+
+$app->post('/update/liste', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ListeController($container);
+    return $c->updateListe($request, $response, $args);
+})->setName('updateListe');
+
+/**
+ * Objets
+ */
 $app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
-$app->get('/l/{token:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new ListeController($container);
-    return $c->getListe($request, $response, $args);
-})->setName('showList');
-
-$app->get('/about', function (Request $request, Response $response, array $args) use ($container) {
-    $this->view->render($response, 'about.phtml');
-})->setName('about');
-
 $app->post('/book', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->bookItem($request, $response, $args);
-})->setName('book');
-
-$app->post('/message', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new MessageController($container);
-    return $c->addMessage($request, $response, $args);
-})->setName('message');
-
-$app->get('/newliste', function (Request $request, Response $response, array $args) {
-    $this->view->render($response, 'newliste.phtml');
-})->setName('newliste');
-
-$app->post('/create', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new ListeController($container);
-    return $c->createListe($request, $response, $args);
-})->setName('create');
-
-$app->post('/update', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new ListeController($container);
-    return $c->updateListe($request, $response, $args);
-})->setName('update');
-
-$app->post('/inscription', function (Request $request, Response $response, array $args) use ($container) {
-    $this->view->render($response, 'inscription.phtml');
-})->setName('inscription');
-
-$app->post('/connection', function (Request $request, Response $response, array $args) use ($container) {
-    $this->view->render($response, 'connection.phtml');
-})->setName('connect');
+})->setName('bookItem');
 
 // Run app
 $app->run();

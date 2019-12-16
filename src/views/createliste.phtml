@@ -1,5 +1,5 @@
 <h2 class="text-center my-5">Création de liste</h2>
-<form id="form_message" method="POST" action="<?= $router->pathFor('create') ?>">
+<form id="form_message" method="POST" action="<?= $router->pathFor('createListe') ?>">
     <div class="form-group">
         <label for="inputName">Insérez un titre</label>
         <input type="text" name="titre" class="form-control" id="inputTitle">
@@ -12,6 +12,5 @@
         <label for="textarea">Ajoutez une description</label>
         <textarea class="form-control" id="textarea" rows="3" name="descr"></textarea>
     </div>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
     <button type="submit" class="btn btn-primary">Envoyer</button>
 </form>

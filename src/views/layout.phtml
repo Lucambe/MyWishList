@@ -23,16 +23,16 @@
                             <a class="nav-link" href="<?= $rootUri ?>">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $router->pathFor('newliste') ?>">Créer une liste</a>
+                            <a class="nav-link" href="<?= $router->pathFor('showCreateListe') ?>">Créer une liste</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $router->pathFor('about') ?>">A propos</a>
+                            <a class="nav-link" href="<?= $router->pathFor('showAbout') ?>">A propos</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Espace membres</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="<?= $router->pathFor('connect') ?>">Connexion</a>
-                                <a class="dropdown-item" href="<?= $router->pathFor('inscription') ?>">Inscription</a>
+                                <a class="dropdown-item" href="<?= $router->pathFor('showLogin') ?>">Connexion</a>
+                                <a class="dropdown-item" href="<?= $router->pathFor('showRegister') ?>">Inscription</a>
                             </div>
                         </li>
                     </ul>

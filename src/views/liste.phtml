@@ -10,7 +10,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="form_message" method="POST" action="<?= $router->pathFor('message') ?>">
+                <form id="form_message" method="POST" action="<?= $router->pathFor('addMessage') ?>">
                     <div class="modal-body">
                         <input type="hidden" value="<?= $liste->token ?>" name="token"/>
                         <div class="form-group">
@@ -20,51 +20,6 @@
                         <div class="form-group">
                             <label for="textarea">Ajoutez votre message</label>
                             <textarea class="form-control" id="textarea" rows="3" name="message"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
-<?php if ($infos["haveCreated"]): ?>
-    <!-- Modal modifier une liste -->
-    <div class="modal fade" id="modifierListe" tabindex="-1" role="dialog" aria-labelledby="modifierListeLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="redigerMessageLabel"><?= $liste->titre ?> - Modification</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="form_message" method="POST" action="<?= $router->pathFor('update') ?>">
-                    <div class="modal-body">
-                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
-                        <div class="form-group">
-                            <label for="inputName">Indiquez le nouveau titre </label>
-                            <div class="alert alert-dark" role="alert">
-                                Actuel: <?= $liste->titre ?>
-                            </div>
-                            <input type="text" name="newTitle" class="form-control" id="inputTitle">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputName">Indiquez la nouvelle date d'expiration </label>
-                            <div class="alert alert-dark" role="alert">
-                                Actuel: <?= date("d/m/Y", strtotime($liste->expiration)) ?>
-                            </div>
-                            <input type="date" name="newDate" class="form-control" id="inputDateExpi">
-                        </div>
-                        <div class="form-group">
-                            <label for="textarea">Insérez votre nouvelle description</label>
-                            <div class="alert alert-dark" role="alert">
-                                Actuel: <?= $liste->description ?>
-                            </div>
-                            <textarea class="form-control" id="textarea" rows="3" name="newDescription"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -140,7 +95,7 @@
     </div>
 <?php endif; ?>
 
-<?php if (!$cookies->has('created') || !in_array($liste->token, json_decode($cookies->get('created')->getValue()))): ?>
+<?php if ($infos["canSee"]): ?>
     <?php foreach ($messages as $message) : ?>
         <div class="card my-3">
             <div class="card-header">
