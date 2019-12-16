@@ -183,7 +183,7 @@ class ListeController extends Controller {
             if(mb_strlen($description, 'utf8') < 10) throw new Exception("La description de la liste doit comporter au minimum 10 caractères.");
             if(new DateTime() > new DateTime($date)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
-            $liste = Liste::where(['token' => var_filter($token, FILTER_SANITIZE_STRING), 'creationToken' => filter_var($createToken, FILTER_SANITIZE_STRING)])->firstOrFail();
+            $liste = Liste::where(['token' => filter_var($token, FILTER_SANITIZE_STRING), 'creationToken' => filter_var($createToken, FILTER_SANITIZE_STRING)])->firstOrFail();
 
             $liste->titre = var_filter($titre, FILTER_SANITIZE_STRING);
             $liste->description = var_filter($description, FILTER_SANITIZE_STRING);
