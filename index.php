@@ -101,7 +101,7 @@ $app->post('/create/liste', function (Request $request, Response $response, arra
 })->setName('createListe');
 
 $app->post('/addMessage', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new MessageController($container);
+    $c = new ListeController($container);
     return $c->addMessage($request, $response, $args);
 })->setName('addMessage');
 

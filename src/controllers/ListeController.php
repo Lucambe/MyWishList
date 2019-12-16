@@ -3,11 +3,13 @@ namespace mywishlist\controllers;
 
 use DateTime;
 use Dflydev\FigCookies\Cookies;
+use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 use Dflydev\FigCookies\SetCookies;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Liste;
+use mywishlist\models\Message;
 use mywishlist\models\Reservation;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -68,18 +70,52 @@ class ListeController extends Controller {
      */
     public function getUpdateListe(Request $request, Response $response, array $args) : Response {
         try {
-            $liste = Liste::where('token', '=', $args['token'])->where('creationToken', '=', $args['creationToken'])->firstOrFail();
+            $liste = Liste::where(['token' => $args['token'], 'creationToken' => $args['creationToken']])->firstOrFail();
 
             $this->view->render($response, 'updateliste.phtml', [
                 "liste" => $liste
             ]);
         } catch(ModelNotFoundException $e) {
-            $this->flash->addMessage('error', "Token invalide :/");
+            $this->flash->addMessage('error', "Token invalide.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
     }
 
+    /**
+     * Permet d'ajouter un message publique à une liste
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @todo: Sécurité avec FILTER_VAR
+     * @todo: refactor cookies, Exceptions, getParsedBody
+     */
+    public function addMessage(Request $request, Response $response, array $args) : Response {
+        try {
+            $name = $request->getParsedBody()['name'];
+            $message = $request->getParsedBody()['message'];
+            $token = $request->getParsedBody()['token'];
+            $liste = Liste::where('token', '=', $token)->first();
+            if(is_null($liste)) {
+                throw new Exception();
+            }
+
+            $m = new Message();
+            $m->idListe = $liste->no;
+            $m->message = $message;
+            $m->messager = $name;
+            $m->save();
+            $response = FigResponseCookies::set($response, SetCookie::create("nom")->withValue($name)->rememberForever());
+            $this->flash->addMessage('success', "$name, Votre message a été envoyé");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        } catch (Exception $e) {
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu envoyer votre message.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
 
     /**
      * Créer une liste a partir d'une requête POST, retourne sur
@@ -146,7 +182,7 @@ class ListeController extends Controller {
                 throw new Exception("Un des paramètres est manquant.");
             }
 
-            $liste = Liste::where('token', '=', $token)->where('creationToken', '=', $createToken)->firstOrFail();
+            $liste = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
 
             $liste->titre = $titre;
             $liste->description = $description;
