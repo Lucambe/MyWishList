@@ -44,21 +44,21 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="form_reservation" method="POST" action="<?= $router->pathFor('modification') ?>">
+                <form id="form_reservation" method="POST" action="<?= $router->pathFor('modifItem') ?>">
                     <div class="modal-body">
                         <input type="hidden" value="<?= $liste->token ?>" name="token"/>
                         <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
                         <div class="form-group">
                             <label for="inputName">Changer le nom</label>
-                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Nom de l'objet" value="<?= $item->descr ?>">
+                            <input type="text" name="name" class="form-control" id="inputName" placeholder="Nom de l'objet" value="<?= $item->nom ?>">
                         </div>
                         <div class="form-group">
                             <label for="textarea">Changer la description</label>
-                            <textarea class="form-control" id="textarea" rows="3" name="desc" value="<?= $item->descr ?>"></textarea>
+                            <textarea class="form-control" id="inputDesc" rows="3" name="desc"><?= $item->descr?></textarea>
                         </div>
                         <div class="form-group">
                             <label for="textarea">Changer le prix</label>
-                            <textarea class="form-control" id="textarea" rows="3" name="desc" value="<?= $item->tarif ?>"></textarea>
+                            <input class="form-control" id="inputPrice" rows="3" name="desc" value="<?= $item->tarif ?>">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -103,13 +103,22 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                         <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
                             Réserver
                         </button>
+                        <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
+                            Modifier
+                        </button>
                     <?php elseif(!$infos["haveExpired"]) : ?>
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
                             Réserver
                         </button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modifier">
+                            Modifier
+                        </button>
                     <?php else: ?>
                         <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="La liste a expiré" disabled>
                             Réserver
+                        </button>
+                        <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="La liste a expiré" disabled>
+                            Modifier
                         </button>
                     <?php endif; ?>
                 <?php endif; ?>
