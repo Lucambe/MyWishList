@@ -46,7 +46,7 @@ class ListeController extends Controller {
                 "items" => $liste->items()->get(),
                 "reservations" => Reservation::get(),
                 "messages" => $liste->messages()->get(),
-                "nom" => FigRequestCookies::get($request, 'nom', ''),
+                "nom" => FigRequestCookies::get($request, 'nom', '')->getValue(),
                 "infos" => $infos
             ]);
         } catch(ModelNotFoundException $e) {
