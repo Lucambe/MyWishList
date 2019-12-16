@@ -1,6 +1,7 @@
 <?php
 namespace mywishlist\controllers;
 
+use DateTime;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
@@ -86,23 +87,22 @@ class ListeController extends Controller {
      * @param Response $response
      * @param array $args
      * @return Response
-     * @todo: Sécurité avec FILTER_VAR
      */
     public function addMessage(Request $request, Response $response, array $args) : Response {
         try {
             $name = $request->getParsedBody('name');
             $message = $request->getParsedBody('message');
             $token = $request->getParsedBody('token');
-            if(!isset($name, $message, $token)) {
-                throw new Exception("Un des paramètres est manquant.");
-            }
+            if(!isset($name, $message, $token)) throw new Exception("Un des paramètres est manquant.");
+            if(mb_strlen($message, 'utf8') < 10) throw new Exception("Votre message doit comporter au minimum 10 caractères.");
+            if(mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères.");
 
-            $liste = Liste::where('token', '=', $token)->firstOrFail();
+            $liste = Liste::where('token', '=', filter_var($token, FILTER_SANITIZE_STRING)->firstOrFail());
 
             $m = new Message();
             $m->idListe = $liste->no;
-            $m->message = $message;
-            $m->messager = $name;
+            $m->message = filter_var($message, FILTER_SANITIZE_STRING);
+            $m->messager = filter_var($name, FILTER_SANITIZE_STRING);
             $m->save();
 
             $response = FigResponseCookies::set($response, SetCookie::create("nom")->withValue($name)->rememberForever());
@@ -123,16 +123,16 @@ class ListeController extends Controller {
      * @param Response $response
      * @param array $args
      * @return Response
-     * @todo Check si la date d'expi est déjà passée
      */
     public function createListe(Request $request, Response $response, array $args) : Response {
         try {
             $titre = $request->getParsedBodyParam('titre');
             $description = $request->getParsedBodyParam('descr');
             $dateExp = $request->getParsedBodyParam('dateExpi');
-            if(!isset($titre, $description, $dateExp)) {
-                throw new Exception("Un des paramètres est manquant.");
-            }
+            if(!isset($titre, $description, $dateExp)) throw new Exception("Un des paramètres est manquant.");
+            if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
+            if(mb_strlen($description, 'utf8') < 10) throw new Exception("La description de la liste doit comporter au minimum 10 caractères.");
+            if(new DateTime() > new DateTime($dateExp)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
             $titre = filter_var($titre, FILTER_SANITIZE_STRING);
             $description = filter_var($description, FILTER_SANITIZE_STRING);
@@ -169,7 +169,6 @@ class ListeController extends Controller {
      * @param Response $response
      * @param array $args
      * @return Response
-     * @todo check si la date d'expi est déjà passée
      */
     public function updateListe(Request $request, Response $response, array $args) : Response {
         try {
@@ -178,15 +177,17 @@ class ListeController extends Controller {
             $date = $request->getParsedBodyParam('newDate');
             $token = $request->getParsedBodyParam('token');
             $createToken = $request->getParsedBodyParam('creationToken');
-            if(!isset($titre, $description, $date, $token, $createToken)) {
-                throw new Exception("Un des paramètres est manquant.");
-            }
 
-            $liste = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
+            if(!isset($titre, $description, $date, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
+            if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
+            if(mb_strlen($description, 'utf8') < 10) throw new Exception("La description de la liste doit comporter au minimum 10 caractères.");
+            if(new DateTime() > new DateTime($date)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
-            $liste->titre = $titre;
-            $liste->description = $description;
-            $liste->expiration = $date;
+            $liste = Liste::where(['token' => var_filter($token, FILTER_SANITIZE_STRING), 'creationToken' => filter_var($createToken, FILTER_SANITIZE_STRING)])->firstOrFail();
+
+            $liste->titre = var_filter($titre, FILTER_SANITIZE_STRING);
+            $liste->description = var_filter($description, FILTER_SANITIZE_STRING);
+            $liste->expiration = var_filter($date, FILTER_SANITIZE_STRING);
             $liste->save();
 
             $this->flash->addMessage('success', "Votre modification a été enregistrée!");
