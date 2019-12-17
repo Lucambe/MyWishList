@@ -86,10 +86,12 @@ class ItemController extends Controller {
      */
     public function bookItem(Request $request, Response $response, array $args) : Response {
         try {
-            $name = $request->getParsedBodyParam('name');
-            $message = $request->getParsedBodyParam('message');
-            $item_id = $request->getParsedBodyParam('item_id');
-            $token = $request->getParsedBodyParam('token');
+            $name = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
+            $message = filter_var($request->getParsedBodyParam('message'), FILTER_SANITIZE_STRING);
+            $item_id = filter_var($request->getParsedBodyParam('item_id'), FILTER_SANITIZE_NUMBER_INT);
+            $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
+
+            if(!isset($name, $message, $item_id, $token)) throw new Exception("Un des paramètres est manquant.");
 
             $liste = Liste::where('token', '=', $token)->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
@@ -122,22 +124,18 @@ class ItemController extends Controller {
     public function createItem(Request $request, Response $response, array $args) : Response {
         try{
 
-            $nom = $request->getParsedBodyParam('nom');
-            $description = $request->getParsedBodyParam('descr');
+            $nom = filter_var($request->getParsedBodyParam('nom'), FILTER_SANITIZE_STRING);
+            $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
             $file = $request->getParsedBodyParam('file');
-            $url = $request->getParsedBodyParam('url');
-            $prix = $request->getParsedBodyParam('prix');
-            $token = $request->getParsedBodyParam('token');
-            $createToken = $request->getParsedBodyParam('creationToken');
-            if(!isset($nom, $description, $file, $prix, $token, $createToken)){
-                throw new Exception("Un des paramètres est manquant.");
-            }
-            $nom = filter_var($nom, FILTER_SANITIZE_STRING);
-            $description = filter_var($description, FILTER_SANITIZE_STRING);
-            $url = filter_var($url, FILTER_SANITIZE_URL);
-            $prix = filter_var($prix, FILTER_SANITIZE_NUMBER_FLOAT);
+            $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_INT);
+            $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
+            $createToken = filter_var($request->getParsedBodyParam('creationToken'), FILTER_SANITIZE_STRING);
 
-            $i = Liste::where(['token' => filter_var($token, FILTER_SANITIZE_STRING), 'creationToken' => filter_var($createToken, FILTER_SANITIZE_STRING)])->firstOrFail();
+            if(!isset($nom, $description, $file, $prix, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
+
+            $i = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
+
             $item = new Item();
             $item->liste_id = $i->no;
             $item->nom = $nom;
