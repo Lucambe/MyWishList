@@ -135,7 +135,7 @@ $app->post('/create/item', function (Request $request, Response $response, array
 
 $app->post('/modification', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
-    return $c->modifItem($request, $response, $args);
+    return $c->editItem($request, $response, $args);
 })->setName('modifItem');
 
 // Run app

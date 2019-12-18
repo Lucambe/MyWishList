@@ -46,8 +46,7 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                 </div>
                 <form id="form_reservation" method="POST" action="<?= $router->pathFor('modifItem') ?>">
                     <div class="modal-body">
-                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
-                        <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                        <input type="hidden" value="<?= $item->id ?>" name="item"/>
                         <div class="form-group">
                             <label for="inputName">Changer le nom</label>
                             <input type="text" name="name" class="form-control" id="inputName" placeholder="Nom de l'objet" value="<?= $item->nom ?>">
@@ -58,7 +57,7 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                         </div>
                         <div class="form-group">
                             <label for="textarea">Changer le prix</label>
-                            <input class="form-control" id="inputPrice" rows="3" name="desc" value="<?= $item->tarif ?>">
+                            <input class="form-control" id="inputPrice" rows="3" name="prix" value="<?= $item->tarif ?>">
                         </div>
                     </div>
                     <div class="modal-footer">

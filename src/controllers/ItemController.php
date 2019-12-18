@@ -157,4 +157,31 @@ class ItemController extends Controller {
         return $response;
     }
 
+    public function editItem(Request $request, Response $response, array $args) : Response {
+        try{
+
+            $id = filter_var($request->getParsedBodyParam('item'), FILTER_SANITIZE_STRING);
+            $nom = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
+            $description = filter_var($request->getParsedBodyParam('desc'), FILTER_SANITIZE_STRING);
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+            $item = Item::where(['id'=>$id])->firstOrFail();
+
+            $item->nom = $nom;
+            $item->descr=$description;
+            $item->tarif=$prix;
+            $item->save();
+
+            $this->flash->addMessage('success', "Votre item a été modifié !");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(ModelNotFoundException $e){
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu modifier cet item.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(Exception $e){
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
 }
