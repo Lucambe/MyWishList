@@ -29,10 +29,10 @@ abstract class CookiesController extends Controller {
         ];
     }
 
-    public function loadCookies(Request $request) {
+    public function loadCookiesFromRequest(Request $request) {
         $cookies = self::getCookies($request);
-        if ($cookies->has("wl_infos") && is_object(json_decode($cookies->get("wl_infos")))) {
-            $arr = json_decode($cookies->get("wl_infos"));
+        if ($cookies->has("wl_infos") && is_array(json_decode(urldecode($cookies->get("wl_infos")->getValue()), TRUE))) {
+            $arr = json_decode(urldecode($cookies->get("wl_infos")->getValue()), TRUE);
             if (isset($arr['name']) && isset($arr['creationTokens']) && is_array($arr['creationTokens'])) {
                 $this->infos = $arr;
             }
