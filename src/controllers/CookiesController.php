@@ -24,31 +24,38 @@ abstract class CookiesController extends Controller {
 
     private static function generateEmptyCookie() {
         return [
-            "nom" => "",
+            "name" => "",
             "creationTokens" => []
         ];
     }
 
-    private function loadCookies(Request $request) {
+    public function loadCookies(Request $request) {
         $cookies = self::getCookies($request);
         if ($cookies->has("wl_infos") && is_object(json_decode($cookies->get("wl_infos")))) {
             $arr = json_decode($cookies->get("wl_infos"));
-            if (isset($arr['nom']) && isset($arr['creationTokens']) && is_array($arr['creationTokens'])) {
+            if (isset($arr['name']) && isset($arr['creationTokens']) && is_array($arr['creationTokens'])) {
                 $this->infos = $arr;
             }
         }
     }
 
 
-    public function createResponseCookie(Request $request, Response $response) {
-        self::loadCookies($request);
+    public function createResponseCookie(Response $response) {
         return SetCookies::fromResponse($response)
             ->with(SetCookie::createRememberedForever("wl_infos")->withValue(json_encode($this->infos)))
             ->renderIntoSetCookieHeader($response);
     }
 
+    public function getName() {
+        return $this->infos['name'];
+    }
+
     public function changeName(String $name) {
-        $this->infos['nom'] = $name;
+        $this->infos['name'] = $name;
+    }
+
+    public function getCreationTokens() {
+        return $this->infos['creationTokens'];
     }
 
     public function addCreationToken(String $token) {
