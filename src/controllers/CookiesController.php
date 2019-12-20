@@ -1,5 +1,4 @@
 <?php
-
 namespace mywishlist\controllers;
 
 use Dflydev\FigCookies\Cookies;
@@ -9,6 +8,11 @@ use Slim\Http\Response;
 use Slim\Container;
 use Slim\Http\Request;
 
+/**
+ * Class CookiesController
+ * @author Jules Sayer <jules.sayer@protonmail.com>
+ * @package mywishlist\controllers
+ */
 abstract class CookiesController extends Controller {
 
     private $infos;

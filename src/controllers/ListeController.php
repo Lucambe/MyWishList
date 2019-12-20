@@ -2,9 +2,6 @@
 namespace mywishlist\controllers;
 
 use DateTime;
-use Dflydev\FigCookies\FigRequestCookies;
-use Dflydev\FigCookies\FigResponseCookies;
-use Dflydev\FigCookies\SetCookie;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Liste;
@@ -20,7 +17,7 @@ use function mywishlist\models\Liste;
  * @author Anthony Pernot <anthony.pernot9@etu.univ-lorraine.fr>
  * @package mywishlist\controllers
  */
-class ListeController extends Controller {
+class ListeController extends CookiesController {
 
     /**
      * Appel liste.phtml, permet d'afficher les informations
@@ -34,12 +31,12 @@ class ListeController extends Controller {
     public function getListe(Request $request, Response $response, array $args) : Response {
         try {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
+            $this->loadCookiesFromRequest($request);
 
-            $created = is_object(json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue())) ? json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue()) : [];
             $infos = [
-                "canSee" => $liste->haveExpired() || !in_array($liste->creationToken, $created),
+                "canSee" => $liste->haveExpired() || !in_array($liste->creationToken, $this->getCreationTokens()),
                 "haveExpired" => $liste->haveExpired(),
-                "haveCreated" => in_array($liste->creationToken, $created)
+                "haveCreated" => in_array($liste->creationToken, $this->getCreationTokens())
             ];
 
             $this->view->render($response, 'liste.phtml', [
@@ -47,7 +44,7 @@ class ListeController extends Controller {
                 "items" => $liste->items()->get(),
                 "reservations" => Reservation::get(),
                 "messages" => $liste->messages()->get(),
-                "nom" => FigRequestCookies::get($request, 'nom', '')->getValue(),
+                "nom" => $this->getName(),
                 "infos" => $infos
             ]);
         } catch(ModelNotFoundException $e) {
@@ -99,6 +96,7 @@ class ListeController extends Controller {
             if(mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères.");
 
             $liste = Liste::where('token', '=', $token->firstOrFail());
+            $this->loadCookiesFromRequest($request);
 
             $m = new Message();
             $m->idListe = $liste->no;
@@ -106,7 +104,8 @@ class ListeController extends Controller {
             $m->messager = $name;
             $m->save();
 
-            $response = FigResponseCookies::set($response, SetCookie::create("nom")->withValue($name)->rememberForever());
+            $this->changeName($name);
+            $response = $this->createResponseCookie($response);
             $this->flash->addMessage('success', "$name, Votre message a été envoyé");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (Exception $e) {
@@ -136,6 +135,8 @@ class ListeController extends Controller {
             if(mb_strlen($description, 'utf8') < 10) throw new Exception("La description de la liste doit comporter au minimum 10 caractères.");
             if(new DateTime() > new DateTime($dateExp)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
+            $this->loadCookiesFromRequest($request);
+
             $liste = new Liste();
             $liste->user_id = 0;
             $liste->titre = $titre;
@@ -146,10 +147,8 @@ class ListeController extends Controller {
             $liste->validated = false;
             $liste->save();
 
-
-            $created = is_object(json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue())) ? json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue()) : [];
-            array_push($created, $liste->creationToken);
-            $response = FigResponseCookies::set($response, SetCookie::create("created")->withValue(json_encode($created))->rememberForever());
+            $this->addCreationToken($liste->creationToken);
+            $response = $this->createResponseCookie($response);
 
             $this->flash->addMessage('success', "Votre liste a été créée!");
             $response = $response->withRedirect($this->router->pathFor('home'));
