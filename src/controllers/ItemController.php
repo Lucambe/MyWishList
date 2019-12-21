@@ -154,6 +154,33 @@ class ItemController extends CookiesController {
         return $response;
     }
 
+
+    public function deleteItem(Request $request, Response $response, array $args ) : Response {
+        try{
+
+            $token = $request->getParsedBodyParam('token');
+            $createToken = $request->getParsedBodyParam('creationToken');
+            $created = is_object(json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue())) ? json_decode(FigRequestCookies::get($request, 'created', '[]')->getValue()) : [];
+
+            if(!isset($token, $createToken, $created)){
+                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, cela veut dire que vous n'êtes pas le propriétaire de la liste");
+            }
+            
+            $i = Liste::where(['token' => filter_var($token, FILTER_SANITIZE_STRING), 'creationToken' => filter_var($createToken, FILTER_SANITIZE_STRING)])->firstOrFail();
+            Item::where('id', '=', $i->no)->delete();
+            $this->flash->addMessage('success', "Votre item a été supprimée !");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+
+        }catch(ModelNotFoundException $e){
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer cet item.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(Exception $e){
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
     public function editItem(Request $request, Response $response, array $args) : Response {
         try{
 

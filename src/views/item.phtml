@@ -34,6 +34,66 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
 <?php endif; ?>
 <?php
 if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
+    <!-- Modal Suppression -->
+    <div class="modal fade" id="supprimer" tabindex="-1" role="dialog" aria-labelledby="supprimerLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="supprimerLabel"><?= $item->nom ?> - Suppression</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_suppression" method="POST" action="<?= $router->pathFor('deleteItem') ?>">
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <p class="h5">Êtes-vous bien sûr de supprimer cet item ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                        <button type="submit" class="btn btn-primary">Oui</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<?php
+if ($reservation->isEmpty() && $infos["canSee"] && $infos["haveExpired"]): ?>
+    <!-- Modal Suppression -->
+    <div class="modal fade" id="supprimer" tabindex="-1" role="dialog" aria-labelledby="supprimerLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="supprimerLabel"><?= $item->nom ?> - Suppression</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_suppression" method="POST" action="<?= $router->pathFor('deleteItem') ?>">
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <p class="h5">Êtes-vous bien sûr de supprimer cet item ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                        <button type="submit" class="btn btn-primary">Oui</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<?php
+if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
     <!-- Modal Modification -->
     <div class="modal fade" id="modifier" tabindex="-1" role="dialog" aria-labelledby="modifierLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -112,12 +172,18 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modifier">
                             Modifier
                         </button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#supprimer">
+                            Supprimer
+                        </button>
                     <?php else: ?>
                         <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="La liste a expiré" disabled>
                             Réserver
                         </button>
                         <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="La liste a expiré" disabled>
                             Modifier
+                        </button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#supprimer">
+                            Supprimer
                         </button>
                     <?php endif; ?>
                 <?php endif; ?>

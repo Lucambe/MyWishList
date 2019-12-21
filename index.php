@@ -138,5 +138,10 @@ $app->post('/modification', function (Request $request, Response $response, arra
     return $c->editItem($request, $response, $args);
 })->setName('modifItem');
 
+$app->post('/delete', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->deleteItem($request, $response, $args);
+})->setName('deleteItem');
+
 // Run app
 $app->run();
