@@ -47,10 +47,10 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                 <form id="form_suppression" method="POST" action="<?= $router->pathFor('deleteItem') ?>">
                     <div class="modal-body">
                         <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <input type="hidden" value="<?= $liste->creationToken ?>" name="creationToken"/>
                         <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
                         <p class="h5">Êtes-vous bien sûr de supprimer cet item ?</p>
                     </div>
                     <div class="modal-footer">
@@ -77,10 +77,11 @@ if ($reservation->isEmpty() && $infos["canSee"] && $infos["haveExpired"]): ?>
                 <form id="form_suppression" method="POST" action="<?= $router->pathFor('deleteItem') ?>">
                     <div class="modal-body">
                         <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        <input type="hidden" value="<?= $liste->creationToken ?>" name="creationToken"/>
                         <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                        
                         <p class="h5">Êtes-vous bien sûr de supprimer cet item ?</p>
                     </div>
                     <div class="modal-footer">
