@@ -123,7 +123,7 @@ class ItemController extends CookiesController {
 
             $nom = filter_var($request->getParsedBodyParam('nom'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
-            $file = $request->getParsedBodyParam('file');
+            $file = $request->getUploadedFiles('file');
             $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
             $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_INT);
             $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
@@ -131,16 +131,20 @@ class ItemController extends CookiesController {
 
             if(!isset($nom, $description, $file, $prix, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
 
+            if($file['size'] > $request->getParsedBodyParam('MAX_FILE_SIZE')) throw new Exception("La taille de l'image est trop grande");
+
             $i = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
 
             $item = new Item();
             $item->liste_id = $i->no;
             $item->nom = $nom;
             $item->descr=$description;
-            $item->img=$file;
+            $item->img=$file['file'];
             $item->url=$url;
             $item->tarif=$prix;
             $item->save();
+
+            move_uploaded_file($file['file']['tmp_name'], '/public/images/'.$file['file']['name']);
 
             $this->flash->addMessage('success', "Votre item a été enregistrée !");
             $response = $response->withRedirect($this->router->pathFor('home'));
