@@ -136,12 +136,12 @@ $app->post('/create/item', function (Request $request, Response $response, array
     return $c->createItem($request, $response, $args);
 })->setName('createItem');
 
-$app->post('/modification', function (Request $request, Response $response, array $args) use ($container) {
+$app->post('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->editItem($request, $response, $args);
-})->setName('modifItem');
+})->setName('updateItem');
 
-$app->post('/delete', function (Request $request, Response $response, array $args) use ($container) {
+$app->post('/delete/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->deleteItem($request, $response, $args);
 })->setName('deleteItem');
