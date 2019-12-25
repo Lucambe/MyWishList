@@ -70,6 +70,9 @@ $app->get('/about', function (Request $request, Response $response, array $args)
     $this->view->render($response, 'about.phtml');
 })->setName('showAbout');
 
+/**
+ * Authentification
+ */
 $app->get('/register', function (Request $request, Response $response, array $args) {
     $this->view->render($response, 'register.phtml');
 })->setName('showRegister');
@@ -86,10 +89,10 @@ $app->get('/l/{token:[a-zA-Z0-9]+}', function (Request $request, Response $respo
     return $c->getListe($request, $response, $args);
 })->setName('showListe');
 
-$app->get('/l/{token:[a-zA-Z0-9]+}/update/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+$app->get('/l/{token:[a-zA-Z0-9]+}/admin/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ListeController($container);
-    return $c->getUpdateListe($request, $response, $args);
-})->setName('showUpdateListe');
+    return $c->getAdminListe($request, $response, $args);
+})->setName('showAdminListe');
 
 $app->get('/create/liste', function (Request $request, Response $response, array $args) {
     $this->view->render($response, 'createliste.phtml');
@@ -105,7 +108,7 @@ $app->post('/addMessage', function (Request $request, Response $response, array 
     return $c->addMessage($request, $response, $args);
 })->setName('addMessage');
 
-$app->post('/update/liste', function (Request $request, Response $response, array $args) use ($container) {
+$app->post('/update/liste/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ListeController($container);
     return $c->updateListe($request, $response, $args);
 })->setName('updateListe');

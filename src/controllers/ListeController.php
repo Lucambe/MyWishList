@@ -55,7 +55,7 @@ class ListeController extends CookiesController {
     }
 
     /**
-     * Appel updateliste.phtml, permet d'afficher le
+     * Appel adminliste.phtml, permet d'afficher le
      * formulaire de modification d'une liste
      *
      * @param Request $request
@@ -63,11 +63,11 @@ class ListeController extends CookiesController {
      * @param array $args
      * @return Response
      */
-    public function getUpdateListe(Request $request, Response $response, array $args) : Response {
+    public function getAdminListe(Request $request, Response $response, array $args) : Response {
         try {
             $liste = Liste::where(['token' => $args['token'], 'creationToken' => $args['creationToken']])->firstOrFail();
 
-            $this->view->render($response, 'updateliste.phtml', [
+            $this->view->render($response, 'adminliste.phtml', [
                 "liste" => $liste
             ]);
         } catch(ModelNotFoundException $e) {
@@ -173,8 +173,8 @@ class ListeController extends CookiesController {
             $titre = filter_var($request->getParsedBodyParam('newTitle'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('newDescription'), FILTER_SANITIZE_STRING);
             $date = $request->getParsedBodyParam('newDate');
-            $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
-            $createToken = filter_var($request->getParsedBodyParam('creationToken'), FILTER_SANITIZE_STRING);
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $createToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
 
             if(!isset($titre, $description, $date, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
