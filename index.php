@@ -131,7 +131,7 @@ $app->post('/create/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}', fun
 
 $app->post('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
-    return $c->editItem($request, $response, $args);
+    return $c->updateItem($request, $response, $args);
 })->setName('updateItem');
 
 $app->post('/delete/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {

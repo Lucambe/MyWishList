@@ -105,8 +105,7 @@ class ItemController extends CookiesController {
     }
 
     public function createItem(Request $request, Response $response, array $args) : Response {
-        try{
-
+        try {
             $nom = filter_var($request->getParsedBodyParam('nom'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
             $file = $request->getUploadedFiles('file');
@@ -195,19 +194,25 @@ class ItemController extends CookiesController {
         return $response;
     }
 
-    public function editItem(Request $request, Response $response, array $args) : Response {
-        try{
-
-            $id = filter_var($request->getParsedBodyParam('item'), FILTER_SANITIZE_STRING);
+    /**
+     * @todo: ajouter modification url et image!
+     * @todo: Un item déjà reservé ne peut pas être modifié!
+     */
+    public function updateItem(Request $request, Response $response, array $args) : Response {
+        try {
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
             $nom = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('desc'), FILTER_SANITIZE_STRING);
             $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-            $item = Item::where(['id'=>$id])->firstOrFail();
+            $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
+            $item = Item::where(['id' => $id, 'liste_id' => $liste->no])->firstOrFail();
 
             $item->nom = $nom;
-            $item->descr=$description;
-            $item->tarif=$prix;
+            $item->descr = $description;
+            $item->tarif = $prix;
             $item->save();
 
             $this->flash->addMessage('success', "Votre item a été modifié !");

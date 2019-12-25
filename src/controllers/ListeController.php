@@ -68,7 +68,9 @@ class ListeController extends CookiesController {
             $liste = Liste::where(['token' => $args['token'], 'creationToken' => $args['creationToken']])->firstOrFail();
 
             $this->view->render($response, 'adminliste.phtml', [
-                "liste" => $liste
+                "liste" => $liste,
+                "items" => $liste->items()->get(),
+                "reservations" => Reservation::get()
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Token invalide.");
