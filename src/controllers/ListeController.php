@@ -33,7 +33,7 @@ class ListeController extends CookiesController {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
             $this->loadCookiesFromRequest($request);
 
-            $infos = [
+            $can = [
                 "canSee" => $liste->haveExpired() || !in_array($liste->creationToken, $this->getCreationTokens()),
                 "haveExpired" => $liste->haveExpired(),
                 "haveCreated" => in_array($liste->creationToken, $this->getCreationTokens())
@@ -45,7 +45,7 @@ class ListeController extends CookiesController {
                 "reservations" => Reservation::get(),
                 "messages" => $liste->messages()->get(),
                 "nom" => $this->getName(),
-                "infos" => $infos
+                "infos" => $can
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Cette liste n'existe pas...");
@@ -92,7 +92,7 @@ class ListeController extends CookiesController {
             $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
 
             if(!isset($name, $message, $token)) throw new Exception("Un des paramètres est manquant.");
-            if(mb_strlen($message, 'utf8') < 10) throw new Exception("Votre message doit comporter au minimum 10 caractères.");
+            if(mb_strlen($message, 'utf8') < 4) throw new Exception("Votre message doit comporter au minimum 4 caractères.");
             if(mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères.");
 
             $liste = Liste::where('token', '=', $token->firstOrFail());
@@ -132,7 +132,7 @@ class ListeController extends CookiesController {
 
             if(!isset($titre, $description, $dateExp)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
-            if(mb_strlen($description, 'utf8') < 10) throw new Exception("La description de la liste doit comporter au minimum 10 caractères.");
+            if(mb_strlen($description, 'utf8') < 4) throw new Exception("La description de la liste doit comporter au minimum 4 caractères.");
             if(new DateTime() > new DateTime($dateExp)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
             $this->loadCookiesFromRequest($request);
@@ -149,8 +149,8 @@ class ListeController extends CookiesController {
 
             $this->addCreationToken($liste->creationToken);
             $response = $this->createResponseCookie($response);
-
-            $this->flash->addMessage('success', "Votre liste a été créée!");
+            $link = $this->router->pathFor('showListe', ['token' => $liste->token]);
+            $this->flash->addMessage('success', "Votre liste a été créée! Cliquez <a href='$link'>ici</a> pour y accéder.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
@@ -178,7 +178,7 @@ class ListeController extends CookiesController {
 
             if(!isset($titre, $description, $date, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
-            if(mb_strlen($description, 'utf8') < 10) throw new Exception("La description de la liste doit comporter au minimum 10 caractères.");
+            if(mb_strlen($description, 'utf8') < 4) throw new Exception("La description de la liste doit comporter au minimum 4 caractères.");
             if(new DateTime() > new DateTime($date)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
