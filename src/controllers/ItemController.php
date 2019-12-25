@@ -131,6 +131,10 @@ class ItemController extends CookiesController {
 
             if(!isset($nom, $description, $file, $prix, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
 
+            /**
+             * WTF Anthony, si coté client la valeur est modifiée, il peut upload un fichier dont la taille peut être choisie...
+             * @todo !!!
+             */
             if($file['size'] > $request->getParsedBodyParam('MAX_FILE_SIZE')) throw new Exception("La taille de l'image est trop grande");
 
             $i = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
