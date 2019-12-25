@@ -56,20 +56,6 @@ class ItemController extends CookiesController {
         return $response;
     }
 
-    public function getCreateItem(Request $request, Response $response, array $args) : Response {
-        try {
-            $liste = Liste::where(['token' => $args['token'], 'creationToken' => $args['creationToken']])->firstOrFail();
-
-            $this->view->render($response, 'createitem.phtml', [
-                "liste" => $liste
-            ]);
-        } catch(ModelNotFoundException $e) {
-            $this->flash->addMessage('error', "Token invalide.");
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }
-        return $response;
-    }
-
     /**
      * Cette fonction permet de réserver un item
      * Elle vérifie que l'objet n'est pas déjà reservé
