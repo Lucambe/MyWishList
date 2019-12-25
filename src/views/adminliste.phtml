@@ -51,7 +51,9 @@
             <a class="nav-link" id="manageItems-tab" data-toggle="pill" href="#manageItems" role="tab" aria-controls="manageItems" aria-selected="false">Gérer les objets</a>
             <a class="nav-link" id="createItem-tab" data-toggle="pill" href="#createItem" role="tab" aria-controls="createItem" aria-selected="false">Ajouter un objet</a>
         </div>
-        <button type="submit" class="btn btn-block btn-danger mt-2">Supprimer la liste</button>
+            <button type="submit" class="btn btn-block btn-danger mt-2" data-toggle="popover" title="<i class='fas fa-exclamation-triangle'></i> Êtes-vous sûr?" data-placement="bottom" data-trigger="focus" data-content="<div class='btn-group btn-group-sm' role='group'><a class='btn btn-sm btn-danger' href='<?= $router->pathFor('deleteListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>'>Confirmer</a><a class='btn btn-sm btn-primary' href='#'>Annuler</a></div>">
+                Supprimer la liste
+            </button>
     </div>
     <div class="col-9">
         <div class="tab-content" id="v-pills-tabContent">

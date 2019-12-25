@@ -111,6 +111,11 @@ $app->post('/update/liste/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}', fu
     return $c->updateListe($request, $response, $args);
 })->setName('updateListe');
 
+$app->get('/delete/liste/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ListeController($container);
+    return $c->deleteListe($request, $response, $args);
+})->setName('deleteListe');
+
 /**
  * Objets
  */
@@ -134,7 +139,7 @@ $app->post('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[
     return $c->updateItem($request, $response, $args);
 })->setName('updateItem');
 
-$app->post('/delete/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+$app->get('/delete/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->deleteItem($request, $response, $args);
 })->setName('deleteItem');

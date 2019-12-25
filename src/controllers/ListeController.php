@@ -201,4 +201,8 @@ class ListeController extends CookiesController {
         }
         return $response;
     }
+
+    public function deleteListe(Request $request, Response $response, array $args) : Response {
+
+    }
 }

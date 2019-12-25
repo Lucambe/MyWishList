@@ -148,6 +148,10 @@ class ItemController extends CookiesController {
     }
 
 
+    /**
+     * @todo: Ici pas besoin de tester le cookie car il faut vérifier que le creationToken passé dans l'URL est bon...
+     * @todo: passer par $args[] au lieu des BodyParams
+     */
     public function deleteItem(Request $request, Response $response, array $args ) : Response {
         try{
 
