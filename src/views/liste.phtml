@@ -10,7 +10,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="form_message" method="POST" action="<?= $router->pathFor('addMessage') ?>">
+                <form method="POST" action="<?= $router->pathFor('addMessage') ?>">
                     <div class="modal-body">
                         <input type="hidden" value="<?= $liste->token ?>" name="token"/>
                         <div class="form-group">

@@ -10,7 +10,7 @@ if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="form_reservation" method="POST" action="<?= $router->pathFor('bookItem') ?>">
+                <form method="POST" action="<?= $router->pathFor('bookItem') ?>">
                     <div class="modal-body">
                         <input type="hidden" value="<?= $liste->token ?>" name="token"/>
                         <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
