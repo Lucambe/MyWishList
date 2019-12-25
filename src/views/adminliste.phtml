@@ -2,41 +2,77 @@
     <h4 class="alert-heading">Espace Administration</h4>
     <p>C'est à partir de cette page que vous pouvez effectuer des actions sur votre liste.</p>
     <hr>
-    <p class="mb-0">Vous modifiez actuellement la liste «<?= $liste->titre ?>»</p>
+    <p class="mb-0">Vous modifiez actuellement la liste «<a href="<?=$router->pathFor('showListe', ['token'=> $liste->token]) ?>"><?= $liste->titre ?></a>».</p>
 </div>
 <div class="row">
     <div class="col-3">
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <a class="nav-link active" id="general-tab" data-toggle="pill" href="#general" role="tab" aria-controls="general" aria-selected="true">Général</a>
+            <a class="nav-link" id="createItem-tab" data-toggle="pill" href="#createItem" role="tab" aria-controls="createItem" aria-selected="false">Ajouter un objet</a>
         </div>
+        <button type="submit" class="btn btn-block btn-danger mt-2">Supprimer la liste</button>
     </div>
     <div class="col-9">
         <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-                <div class="card">
+                <div class="card bg-light">
                     <div class="card-header">
                         Général
                     </div>
                     <div class="card-body">
-                        <form id="form_message" method="POST" action="<?= $router->pathFor('updateListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>">
+                        <form method="POST" action="<?= $router->pathFor('updateListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>">
                             <div class="form-group">
-                                <label for="inputName">Titre</label>
+                                <label for="inputName">Titre*</label>
                                 <input type="text" name="newTitle" class="form-control" id="inputTitle" value="<?= $liste->titre ?>">
                             </div>
                             <div class="form-group">
-                                <label for="inputName">Date d'expiration</label>
+                                <label for="inputName">Date d'expiration*</label>
                                 <input type="date" name="newDate" class="form-control" id="inputDateExpi" value="<?= $liste->expiration ?>">
                             </div>
                             <div class="form-group">
-                                <label for="textarea">Description</label>
+                                <label for="textarea">Description*</label>
                                 <textarea class="form-control" id="textarea" rows="3" name="newDescription"><?= $liste->description ?></textarea>
                             </div>
+                            Les champs marqués d'un astérisque sont obligatoires.
                             <button type="submit" class="btn btn-lg btn-primary float-right">Envoyer</button>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">...</div>
+            <div class="tab-pane fade" id="createItem" role="tabpanel" aria-labelledby="createItem-tab">
+                <div class="card bg-light">
+                    <div class="card-header">
+                        Ajouter un objet
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="<?= $router->pathFor('createItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>">
+                            <div class="form-group">
+                                <label for="inputName">Nom de l'objet*</label>
+                                <input type="text" name="nom" class="form-control" id="inputName">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPrix">Prix*</label>
+                                <input type="number" name="prix" class="form-control" id="inputPrix">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputFile">Image</label>
+                                <input type="file" accept="image/png, image/jpg, image/jpeg" name="file" class="form-control" id="inputFile">
+                                <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
+                            </div>
+                            <div class="form-group" data-toggle="tooltip">
+                                <label for="inputUrl">Lien pour plus d'information</label>
+                                <input type="url" name="url" class="form-control" id="inputUrl">
+                            </div>
+                            <div class="form-group">
+                                <label for="textarea">Description*</label>
+                                <textarea class="form-control" id="textarea" rows="3" name="descr"></textarea>
+                            </div>
+                            Les champs marqués d'un astérisque sont obligatoires.
+                            <button type="submit" class="btn btn-lg btn-primary float-right">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
             <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
         </div>

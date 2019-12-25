@@ -124,7 +124,7 @@ $app->post('/book', function (Request $request, Response $response, array $args)
     return $c->bookItem($request, $response, $args);
 })->setName('bookItem');
 
-$app->post('/create/item', function (Request $request, Response $response, array $args) use ($container) {
+$app->post('/create/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->createItem($request, $response, $args);
 })->setName('createItem');
