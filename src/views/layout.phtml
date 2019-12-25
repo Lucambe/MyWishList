@@ -48,6 +48,11 @@
         <script src="<?= $rootUri ?>/public/js/popper.min.js"></script>
         <script src="<?= $rootUri ?>/public/js/bootstrap.min.js"></script>
         <script>
+            function clipboard(item) {
+                var copyText = document.getElementById(item.id);
+                copyText.select();
+                document.execCommand("copy");
+            }
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 $('[data-toggle="popover"]').popover({html: true});

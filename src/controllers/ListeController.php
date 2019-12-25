@@ -70,7 +70,8 @@ class ListeController extends CookiesController {
             $this->view->render($response, 'adminliste.phtml', [
                 "liste" => $liste,
                 "items" => $liste->items()->get(),
-                "reservations" => Reservation::get()
+                "reservations" => Reservation::get(),
+                "uri" => $request->getUri()
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Token invalide.");
