@@ -98,7 +98,7 @@ class ListeController extends CookiesController {
             if(mb_strlen($message, 'utf8') < 4) throw new Exception("Votre message doit comporter au minimum 4 caractères.");
             if(mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères.");
 
-            $liste = Liste::where('token', '=', $token->firstOrFail());
+            $liste = Liste::where('token', '=', $token)->firstOrFail();
             $this->loadCookiesFromRequest($request);
 
             $m = new Message();

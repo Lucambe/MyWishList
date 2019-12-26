@@ -41,6 +41,11 @@
                     Rédiger un message
                 </button>
             <?php endif; ?>
+            <?php if ($infos["haveCreated"]): ?>
+                <a href="<?= $router->pathFor('showAdminListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>" class="ml-auto btn btn-outline-danger btn-sm">
+                    Administrer la liste
+                </a>
+            <?php endif; ?>
         </div>
     </ol>
 </nav>
