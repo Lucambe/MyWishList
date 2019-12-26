@@ -132,7 +132,6 @@ class ListeController extends CookiesController {
 
             if(!isset($titre, $description, $dateExp)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
-            if(mb_strlen($description, 'utf8') < 4) throw new Exception("La description de la liste doit comporter au minimum 4 caractères.");
             if(new DateTime() > new DateTime($dateExp)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
             $this->loadCookiesFromRequest($request);
@@ -178,7 +177,6 @@ class ListeController extends CookiesController {
 
             if(!isset($titre, $description, $date, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
-            if(mb_strlen($description, 'utf8') < 4) throw new Exception("La description de la liste doit comporter au minimum 4 caractères.");
             if(new DateTime() > new DateTime($date)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
