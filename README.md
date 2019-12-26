@@ -50,9 +50,9 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 ### Créateur
 - [x] *Créer une liste* (Anthony, Jules)
 - [x] *Modifier les informations générales d'une de ses listes* (Anthony, Jules)
-- [ ] *Ajouter des items* (Anthony, Jules)
-- [ ] *Modifier un item* (Nathan, Jules)
-- [ ] *Supprimer un item* (Anthony)
+- [x] *Ajouter des items* (Anthony, Jules)
+- [x] *Modifier un item* (Nathan, Jules)
+- [x] *Supprimer un item* (Anthony, Jules)
 - [ ] *Rajouter une image à un item*
 - [ ] *Modifier une image à un item*
 - [ ] *Supprimer une image d'un item*
