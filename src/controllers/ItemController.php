@@ -111,10 +111,10 @@ class ItemController extends CookiesController {
             $file = $request->getUploadedFiles('file');
             $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
             $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_INT);
-            $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
-            $createToken = filter_var($request->getParsedBodyParam('creationToken'), FILTER_SANITIZE_STRING);
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
 
-            if(!isset($nom, $description, $file, $prix, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
+            if(!isset($nom, $description, $file, $prix, $token, $creationToken)) throw new Exception("Un des paramètres est manquant.");
 
             /**
              * WTF Anthony, si coté client la valeur est modifiée, il peut upload un fichier dont la taille peut être choisie...
@@ -122,15 +122,20 @@ class ItemController extends CookiesController {
              */
             if($file['size'] > $request->getParsedBodyParam('MAX_FILE_SIZE')) throw new Exception("La taille de l'image est trop grande");
 
-            $i = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
+            $i = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
 
             $item = new Item();
             $item->liste_id = $i->no;
             $item->nom = $nom;
-            $item->descr=$description;
-            $item->img=$file['file'];
-            $item->url=$url;
-            $item->tarif=$prix;
+            $item->descr = $description;
+
+            /* Si pas d'image uploadé, ne rien faire, car le modèle Item
+            met déjà une image par défaut (default.png), l'upload d'image n'est pas encore gérée correctement, la ligne sera donc à décommenter quand ça sera fait,
+            et il faudra tester si une image a été upload avant de la set.
+            */
+            // $item->img = $file['file']['name'];
+            $item->url = $url;
+            $item->tarif = $prix;
             $item->save();
 
             move_uploaded_file($file['file']['tmp_name'], '/public/images/'.$file['file']['name']);
