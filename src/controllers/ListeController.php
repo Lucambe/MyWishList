@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Liste;
 use mywishlist\models\Message;
-use mywishlist\models\Reservation;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use function mywishlist\models\Liste;
@@ -42,7 +41,6 @@ class ListeController extends CookiesController {
             $this->view->render($response, 'liste.phtml', [
                 "liste" => $liste,
                 "items" => $liste->items()->get(),
-                "reservations" => Reservation::get(),
                 "messages" => $liste->messages()->get(),
                 "nom" => $this->getName(),
                 "infos" => $can
@@ -70,7 +68,6 @@ class ListeController extends CookiesController {
             $this->view->render($response, 'adminliste.phtml', [
                 "liste" => $liste,
                 "items" => $liste->items()->get(),
-                "reservations" => Reservation::get(),
                 "uri" => $request->getUri()
             ]);
         } catch(ModelNotFoundException $e) {

@@ -1,8 +1,7 @@
-<?php foreach($items as $item): ?>
+<?php foreach($items as $item): if($item->reservation()->get()->isEmpty()): ?>
 <!--
  Modal Modification
 @todo: Ajouter modif. image, url
-@todo: Ne pas créer le modal si pas possible de modifier (déjà reservé par exemple)
 -->
 <div class="modal fade" id="edit<?= $item->id ?>" tabindex="-1" role="dialog" aria-labelledby="modifierLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -37,7 +36,7 @@
         </div>
     </div>
 </div>
-<?php endforeach; ?>
+<?php endif; endforeach; ?>
 <div class="alert alert-dark" role="alert" xmlns:width="http://www.w3.org/1999/xhtml">
     <h4 class="alert-heading">Espace Administration</h4>
     <p>C'est à partir de cette page que vous pouvez effectuer des actions sur votre liste.</p>
@@ -132,10 +131,12 @@
                                         <img class="card-img" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet" style="height: 8vw;">
                                         <div class="card-img-overlay">
                                             <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
+                                            <?php if($item->reservation()->get()->isEmpty()): ?>
                                             <div class="btn-group btn-group-sm float-right" role="group">
                                                 <a class="btn btn-sm btn-primary" data-toggle="modal" href="#edit<?= $item->id ?>" role="button">Modifier</a>
                                                 <a class="btn btn-sm btn-danger" href="<?= $router->pathFor('deleteItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>" role="button">Supprimer</a>
                                             </div>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="card-body">
                                             <h3 class="card-title my-1"><?= $item->nom ?></h3>
