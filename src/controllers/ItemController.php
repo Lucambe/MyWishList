@@ -163,6 +163,7 @@ class ItemController extends CookiesController {
             
             $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
+            if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il est donc impossible de le supprimer.");
             $item->destroy($item_id);
             
 
