@@ -147,45 +147,21 @@ class ItemController extends CookiesController {
         return $response;
     }
 
-
     /**
-     * @todo: Ici pas besoin de tester le cookie car il faut vérifier que le creationToken passé dans l'URL est bon...
-     * @todo: passer par $args[] au lieu des BodyParams
+     * @todo: Supprimer l'image uploadée associé à l'item
      */
     public function deleteItem(Request $request, Response $response, array $args ) : Response {
-        try{
-
-            $token = filter_var($request->getParsedBodyParam('token'),FILTER_SANITIZE_STRING);
-            $createToken = filter_var($request->getParsedBodyParam('creationToken'), FILTER_SANITIZE_STRING);
-            $item  = $request->getParsedBodyParam('item_id');
-
-            if(!isset($token, $createToken)){
-                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, cela veut dire que vous n'êtes pas le propriétaire de la liste");
-            }
+        try {
+            $token = filter_var($args['token'],FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $item_id  = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
             
-            $l = Liste::where(['token' =>  $token, 'creationToken' => $createToken])->firstOrFail();
-
-
-            /*
-                - le test du cookie est traditionnel avec le tableau superglobale $_COOKIE 
-                    et supprime l'item dans la bdd, permet de tester l'existence du cookie du créateur 
-
-                    ===> FONCTIONNE
-
-                - la condition en commentaire en dessous ne fonctionne pas, 
-                    le message flash de succès s'affiche sans supprimer l'item dans la bdd
-
-                    ===> A REVOIR POUR ETABLIR UN TEST PLUS ESTHETIQUE ET PLUS SECURISER
-            */
-
-            //if(in_array($l->creationToken, $this->getCreationTokens())){
-
-            if(isset($_COOKIE['nom']) && isset($_COOKIE['created'])){
-                Item::where([ 'liste_id' => $l->no, 'id' => $item ])->delete();
-            }
+            $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
+            $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
+            $item->destroy($item_id);
             
 
-            $this->flash->addMessage('success', "Votre item a été supprimée !");
+            $this->flash->addMessage('success', "Votre objet a été supprimé !");
             $response = $response->withRedirect($this->router->pathFor('home'));
 
         }catch(ModelNotFoundException $e){
