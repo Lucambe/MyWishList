@@ -58,7 +58,7 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 - [ ] *Supprimer une image d'un item*
 - [x] *Partager une liste* (Jules)
 - [ ] *Consulter les réservations d'une de ses listes avant échéance*
-- [ ] *Consulter les réservations et messages d'une de ses listes après échéance*
+- [x] *Consulter les réservations et messages d'une de ses listes après échéance* (Jules)
 
 ### Extensions
 - [ ] *Créer un compte*
