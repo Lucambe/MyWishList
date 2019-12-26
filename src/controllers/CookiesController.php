@@ -76,7 +76,7 @@ abstract class CookiesController extends Controller {
      */
     public function createResponseCookie(Response $response) {
         return SetCookies::fromResponse($response)
-            ->with(SetCookie::createRememberedForever("wl_infos")->withValue(json_encode($this->infos)))
+            ->with(SetCookie::createRememberedForever("wl_infos")->withPath("/")->withValue(json_encode($this->infos)))
             ->renderIntoSetCookieHeader($response);
     }
 
@@ -123,5 +123,4 @@ abstract class CookiesController extends Controller {
             unset($this->infos['creationTokens'][$token]);
         }
     }
-
 }
