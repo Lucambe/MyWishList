@@ -34,7 +34,7 @@ class ItemController extends CookiesController {
             $this->loadCookiesFromRequest($request);
 
             $can = [
-                "canSee" => $liste->haveExpired() || !in_array($liste->tokenCreation, $this->getCreationTokens()),
+                "canSee" => $liste->haveExpired() || !in_array($liste->creationToken, $this->getCreationTokens()),
                 "haveExpired" => $liste->haveExpired(),
                 "haveCreated" => in_array($liste->tokenCreation, $this->getCreationTokens())
             ];
