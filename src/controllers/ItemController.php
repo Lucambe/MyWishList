@@ -71,10 +71,10 @@ class ItemController extends CookiesController {
         try {
             $name = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $message = filter_var($request->getParsedBodyParam('message'), FILTER_SANITIZE_STRING);
-            $item_id = filter_var($request->getParsedBodyParam('item_id'), FILTER_SANITIZE_NUMBER_INT);
-            $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
 
-            if(!isset($name, $message, $item_id, $token)) throw new Exception("Un des paramètres est manquant.");
+            if(mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères");
 
             $liste = Liste::where('token', '=', $token)->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
@@ -110,11 +110,12 @@ class ItemController extends CookiesController {
             $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
             $file = $request->getUploadedFiles('file');
             $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
-            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_INT);
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT);
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
 
-            if(!isset($nom, $description, $file, $prix, $token, $creationToken)) throw new Exception("Un des paramètres est manquant.");
+            if(mb_strlen($nom, 'utf8') < 2) throw new Exception("Le nom doit comporter au minimum 2 caractères");
+            if(mb_strlen($prix, 'utf8') < 1) throw new Exception("Le prix doit comporter au moins 1 caractère");
 
             /**
              * WTF Anthony, si coté client la valeur est modifiée, il peut upload un fichier dont la taille peut être choisie...
@@ -164,12 +165,11 @@ class ItemController extends CookiesController {
             $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
             if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il est donc impossible de le supprimer.");
+
             $item->destroy($item_id);
-            
 
             $this->flash->addMessage('success', "Votre objet a été supprimé !");
             $response = $response->withRedirect($this->router->pathFor('home'));
-
         }catch(ModelNotFoundException $e){
             $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer cet item.');
             $response = $response->withRedirect($this->router->pathFor('home'));
@@ -190,7 +190,10 @@ class ItemController extends CookiesController {
             $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
             $nom = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('desc'), FILTER_SANITIZE_STRING);
-            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT);
+
+            if(mb_strlen($prix, 'utf8') < 2) throw new Exception("Le nom doit comporter au moins 1 caractère");
+            if(mb_strlen($prix, 'utf8') < 1) throw new Exception("Le prix doit comporter au moins 1 caractère");
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
@@ -212,5 +215,4 @@ class ItemController extends CookiesController {
         }
         return $response;
     }
-
 }

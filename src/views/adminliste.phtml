@@ -17,16 +17,17 @@
                     <input type="hidden" value="<?= $item->id ?>" name="item"/>
                     <div class="form-group">
                         <label for="inputName">Nom*</label>
-                        <input type="text" name="name" class="form-control" id="inputName" placeholder="Nom de l'objet" value="<?= $item->nom ?>">
+                        <input type="text" name="name" class="form-control" id="inputName" placeholder="Nom de l'objet" value="<?= $item->nom ?>" required>
                     </div>
                     <div class="form-group">
-                        <label for="textarea">Description*</label>
-                        <textarea class="form-control" id="inputDesc" rows="3" name="desc"><?= $item->descr?></textarea>
+                        <label for="inputDesc">Description</label>
+                        <textarea class="form-control" id="inputDesc" rows="3" name="desc" required><?= $item->descr?></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="textarea">Prix*</label>
-                        <input class="form-control" id="inputPrice" rows="3" name="prix" value="<?= $item->tarif ?>">
+                        <label for="inputPrice">Prix*</label>
+                        <input type="number" class="form-control" id="inputPrice" rows="3" name="prix" value="<?= $item->tarif ?>" required>
                     </div>
+                    Les champs marqués d'un astérisque sont obligatoires.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -37,7 +38,7 @@
     </div>
 </div>
 <?php endif; endforeach; ?>
-<div class="alert alert-dark" role="alert" xmlns:width="http://www.w3.org/1999/xhtml">
+<div class="alert alert-dark" role="alert">
     <h4 class="alert-heading">Espace Administration</h4>
     <p>C'est à partir de cette page que vous pouvez effectuer des actions sur votre liste.</p>
     <hr>
@@ -66,16 +67,16 @@
                     <div class="card-body">
                         <form method="POST" action="<?= $router->pathFor('updateListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>">
                             <div class="form-group">
-                                <label for="inputName">Titre*</label>
+                                <label for="inputTitle">Titre*</label>
                                 <input type="text" name="newTitle" class="form-control" id="inputTitle" value="<?= $liste->titre ?>">
                             </div>
                             <div class="form-group">
-                                <label for="inputName">Date d'expiration*</label>
+                                <label for="inputDateExpi">Date d'expiration*</label>
                                 <input type="date" name="newDate" class="form-control" id="inputDateExpi" value="<?= $liste->expiration ?>">
                             </div>
                             <div class="form-group">
-                                <label for="textarea">Description*</label>
-                                <textarea class="form-control" id="textarea" rows="3" name="newDescription"><?= $liste->description ?></textarea>
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control" id="inputDesc" rows="3" name="newDescription"><?= $liste->description ?></textarea>
                             </div>
                             Les champs marqués d'un astérisque sont obligatoires.
                             <button type="submit" class="btn btn-lg btn-primary float-right">Envoyer</button>
@@ -108,8 +109,8 @@
                                 <input type="url" name="url" class="form-control" id="inputUrl">
                             </div>
                             <div class="form-group">
-                                <label for="textarea">Description*</label>
-                                <textarea class="form-control" id="textarea" rows="3" name="descr"></textarea>
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control" id="inputDesc" rows="3" name="descr"></textarea>
                             </div>
                             Les champs marqués d'un astérisque sont obligatoires.
                             <button type="submit" class="btn btn-lg btn-primary float-right">Envoyer</button>

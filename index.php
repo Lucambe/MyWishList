@@ -124,7 +124,7 @@ $app->get('/l/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Res
     return $c->getItem($request, $response, $args);
 })->setName('showItem');
 
-$app->post('/book', function (Request $request, Response $response, array $args) use ($container) {
+$app->post('/l/{token:[a-zA-Z0-9]+}/book/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->bookItem($request, $response, $args);
 })->setName('bookItem');

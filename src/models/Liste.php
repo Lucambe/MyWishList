@@ -1,11 +1,7 @@
 <?php
-
 namespace mywishlist\models;
-
 use DateTime;
-use Dflydev\FigCookies\Cookies;
 use Illuminate\Database\Eloquent\Model;
-use Slim\Http\Request;
 
 class Liste extends Model{
     protected $table = "liste";
