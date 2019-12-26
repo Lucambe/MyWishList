@@ -182,19 +182,19 @@ class ItemController extends CookiesController {
 
     /**
      * @todo: ajouter modification url et image!
-     * @todo: Un item déjà reservé ne peut pas être modifié!
      */
     public function updateItem(Request $request, Response $response, array $args) : Response {
         try {
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
-            $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
             $nom = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('desc'), FILTER_SANITIZE_STRING);
             $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
-            $item = Item::where(['id' => $id, 'liste_id' => $liste->no])->firstOrFail();
+            $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
+            if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
 
             $item->nom = $nom;
             $item->descr = $description;
