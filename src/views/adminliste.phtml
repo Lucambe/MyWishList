@@ -134,7 +134,9 @@
                                             <?php if($item->reservation()->get()->isEmpty()): ?>
                                             <div class="btn-group btn-group-sm float-right" role="group">
                                                 <a class="btn btn-sm btn-primary" data-toggle="modal" href="#edit<?= $item->id ?>" role="button">Modifier</a>
-                                                <a class="btn btn-sm btn-danger" href="<?= $router->pathFor('deleteItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>" role="button">Supprimer</a>
+                                                <button type="submit" class="btn btn-sm btn-danger" data-toggle="popover" title="<i class='fas fa-exclamation-triangle'></i> Êtes-vous sûr?" data-placement="bottom" data-trigger="focus" data-content="<div class='btn-group btn-group-sm' role='group'><a class='btn btn-sm btn-danger' href='<?= $router->pathFor('deleteItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>'>Confirmer</a><a class='btn btn-sm btn-primary' href='#'>Annuler</a></div>">
+                                                    Supprimer
+                                                </button>
                                             </div>
                                             <?php endif; ?>
                                         </div>
