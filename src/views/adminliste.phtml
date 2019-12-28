@@ -230,7 +230,11 @@
                             <?php foreach ($items as $item) : ?>
                                 <div class="col mb-2">
                                     <div class="card h-100">
-                                        <img class="card-img" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet" style="height: 8vw;">
+                                        <?php if(filter_var($item->img, FILTER_VALIDATE_URL)): ?>
+                                            <iframe class="card-img" src="<?= $rootUri ?><?= $item->img ?>" ></iframe>
+                                        <?php else: ?>
+                                            <img class="card-img" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet" style="height: 8vw;">
+                                        <?php endif; ?>
                                         <div class="card-img-overlay">
                                             <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
                                             <?php if($item->reservation()->get()->isEmpty()): ?>

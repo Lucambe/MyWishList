@@ -216,7 +216,8 @@ class ItemController extends CookiesController {
     }
 
     /**
-    *    @todo : FONCTIONS SUIVANTES PAS FINI NI FIXER
+    *    @todo : ---> FONCTIONNE MAIS NE GERE PAS LE HOT-LINKING + SUPPRESSION D'UNE IMAGE PAR UN STRING VIDE (A REVOIR !!)
+    *            
     */
     public function addImgItem(Request $request, Response $response, array $args) : Response {
         try{
@@ -231,11 +232,11 @@ class ItemController extends CookiesController {
                 cela veut dire que vous n'êtes pas le propriétaire de la liste. De plus, êtes-vous sûr d'avoir spécifié le lien de l'image à ajouter ?");
             }
             
-                $liste = Liste::where(['token' =>  $token, 'creationToken' => $createToken])->firstOrFail();
+                $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
                 $item = Item::where(['liste_id' => $liste->no , 'id' => $item_id])->firstOrFail();
                 if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
 
-                $item->img=$url;
+                $item->img = $url;
                 $item->save();
 
                 $this->flash->addMessage('success', 'Une image a été ajouter à votre item !');
@@ -295,12 +296,14 @@ class ItemController extends CookiesController {
                 cela veut dire que vous n'êtes pas le propriétaire de la liste.");
             }
 
-            $liste = Liste::where(['token' =>  $token, 'creationToken' => $createToken])->firstOrFail();
+            $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['liste_id' => $liste->no , 'id' => $item_id])->firstOrFail();
             if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
             if(!isset($item->img)) throw new Exception("Cet item ne possède pas d'image.");
 
-            $item->img->delete();
+            // fonctionne pas avec unset()
+            $item->img="";
+            $item->save();
 
             $this->flash->addMessage('success', "L'image de votre item à été supprimer !");
             $response = $response->withRedirect($this->router->pathFor('home'));
