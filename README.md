@@ -80,3 +80,4 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 **PERNOT Anthony** - S3B @[anthopernot](https://github.com/Wilders/MyWishList/commits?author=anthopernot)
 
 **CHEVALIER Nathan** - S3B @[FuretVolant](https://github.com/Wilders/MyWishList/commits?author=FuretVolant)
+
