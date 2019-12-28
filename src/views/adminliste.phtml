@@ -21,11 +21,11 @@
                     </div>
                     <div class="form-group">
                         <label for="inputDesc">Description</label>
-                        <textarea class="form-control" id="inputDesc" rows="3" name="desc" required><?= $item->descr?></textarea>
+                        <textarea class="form-control" id="inputDesc" rows="3" name="desc"><?= $item->descr?></textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputPrice">Prix*</label>
-                        <input type="number" class="form-control" id="inputPrice" rows="3" name="prix" value="<?= $item->tarif ?>" required>
+                        <input type="number" step="0.01" min="0" class="form-control" id="inputPrice" rows="3" name="prix" value="<?= $item->tarif ?>" required>
                     </div>
                     Les champs marqués d'un astérisque sont obligatoires.
                 </div>
@@ -44,6 +44,22 @@
     <hr>
     <p class="mb-0">Vous modifiez actuellement la liste «<a href="<?=$router->pathFor('showListe', ['token'=> $liste->token]) ?>"><?= $liste->titre ?></a>».</p>
 </div>
+<?php if(isset($flash['error'])) foreach($flash['error'] as $m): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Mince!</strong> <?= $m ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<?php endforeach; ?>
+<?php if(isset($flash['success'])) foreach($flash['success'] as $m): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Super!</strong> <?= $m ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<?php endforeach; ?>
 <div class="row">
     <div class="col-3">
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -97,7 +113,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputPrix">Prix*</label>
-                                <input type="number" name="prix" class="form-control" id="inputPrix">
+                                <input type="number" step="0.01" min="0" name="prix" class="form-control" id="inputPrix">
                             </div>
                             <div class="form-group">
                                 <label for="inputFile">Image</label>

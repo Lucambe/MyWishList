@@ -110,7 +110,7 @@ class ItemController extends CookiesController {
             $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
             $file = $request->getUploadedFiles('file');
             $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
-            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT);
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
 
@@ -142,13 +142,13 @@ class ItemController extends CookiesController {
             move_uploaded_file($file['file']['tmp_name'], '/public/images/'.$file['file']['name']);
 
             $this->flash->addMessage('success', "Votre item a été enregistrée !");
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }catch(ModelNotFoundException $e){
             $this->flash->addMessage('error', 'Nous n\'avons pas pu créer cet item.');
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }catch(Exception $e){
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
         return $response;
     }
@@ -169,13 +169,13 @@ class ItemController extends CookiesController {
             $item->destroy($item_id);
 
             $this->flash->addMessage('success', "Votre objet a été supprimé !");
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }catch(ModelNotFoundException $e){
             $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer cet item.');
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }catch(Exception $e){
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
         return $response;
     }
@@ -190,8 +190,7 @@ class ItemController extends CookiesController {
             $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
             $nom = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('desc'), FILTER_SANITIZE_STRING);
-            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT);
-
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
             if(mb_strlen($prix, 'utf8') < 2) throw new Exception("Le nom doit comporter au moins 1 caractère");
             if(mb_strlen($prix, 'utf8') < 1) throw new Exception("Le prix doit comporter au moins 1 caractère");
 
@@ -205,13 +204,13 @@ class ItemController extends CookiesController {
             $item->save();
 
             $this->flash->addMessage('success', "Votre item a été modifié !");
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }catch(ModelNotFoundException $e){
             $this->flash->addMessage('error', 'Nous n\'avons pas pu modifier cet item.');
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }catch(Exception $e){
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
         return $response;
     }

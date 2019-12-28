@@ -68,7 +68,8 @@ class ListeController extends CookiesController {
             $this->view->render($response, 'adminliste.phtml', [
                 "liste" => $liste,
                 "items" => $liste->items()->get(),
-                "uri" => $request->getUri()
+                "uri" => $request->getUri(),
+                "flash" => $this->flash->getMessages()
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Token invalide.");
@@ -173,13 +174,13 @@ class ListeController extends CookiesController {
             $description = filter_var($request->getParsedBodyParam('newDescription'), FILTER_SANITIZE_STRING);
             $date = $request->getParsedBodyParam('newDate');
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
-            $createToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
 
-            if(!isset($titre, $description, $date, $token, $createToken)) throw new Exception("Un des paramètres est manquant.");
+            if(!isset($titre, $description, $date, $token, $creationToken)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
             if(new DateTime() > new DateTime($date)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
-            $liste = Liste::where(['token' => $token, 'creationToken' => $createToken])->firstOrFail();
+            $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
 
             $liste->titre = $titre;
             $liste->description = $description;
@@ -187,13 +188,13 @@ class ListeController extends CookiesController {
             $liste->save();
 
             $this->flash->addMessage('success', "Votre modification a été enregistrée!");
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         } catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Impossible de modifier la liste.");
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
         return $response;
     }
