@@ -215,6 +215,9 @@ class ItemController extends CookiesController {
         return $response;
     }
 
+    /**
+    *    @todo : FONCTIONS SUIVANTES PAS FINI NI FIXER
+    */
     public function addImgItem(Request $request, Response $response, array $args) : Response {
         try{
 
