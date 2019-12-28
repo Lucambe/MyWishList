@@ -121,7 +121,7 @@ class ItemController extends CookiesController {
              * WTF Anthony, si coté client la valeur est modifiée, il peut upload un fichier dont la taille peut être choisie...
              * @todo !!!
              */
-            if($file['size'] > $request->getParsedBodyParam('MAX_FILE_SIZE')) throw new Exception("La taille de l'image est trop grande");
+            if($file['size'] > 2097152) throw new Exception("La taille de l'image est trop grande");
 
             $i = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
 
@@ -214,4 +214,101 @@ class ItemController extends CookiesController {
         }
         return $response;
     }
+
+    public function addImgItem(Request $request, Response $response, array $args) : Response {
+        try{
+
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+            $url = filter_var($request->getParsedBodyParam('picture'),FILTER_SANITIZE_URL);
+
+            if(!isset($token, $creationToken, $item_id, $url)){
+                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, 
+                cela veut dire que vous n'êtes pas le propriétaire de la liste. De plus, êtes-vous sûr d'avoir spécifié le lien de l'image à ajouter ?");
+            }
+            
+                $liste = Liste::where(['token' =>  $token, 'creationToken' => $createToken])->firstOrFail();
+                $item = Item::where(['liste_id' => $liste->no , 'id' => $item_id])->firstOrFail();
+                if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
+
+                $item->img=$url;
+                $item->save();
+
+                $this->flash->addMessage('success', 'Une image a été ajouter à votre item !');
+                $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(ModelNotFoundException $e){
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu ajouter d\'image à cet item.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(Exception $e){
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+
+        return $response;
+    }
+
+    
+    public function editImgItem(Request $request, Response $response, array $args) : Response {
+        try{
+
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+            $url = filter_var($request->getParsedBodyParam('picture'),FILTER_SANITIZE_URL);
+
+            if(!isset($token, $creationToken, $item_id)){
+                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, 
+                cela veut dire que vous n'êtes pas le propriétaire de la liste. ");
+            }
+
+            $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
+            $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
+            if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
+
+            $item->img = $url;
+            $item->save();
+
+            $this->flash->addMessage('success', 'L\'image de votre item a été modifier !');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(ModelNotFoundException $e){
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer l\'image de cet item.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(Exception $e){
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
+    public function deleteImgItem(Request $request, Response $response, array $args) : Response {
+        try{
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+
+            if(!isset($token, $creationToken, $item_id)){
+                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, 
+                cela veut dire que vous n'êtes pas le propriétaire de la liste.");
+            }
+
+            $liste = Liste::where(['token' =>  $token, 'creationToken' => $createToken])->firstOrFail();
+            $item = Item::where(['liste_id' => $liste->no , 'id' => $item_id])->firstOrFail();
+            if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
+            if(!isset($item->img)) throw new Exception("Cet item ne possède pas d'image.");
+
+            $item->img->delete();
+
+            $this->flash->addMessage('success', "L'image de votre item à été supprimer !");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(ModelNotFoundException $e){
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer l\'image de cet item.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }catch(Exception $e){
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
 }

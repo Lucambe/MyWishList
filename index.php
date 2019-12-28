@@ -139,6 +139,21 @@ $app->post('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[
     return $c->updateItem($request, $response, $args);
 })->setName('updateItem');
 
+$app->post('/addImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->addImgItem($request, $response, $args);
+})->setName('ajouterImageItem');
+
+$app->post('/editImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->editImgItem($request, $response, $args);
+})->setName('modifierImageItem');
+
+$app->post('/deleteImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->deleteImgItem($request, $response, $args);
+})->setName('supprimerImageItem');
+
 $app->get('/delete/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->deleteItem($request, $response, $args);

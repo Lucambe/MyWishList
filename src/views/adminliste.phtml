@@ -3,6 +3,87 @@
  Modal Modification
 @todo: Ajouter modif. image, url
 -->
+<div class="modal fade" id="addImg<?= $item->id ?>" tabindex="-1" role="dialog" aria-labelledby="ajouterImageLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+              <h5 class="modal-title" id="ajouterImageLabel"><?= $item->nom ?> - Ajout image</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                  </button>
+           </div>
+            <form id="form_ajouterImage" method="POST" action="<?= $router->pathFor('ajouterImageItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>">
+               <div class="modal-body">
+                    <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                    <input type="hidden" value="<?= $liste->creationToken ?>" name="creationToken"/>
+                    <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                   <div class="form-group">
+                     <label for="inputLinkPicture">Ajouter un lien</label>
+                     <input type="text" name="picture" class="form-control" id="inputLinkPicture" placeholder="URL externe d'une image ou chemin relatif d'une image déjà présente dans /public/images/">
+                   </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <button type="submit" class="btn btn-primary">Appliquer</button>
+               </div>
+            </form>
+         </div>
+     </div>            
+</div>
+<div class="modal fade" id="deleteImg<?= $item->id ?>" tabindex="-1" role="dialog" aria-labelledby="supprimerImageLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+              <h5 class="modal-title" id="supprimerImageLabel"><?= $item->nom ?> - Suppression image</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                  </button>
+           </div>
+            <form id="form_supprimerImage" method="POST" action="<?= $router->pathFor('supprimerImageItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>">
+               <div class="modal-body">
+                    <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                    <input type="hidden" value="<?= $liste->creationToken ?>" name="creationToken"/>
+                    <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                   <div class="form-group">
+                     <label for="inputLinkPicture">Êtes-vous sûr de supprimer l'image de l'item <?= $item->nom ?> ?</label>
+                   </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Non</button>
+                  <button type="submit" class="btn btn-success">Oui</button>
+               </div>
+            </form>
+         </div>
+     </div>            
+</div>
+<div class="modal fade" id="editImg<?= $item->id ?>" tabindex="-1" role="dialog" aria-labelledby="modifierImageLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+              <h5 class="modal-title" id="modifierImageLabel"><?= $item->nom ?> - Modification image</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                  </button>
+           </div>
+            <form id="form_modifierImage" method="POST" action="<?= $router->pathFor('modifierImageItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>">
+               <div class="modal-body">
+                    <input type="hidden" value="<?= $liste->token ?>" name="token"/>
+                    <input type="hidden" value="<?= $liste->creationToken ?>" name="creationToken"/>
+                    <input type="hidden" value="<?= $item->id ?>" name="item_id"/>
+                   <div class="form-group">
+                   <label for="inputLinkPicture">Modifier le lien</label>
+                   <input type="text" name="picture" class="form-control" id="inputLinkPicture" placeholder="Lien de l'image" value="<?= $item->img ?>" required>
+                   </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <button type="submit" class="btn btn-primary">Valider</button>
+               </div>
+            </form>
+         </div>
+     </div>            
+</div>
+
 <div class="modal fade" id="edit<?= $item->id ?>" tabindex="-1" role="dialog" aria-labelledby="modifierLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -26,6 +107,11 @@
                     <div class="form-group">
                         <label for="inputPrice">Prix*</label>
                         <input type="number" step="0.01" min="0" class="form-control" id="inputPrice" rows="3" name="prix" value="<?= $item->tarif ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-sm btn-primary" data-toggle="modal" href="#addImg<?= $item->id ?>" role="button" data-dismiss="modal">Ajouter image</a>
+                        <a class="btn btn-sm btn-primary" data-toggle="modal" href="#editImg<?= $item->id ?>" role="button" data-dismiss="modal">Changer image</a>
+                        <a class="btn btn-sm btn-primary" data-toggle="modal" href="#deleteImg<?= $item->id ?>" role="button" data-dismiss="modal">Supprimer image</a>
                     </div>
                     Les champs marqués d'un astérisque sont obligatoires.
                 </div>
@@ -118,7 +204,6 @@
                             <div class="form-group">
                                 <label for="inputFile">Image</label>
                                 <input type="file" accept="image/png, image/jpg, image/jpeg" name="file" class="form-control" id="inputFile">
-                                <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
                             </div>
                             <div class="form-group" data-toggle="tooltip">
                                 <label for="inputUrl">Lien pour plus d'information</label>
