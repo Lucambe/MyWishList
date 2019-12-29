@@ -101,7 +101,7 @@ $app->post('/create/liste', function (Request $request, Response $response, arra
     return $c->createListe($request, $response, $args);
 })->setName('createListe');
 
-$app->post('/addMessage', function (Request $request, Response $response, array $args) use ($container) {
+$app->post('/l/{token:[a-zA-Z0-9]+}/addMessage', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ListeController($container);
     return $c->addMessage($request, $response, $args);
 })->setName('addMessage');
@@ -139,20 +139,10 @@ $app->post('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[
     return $c->updateItem($request, $response, $args);
 })->setName('updateItem');
 
-$app->post('/addImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new ItemController($container);
-    return $c->addImgItem($request, $response, $args);
-})->setName('ajouterImageItem');
-
-$app->post('/editImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new ItemController($container);
-    return $c->editImgItem($request, $response, $args);
-})->setName('modifierImageItem');
-
-$app->post('/deleteImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+$app->get('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}/deleteImage', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->deleteImgItem($request, $response, $args);
-})->setName('supprimerImageItem');
+})->setName('deleteImageItem');
 
 $app->get('/delete/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);

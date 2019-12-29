@@ -40,7 +40,11 @@
 <div class="card mb-3">
     <div class="row no-gutters">
         <div class="col-md-3">
-            <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+            <?php if(filter_var($item->img, FILTER_VALIDATE_URL)): ?>
+                <img src="<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+            <?php else: ?>
+                <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+            <?php endif; ?>
         </div>
         <div class="col-md-8">
             <div class="card-body">

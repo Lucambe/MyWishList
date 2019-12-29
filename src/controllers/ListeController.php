@@ -90,9 +90,8 @@ class ListeController extends CookiesController {
         try {
             $name = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $message = filter_var($request->getParsedBodyParam('message'), FILTER_SANITIZE_STRING);
-            $token = filter_var($request->getParsedBodyParam('token'), FILTER_SANITIZE_STRING);
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
 
-            if(!isset($name, $message, $token)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($message, 'utf8') < 4) throw new Exception("Votre message doit comporter au minimum 4 caractères.");
             if(mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères.");
 
@@ -131,7 +130,6 @@ class ListeController extends CookiesController {
             $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
             $dateExp = $request->getParsedBodyParam('dateExpi');
 
-            if(!isset($titre, $description, $dateExp)) throw new Exception("Un des paramètres est manquant.");
             if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
             if(new DateTime() > new DateTime($dateExp)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 

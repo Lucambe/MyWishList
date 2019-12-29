@@ -106,61 +106,49 @@ class ItemController extends CookiesController {
 
     public function createItem(Request $request, Response $response, array $args) : Response {
         try {
-            $nom = filter_var($request->getParsedBodyParam('nom'), FILTER_SANITIZE_STRING);
-            $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
-            $file = $request->getUploadedFiles('file');
-            $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
-            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $nom = filter_var($request->getParsedBodyParam('nom'), FILTER_SANITIZE_STRING);
+            $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
+            $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
+            $img = filter_var($request->getParsedBodyParam('picture'), FILTER_SANITIZE_STRING);
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
             if(mb_strlen($nom, 'utf8') < 2) throw new Exception("Le nom doit comporter au minimum 2 caractères");
-            if(mb_strlen($prix, 'utf8') < 1) throw new Exception("Le prix doit comporter au moins 1 caractère");
+            if($prix < 0) throw new Exception("Le prix ne peut pas être négatif");
+            if(mb_strlen($img, 'utf8') == 0) $img = "default.jpg";
+            if(!filter_var($img, FILTER_VALIDATE_URL)) {
+                if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $request->getUri()->getBasePath() . "/public/images/" . $img)) throw new Exception("Le lien n'est pas bon et/ou l'image voulue n'existe pas dans le dossier /public/images/");
+            }
 
-            /**
-             * WTF Anthony, si coté client la valeur est modifiée, il peut upload un fichier dont la taille peut être choisie...
-             * @todo !!!
-             */
-            if($file['size'] > 2097152) throw new Exception("La taille de l'image est trop grande");
-
-            $i = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
+            $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
 
             $item = new Item();
-            $item->liste_id = $i->no;
+            $item->liste_id = $liste->no;
             $item->nom = $nom;
             $item->descr = $description;
 
-            /* Si pas d'image uploadé, ne rien faire, car le modèle Item
-            met déjà une image par défaut (default.png), l'upload d'image n'est pas encore gérée correctement, la ligne sera donc à décommenter quand ça sera fait,
-            et il faudra tester si une image a été upload avant de la set.
-            */
-            // $item->img = $file['file']['name'];
             $item->url = $url;
             $item->tarif = $prix;
             $item->save();
 
-            move_uploaded_file($file['file']['tmp_name'], '/public/images/'.$file['file']['name']);
-
             $this->flash->addMessage('success', "Votre item a été enregistrée !");
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
-        }catch(ModelNotFoundException $e){
+        } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', 'Nous n\'avons pas pu créer cet item.');
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
-        }catch(Exception $e){
+        } catch(Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
         return $response;
     }
 
-    /**
-     * @todo: Supprimer l'image uploadée associé à l'item
-     */
     public function deleteItem(Request $request, Response $response, array $args ) : Response {
         try {
             $token = filter_var($args['token'],FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
-            $item_id  = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
             
             $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
@@ -170,10 +158,10 @@ class ItemController extends CookiesController {
 
             $this->flash->addMessage('success', "Votre objet a été supprimé !");
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
-        }catch(ModelNotFoundException $e){
+        } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer cet item.');
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
-        }catch(Exception $e){
+        } catch(Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
@@ -185,14 +173,21 @@ class ItemController extends CookiesController {
      */
     public function updateItem(Request $request, Response $response, array $args) : Response {
         try {
-            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $token = filter_var($args['token'],FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
-            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+            $item_id  = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
             $nom = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('desc'), FILTER_SANITIZE_STRING);
-            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+            $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $img = filter_var($request->getParsedBodyParam('picture'), FILTER_SANITIZE_STRING);
+            $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
+
             if(mb_strlen($prix, 'utf8') < 2) throw new Exception("Le nom doit comporter au moins 1 caractère");
-            if(mb_strlen($prix, 'utf8') < 1) throw new Exception("Le prix doit comporter au moins 1 caractère");
+            if($prix < 0) throw new Exception("Le prix ne peut pas être négatif");
+            if(mb_strlen($img, 'utf8') == 0) $img = "default.jpg";
+            if(!filter_var($img, FILTER_VALIDATE_URL)) {
+                if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $request->getUri()->getBasePath() . "/public/images/" . $img)) throw new Exception("Le lien n'est pas bon et/ou l'image voulue n'existe pas dans le dossier /public/images/");
+            }
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
@@ -201,118 +196,43 @@ class ItemController extends CookiesController {
             $item->nom = $nom;
             $item->descr = $description;
             $item->tarif = $prix;
+            $item->img = $img;
+            $item->url = $url;
             $item->save();
 
             $this->flash->addMessage('success', "Votre item a été modifié !");
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
-        }catch(ModelNotFoundException $e){
+        } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', 'Nous n\'avons pas pu modifier cet item.');
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
-        }catch(Exception $e){
+        } catch(Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
-        }
-        return $response;
-    }
-
-    /**
-    *    @todo : ---> FONCTIONNE MAIS NE GERE PAS LE HOT-LINKING + SUPPRESSION D'UNE IMAGE PAR UN STRING VIDE (A REVOIR !!)
-    *            
-    */
-    public function addImgItem(Request $request, Response $response, array $args) : Response {
-        try{
-
-            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
-            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
-            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
-            $url = filter_var($request->getParsedBodyParam('picture'),FILTER_SANITIZE_URL);
-
-            if(!isset($token, $creationToken, $item_id, $url)){
-                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, 
-                cela veut dire que vous n'êtes pas le propriétaire de la liste. De plus, êtes-vous sûr d'avoir spécifié le lien de l'image à ajouter ?");
-            }
-            
-                $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
-                $item = Item::where(['liste_id' => $liste->no , 'id' => $item_id])->firstOrFail();
-                if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
-
-                $item->img = $url;
-                $item->save();
-
-                $this->flash->addMessage('success', 'Une image a été ajouter à votre item !');
-                $response = $response->withRedirect($this->router->pathFor('home'));
-        }catch(ModelNotFoundException $e){
-            $this->flash->addMessage('error', 'Nous n\'avons pas pu ajouter d\'image à cet item.');
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }catch(Exception $e){
-            $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }
-
-        return $response;
-    }
-
-    
-    public function editImgItem(Request $request, Response $response, array $args) : Response {
-        try{
-
-            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
-            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
-            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
-            $url = filter_var($request->getParsedBodyParam('picture'),FILTER_SANITIZE_URL);
-
-            if(!isset($token, $creationToken, $item_id)){
-                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, 
-                cela veut dire que vous n'êtes pas le propriétaire de la liste. ");
-            }
-
-            $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
-            $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
-            if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
-
-            $item->img = $url;
-            $item->save();
-
-            $this->flash->addMessage('success', 'L\'image de votre item a été modifier !');
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }catch(ModelNotFoundException $e){
-            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer l\'image de cet item.');
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }catch(Exception $e){
-            $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
     }
 
     public function deleteImgItem(Request $request, Response $response, array $args) : Response {
-        try{
+        try {
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
-            $item_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
-
-            if(!isset($token, $creationToken, $item_id)){
-                throw new Exception("Vous n'avez pas spécifié votre token de créateur ou le cookie du créateur n'existe pas tout simplement, 
-                cela veut dire que vous n'êtes pas le propriétaire de la liste.");
-            }
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
 
             $liste = Liste::where(['token' =>  $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['liste_id' => $liste->no , 'id' => $item_id])->firstOrFail();
             if(Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
-            if(!isset($item->img)) throw new Exception("Cet item ne possède pas d'image.");
 
-            // fonctionne pas avec unset()
-            $item->img="";
+            $item->img = "default.jpg";
             $item->save();
 
-            $this->flash->addMessage('success', "L'image de votre item à été supprimer !");
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }catch(ModelNotFoundException $e){
-            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer l\'image de cet item.');
-            $response = $response->withRedirect($this->router->pathFor('home'));
-        }catch(Exception $e){
+            $this->flash->addMessage('success', "L'image de votre objet à été supprimée!");
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
+        } catch(ModelNotFoundException $e) {
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer l\'image de cet objet.');
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
+        } catch(Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
         return $response;
     }
