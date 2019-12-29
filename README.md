@@ -53,9 +53,9 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 - [x] *Ajouter des items* (Anthony, Jules)
 - [x] *Modifier un item* (Nathan, Jules)
 - [x] *Supprimer un item* (Anthony, Jules)
-- [ ] *Rajouter une image à un item*
-- [ ] *Modifier une image à un item*
-- [ ] *Supprimer une image d'un item*
+- [x] *Rajouter une image à un item* (Anthony, Jules)
+- [x] *Modifier une image à un item* (Anthony, Jules)
+- [x] *Supprimer une image d'un item* (Jules)
 - [x] *Partager une liste* (Jules)
 - [ ] *Consulter les réservations d'une de ses listes avant échéance*
 - [x] *Consulter les réservations et messages d'une de ses listes après échéance* (Jules)
