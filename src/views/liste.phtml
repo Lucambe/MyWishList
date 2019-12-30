@@ -30,38 +30,38 @@
         </div>
     </div>
 <?php endif; ?>
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
-        <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
-        <div class="ml-auto">
-            <?php if (!$infos["haveCreated"] && !$infos["haveExpired"]): ?>
-                <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">
-                    Rédiger un message
-                </button>
-            <?php endif; ?>
-            <?php if ($infos["haveCreated"]): ?>
-                <a href="<?= $router->pathFor('showAdminListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>" class="ml-auto btn btn-outline-danger btn-sm">
-                    Administrer la liste
-                </a>
-            <?php endif; ?>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
+            <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
+            <div class="ml-auto">
+                <?php if (!$infos["haveCreated"] && !$infos["haveExpired"]): ?>
+                    <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">
+                        Rédiger un message
+                    </button>
+                <?php endif; ?>
+                <?php if ($infos["haveCreated"]): ?>
+                    <a href="<?= $router->pathFor('showAdminListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>" class="ml-auto btn btn-outline-danger btn-sm">
+                        Administrer la liste
+                    </a>
+                <?php endif; ?>
+            </div>
+        </ol>
+    </nav>
+    <div class="card text-center mb-2">
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p><?= $liste->description ?></p>
+                <footer class="blockquote-footer">Expire le <cite title="Source Title"><?= date("d/m/Y", strtotime($liste->expiration)) ?></cite></footer>
+            </blockquote>
         </div>
-    </ol>
-</nav>
-<div class="card text-center mb-2">
-    <div class="card-body">
-        <blockquote class="blockquote mb-0">
-            <p><?= $liste->description ?></p>
-            <footer class="blockquote-footer">Expire le <cite title="Source Title"><?= date("d/m/Y", strtotime($liste->expiration)) ?></cite></footer>
-        </blockquote>
     </div>
-</div>
 <?php if (!$items->isEmpty()): ?>
     <div class="row row-cols-1 row-cols-md-2">
         <?php foreach ($items as $item) : ?>
             <div class="col mb-4">
                 <div class="card h-100 my-2">
-                    <?php if(filter_var($item->img, FILTER_VALIDATE_URL)): ?>
+                    <?php if (filter_var($item->img, FILTER_VALIDATE_URL)): ?>
                         <img class="card-img-top" src="<?= $item->img ?>" alt="Image de l'objet">
                     <?php else: ?>
                         <img class="card-img-top" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet">
@@ -70,13 +70,13 @@
                         <h3 class="card-title"><?= $item->nom ?></h3>
                         <p class="card-text">
                             <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
-                            <?php if(filter_var($item->url, FILTER_VALIDATE_URL)): ?>
+                            <?php if (filter_var($item->url, FILTER_VALIDATE_URL)): ?>
                                 <a href="<?= $item->url ?>" class="card-text badge badge-primary" target="_blank">En savoir plus (lien externe)</a>
                             <?php endif; ?>
                             <?php if ($infos["canSee"]): ?>
                                 <?php if (!$item->reservation()->get()->isEmpty()): ?>
                                     <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
-                                <?php elseif(!$infos["haveExpired"]) : ?>
+                                <?php elseif (!$infos["haveExpired"]) : ?>
                                     <span class="card-text badge badge-success">Disponible</span>
                                 <?php else: ?>
                                     <span class="card-text badge badge-dark">Expiré</span>

@@ -1,4 +1,4 @@
-<?php if(isset($flash['error'])) foreach($flash['error'] as $m): ?>
+<?php if (isset($flash['error'])) foreach ($flash['error'] as $m): ?>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Mince!</strong> <?= $m ?>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -6,7 +6,7 @@
         </button>
     </div>
 <?php endforeach; ?>
-<?php if(isset($flash['success'])) foreach($flash['success'] as $m): ?>
+<?php if (isset($flash['success'])) foreach ($flash['success'] as $m): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>Super!</strong> <?= $m ?>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -1,12 +1,14 @@
 <?php
+
 namespace mywishlist\models;
+
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 
-class Liste extends Model{
+class Liste extends Model {
+    public $timestamps = false;
     protected $table = "liste";
     protected $primaryKey = "no";
-    public $timestamps = false;
 
     public function items() {
         return $this->hasMany('\mywishlist\models\Item', 'liste_id');
@@ -23,7 +25,7 @@ class Liste extends Model{
      * @return bool
      * @throws \Exception
      */
-    public function haveExpired() : bool {
+    public function haveExpired(): bool {
         return new DateTime() > new DateTime($this->expiration);
     }
 }

@@ -1,12 +1,13 @@
 <?php
+
 namespace mywishlist\models;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model {
+    public $timestamps = false;
     protected $table = "item";
     protected $primaryKey = "id";
-    public $timestamps = false;
-
     /**
      * Permet de mettre une image par défaut
      * @var array

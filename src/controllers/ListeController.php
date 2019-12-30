@@ -1,4 +1,5 @@
 <?php
+
 namespace mywishlist\controllers;
 
 use DateTime;
@@ -27,7 +28,7 @@ class ListeController extends CookiesController {
      * @param array $args
      * @return Response
      */
-    public function getListe(Request $request, Response $response, array $args) : Response {
+    public function getListe(Request $request, Response $response, array $args): Response {
         try {
             $liste = Liste::where('token', '=', $args['token'])->firstOrFail();
             $this->loadCookiesFromRequest($request);
@@ -45,7 +46,7 @@ class ListeController extends CookiesController {
                 "nom" => $this->getName(),
                 "infos" => $can
             ]);
-        } catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Cette liste n'existe pas...");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
@@ -61,7 +62,7 @@ class ListeController extends CookiesController {
      * @param array $args
      * @return Response
      */
-    public function getAdminListe(Request $request, Response $response, array $args) : Response {
+    public function getAdminListe(Request $request, Response $response, array $args): Response {
         try {
             $liste = Liste::where(['token' => $args['token'], 'creationToken' => $args['creationToken']])->firstOrFail();
             $this->loadCookiesFromRequest($request);
@@ -73,14 +74,14 @@ class ListeController extends CookiesController {
                 "flash" => $this->flash->getMessages(),
                 "showRes" => $this->getShowRes()
             ]);
-        } catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Token invalide.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
         return $response;
     }
 
-    public function showRes(Request $request, Response $response, array $args) : Response {
+    public function showRes(Request $request, Response $response, array $args): Response {
         $this->loadCookiesFromRequest($request);
         $bool = filter_var($args['bool'], FILTER_VALIDATE_BOOLEAN);
         $this->changeShowRes($bool);
@@ -99,14 +100,14 @@ class ListeController extends CookiesController {
      * @param array $args
      * @return Response
      */
-    public function addMessage(Request $request, Response $response, array $args) : Response {
+    public function addMessage(Request $request, Response $response, array $args): Response {
         try {
             $name = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
             $message = filter_var($request->getParsedBodyParam('message'), FILTER_SANITIZE_STRING);
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
 
-            if(mb_strlen($message, 'utf8') < 4) throw new Exception("Votre message doit comporter au minimum 4 caractères.");
-            if(mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères.");
+            if (mb_strlen($message, 'utf8') < 4) throw new Exception("Votre message doit comporter au minimum 4 caractères.");
+            if (mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères.");
 
             $liste = Liste::where('token', '=', $token)->firstOrFail();
             $this->loadCookiesFromRequest($request);
@@ -137,14 +138,14 @@ class ListeController extends CookiesController {
      * @param array $args
      * @return Response
      */
-    public function createListe(Request $request, Response $response, array $args) : Response {
+    public function createListe(Request $request, Response $response, array $args): Response {
         try {
             $titre = filter_var($request->getParsedBodyParam('titre'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('descr'), FILTER_SANITIZE_STRING);
             $dateExp = $request->getParsedBodyParam('dateExpi');
 
-            if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
-            if(new DateTime() > new DateTime($dateExp)) throw new Exception("La date d'expiration ne peut être déjà passée..");
+            if (mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
+            if (new DateTime() > new DateTime($dateExp)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
             $this->loadCookiesFromRequest($request);
 
@@ -179,7 +180,7 @@ class ListeController extends CookiesController {
      * @param array $args
      * @return Response
      */
-    public function updateListe(Request $request, Response $response, array $args) : Response {
+    public function updateListe(Request $request, Response $response, array $args): Response {
         try {
             $titre = filter_var($request->getParsedBodyParam('newTitle'), FILTER_SANITIZE_STRING);
             $description = filter_var($request->getParsedBodyParam('newDescription'), FILTER_SANITIZE_STRING);
@@ -187,9 +188,9 @@ class ListeController extends CookiesController {
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
 
-            if(!isset($titre, $description, $date, $token, $creationToken)) throw new Exception("Un des paramètres est manquant.");
-            if(mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
-            if(new DateTime() > new DateTime($date)) throw new Exception("La date d'expiration ne peut être déjà passée..");
+            if (!isset($titre, $description, $date, $token, $creationToken)) throw new Exception("Un des paramètres est manquant.");
+            if (mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
+            if (new DateTime() > new DateTime($date)) throw new Exception("La date d'expiration ne peut être déjà passée..");
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
 

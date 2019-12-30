@@ -1,4 +1,5 @@
 <?php
+
 namespace mywishlist\controllers;
 
 use Slim\Http\Request;
@@ -20,7 +21,7 @@ class HomeController extends Controller {
      * @param array $args
      * @return Response
      */
-    public function showHome(Request $request, Response $response, array $args) : Response {
+    public function showHome(Request $request, Response $response, array $args): Response {
         $this->view->render($response, 'home.phtml', [
             "flash" => $this->flash->getMessages()
         ]);

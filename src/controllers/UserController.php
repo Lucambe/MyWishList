@@ -9,5 +9,7 @@ use Slim\Http\Response;
 
 class UserController
 {
-    public function addUser(Request $request, Response $response, array $args){}
+    public function addUser(Request $request, Response $response, array $args)
+    {
+    }
 }

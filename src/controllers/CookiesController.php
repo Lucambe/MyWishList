@@ -1,12 +1,13 @@
 <?php
+
 namespace mywishlist\controllers;
 
 use Dflydev\FigCookies\Cookies;
 use Dflydev\FigCookies\SetCookie;
 use Dflydev\FigCookies\SetCookies;
-use Slim\Http\Response;
 use Slim\Container;
 use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class CookiesController
@@ -28,16 +29,6 @@ abstract class CookiesController extends Controller {
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->infos = self::generateEmptyCookie();
-    }
-
-    /**
-     * Cette méthode récupère les cookies à partir d'une requête
-     * et renvoie une collection de Cookies
-     * @param Request $request
-     * @return Cookies
-     */
-    private static function getCookies(Request $request): Cookies {
-        return Cookies::fromRequest($request);
     }
 
     /**
@@ -68,6 +59,15 @@ abstract class CookiesController extends Controller {
         }
     }
 
+    /**
+     * Cette méthode récupère les cookies à partir d'une requête
+     * et renvoie une collection de Cookies
+     * @param Request $request
+     * @return Cookies
+     */
+    private static function getCookies(Request $request): Cookies {
+        return Cookies::fromRequest($request);
+    }
 
     /**
      * Créer une réponse avec un cookie contenant

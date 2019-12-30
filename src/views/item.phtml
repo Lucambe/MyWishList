@@ -30,60 +30,61 @@
         </div>
     </div>
 <?php endif; ?>
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
-        <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showListe', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></h5>
-        <h5 class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></h5>
-    </ol>
-</nav>
-<div class="card mb-3">
-    <div class="row no-gutters">
-        <div class="col-md-3">
-            <?php if(filter_var($item->img, FILTER_VALIDATE_URL)): ?>
-                <img src="<?= $item->img ?>" class="card-img" alt="Image de l'objet">
-            <?php else: ?>
-                <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="card-img" alt="Image de l'objet">
-            <?php endif; ?>
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title"><?= $item->nom ?></h5>
-                <p class="card-text">
-                    <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
-                    <?php if(filter_var($item->url, FILTER_VALIDATE_URL)): ?>
-                        <a href="<?= $item->url ?>" class="card-text badge badge-primary" target="_blank">En savoir plus (lien externe)</a>
-                    <?php endif; ?>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
+            <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showListe', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a>
+            </h5>
+            <h5 class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></h5>
+        </ol>
+    </nav>
+    <div class="card mb-3">
+        <div class="row no-gutters">
+            <div class="col-md-3">
+                <?php if (filter_var($item->img, FILTER_VALIDATE_URL)): ?>
+                    <img src="<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+                <?php else: ?>
+                    <img src="<?= $rootUri ?>/public/images/<?= $item->img ?>" class="card-img" alt="Image de l'objet">
+                <?php endif; ?>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><?= $item->nom ?></h5>
+                    <p class="card-text">
+                        <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
+                        <?php if (filter_var($item->url, FILTER_VALIDATE_URL)): ?>
+                            <a href="<?= $item->url ?>" class="card-text badge badge-primary" target="_blank">En savoir plus (lien externe)</a>
+                        <?php endif; ?>
+                        <?php if ($infos["canSee"]): ?>
+                            <?php if (!$reservation->isEmpty()) : ?>
+                                <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
+                            <?php elseif (!$infos["haveExpired"]) : ?>
+                                <span class="card-text badge badge-success">Disponible</span>
+                            <?php else: ?>
+                                <span class="card-text badge badge-dark">Expiré</span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </p>
+                    <p class="card-text"><?= $item->descr ?></p>
                     <?php if ($infos["canSee"]): ?>
                         <?php if (!$reservation->isEmpty()) : ?>
-                            <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
-                        <?php elseif(!$infos["haveExpired"]) : ?>
-                            <span class="card-text badge badge-success">Disponible</span>
+                            <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
+                                Réserver
+                            </button>
+                        <?php elseif (!$infos["haveExpired"]) : ?>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
+                                Réserver
+                            </button>
                         <?php else: ?>
-                            <span class="card-text badge badge-dark">Expiré</span>
+                            <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="La liste a expiré" disabled>
+                                Réserver
+                            </button>
                         <?php endif; ?>
                     <?php endif; ?>
-                </p>
-                <p class="card-text"><?= $item->descr ?></p>
-                <?php if ($infos["canSee"]): ?>
-                    <?php if (!$reservation->isEmpty()) : ?>
-                        <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="L'objet est déjà réservé" disabled>
-                            Réserver
-                        </button>
-                    <?php elseif(!$infos["haveExpired"]) : ?>
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserver">
-                            Réserver
-                        </button>
-                    <?php else: ?>
-                        <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="La liste a expiré" disabled>
-                            Réserver
-                        </button>
-                    <?php endif; ?>
-                <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
-</div>
 <?php if (!$reservation->isEmpty() && ($infos["haveExpired"])) : ?>
     <div class="card">
         <div class="card-header">
@@ -92,7 +93,7 @@
         <div class="card-body">
             <blockquote class="blockquote mb-0">
                 <p><?= $reservation->first()->message ?></p>
-                <footer class="blockquote-footer"><?= $reservation->first()->nom ?>, <cite title="Source de la Réservation">pour la réservation de <?= $item->nom ?> dans <?= $liste->titre ?></cite></footer>
+                <footer class="blockquote-footer"><?= $reservation->first()->nom ?>, <cite title="Source de la Réservation">pour la réservation de <?= $item->nom ?>dans <?= $liste->titre ?></cite></footer>
             </blockquote>
         </div>
     </div>
