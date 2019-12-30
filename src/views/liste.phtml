@@ -70,6 +70,9 @@
                         <h3 class="card-title"><?= $item->nom ?></h3>
                         <p class="card-text">
                             <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
+                            <?php if(filter_var($item->url, FILTER_VALIDATE_URL)): ?>
+                                <a href="<?= $item->url ?>" class="card-text badge badge-primary" target="_blank">En savoir plus (lien externe)</a>
+                            <?php endif; ?>
                             <?php if ($infos["canSee"]): ?>
                                 <?php if (!$item->reservation()->get()->isEmpty()): ?>
                                     <span class="card-text badge badge-danger">Reservé par <?= $item->reservation()->first()->nom ?></span>
