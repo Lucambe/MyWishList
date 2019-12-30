@@ -104,6 +104,16 @@ class ItemController extends CookiesController {
         return $response;
     }
 
+    /**
+     * Cette fonction permet de
+     * créer un item en vérifiant le prix,
+     * et l'image
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function createItem(Request $request, Response $response, array $args) : Response {
         try {
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
@@ -127,7 +137,7 @@ class ItemController extends CookiesController {
             $item->liste_id = $liste->no;
             $item->nom = $nom;
             $item->descr = $description;
-
+            $item->img = $img;
             $item->url = $url;
             $item->tarif = $prix;
             $item->save();
@@ -144,6 +154,15 @@ class ItemController extends CookiesController {
         return $response;
     }
 
+    /**
+     * Cette fonction permet
+     * de supprimer un item
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function deleteItem(Request $request, Response $response, array $args ) : Response {
         try {
             $token = filter_var($args['token'],FILTER_SANITIZE_STRING);
@@ -169,7 +188,13 @@ class ItemController extends CookiesController {
     }
 
     /**
-     * @todo: ajouter modification url et image!
+     * Cette fonction permet
+     * de mettre à jour un item
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
      */
     public function updateItem(Request $request, Response $response, array $args) : Response {
         try {
@@ -212,6 +237,16 @@ class ItemController extends CookiesController {
         return $response;
     }
 
+    /**
+     * Cette fonction permet
+     * de supprimer l'image
+     * d'un item
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function deleteImgItem(Request $request, Response $response, array $args) : Response {
         try {
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
@@ -236,5 +271,4 @@ class ItemController extends CookiesController {
         }
         return $response;
     }
-
 }

@@ -89,9 +89,6 @@
         </div>
         <p class="text-center my-0">Partagez votre liste!</p>
         <input type="text" readonly class="form-control" id="staticShowListe" value="<?= $uri->getAuthority() . $router->pathfor('showListe', ['token' => $liste->token]) ?>" onclick="clipboard(this)" data-toggle="popover" data-content="<i class='fas fa-check-circle'></i></i> C'est copié!" data-placement="bottom" data-trigger="focus">
-        <button type="submit" class="btn btn-block btn-danger my-2" data-toggle="popover" title="<i class='fas fa-exclamation-triangle'></i> Êtes-vous sûr?" data-placement="bottom" data-trigger="focus" data-content="<div class='btn-group btn-group-sm' role='group'><a class='btn btn-sm btn-danger' href='<?= $router->pathFor('deleteListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>'>Confirmer</a><a class='btn btn-sm btn-primary' href='#'>Annuler</a></div>">
-            Supprimer la liste
-        </button>
     </div>
     <div class="col-9">
         <div class="tab-content" id="v-pills-tabContent">
