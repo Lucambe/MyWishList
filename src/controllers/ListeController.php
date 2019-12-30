@@ -64,17 +64,30 @@ class ListeController extends CookiesController {
     public function getAdminListe(Request $request, Response $response, array $args) : Response {
         try {
             $liste = Liste::where(['token' => $args['token'], 'creationToken' => $args['creationToken']])->firstOrFail();
+            $this->loadCookiesFromRequest($request);
 
             $this->view->render($response, 'adminliste.phtml', [
                 "liste" => $liste,
                 "items" => $liste->items()->get(),
                 "uri" => $request->getUri(),
-                "flash" => $this->flash->getMessages()
+                "flash" => $this->flash->getMessages(),
+                "showRes" => $this->getShowRes()
             ]);
         } catch(ModelNotFoundException $e) {
             $this->flash->addMessage('error', "Token invalide.");
             $response = $response->withRedirect($this->router->pathFor('home'));
         }
+        return $response;
+    }
+
+    public function showRes(Request $request, Response $response, array $args) : Response {
+        $this->loadCookiesFromRequest($request);
+        $bool = filter_var($args['bool'], FILTER_VALIDATE_BOOLEAN);
+        $this->changeShowRes($bool);
+
+        $response = $this->createResponseCookie($response);
+        $this->flash->addMessage('success', "Le mode d'affichage a été changé. Vous pouvez désormais voir si un objet a été réservé sur les listes que vous avez créé à partir de votre administration.");
+        $response = $response->withRedirect($this->router->pathFor('home'));
         return $response;
     }
 

@@ -89,6 +89,11 @@
         </div>
         <p class="text-center my-0">Partagez votre liste!</p>
         <input type="text" readonly class="form-control" id="staticShowListe" value="<?= $uri->getAuthority() . $router->pathfor('showListe', ['token' => $liste->token]) ?>" onclick="clipboard(this)" data-toggle="popover" data-content="<i class='fas fa-check-circle'></i></i> C'est copié!" data-placement="bottom" data-trigger="focus">
+        <?php if($showRes): ?>
+            <a class="btn btn-sm btn-primary btn-block mt-2" href="<?= $router->pathFor('showRes', ['bool' => "false"]) ?>">Cacher les réservations avant échéance</a>
+        <?php else: ?>
+            <a class="btn btn-sm btn-primary btn-block mt-2" href="<?= $router->pathFor('showRes', ['bool' => "true"]) ?>">Afficher les réservations avant échéance</a>
+        <?php endif; ?>
     </div>
     <div class="col-9">
         <div class="tab-content" id="v-pills-tabContent">
@@ -169,12 +174,19 @@
                                         <div class="card-img-overlay">
                                             <span class="card-text badge badge-warning"><?= $item->tarif ?> €</span>
                                             <?php if($item->reservation()->get()->isEmpty()): ?>
+                                            <?php if($showRes): ?>
+                                                <span class="card-text badge badge-dark">Pas encore reservé</span>
+                                            <?php endif; ?>
                                             <div class="btn-group btn-group-sm float-right" role="group">
                                                 <a class="btn btn-sm btn-primary" data-toggle="modal" href="#edit<?= $item->id ?>" role="button">Modifier</a>
                                                 <button type="submit" class="btn btn-sm btn-danger" data-toggle="popover" title="<i class='fas fa-exclamation-triangle'></i> Êtes-vous sûr?" data-placement="bottom" data-trigger="focus" data-content="<div class='btn-group btn-group-sm' role='group'><a class='btn btn-sm btn-danger' href='<?= $router->pathFor('deleteItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>'>Confirmer</a><a class='btn btn-sm btn-primary' href='#'>Annuler</a></div>">
                                                     Supprimer
                                                 </button>
                                             </div>
+                                            <?php else: ?>
+                                                <?php if($showRes): ?>
+                                                    <span class="card-text badge badge-success">Reservé</span>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </div>
                                         <div class="card-body">

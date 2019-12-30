@@ -47,6 +47,7 @@ abstract class CookiesController extends Controller {
     private static function generateEmptyCookie() {
         return [
             "name" => "",
+            "showRes" => false,
             "creationTokens" => []
         ];
     }
@@ -61,7 +62,7 @@ abstract class CookiesController extends Controller {
         $cookies = self::getCookies($request);
         if ($cookies->has("wl_infos") && is_array(json_decode(urldecode($cookies->get("wl_infos")->getValue()), TRUE))) {
             $arr = json_decode(urldecode($cookies->get("wl_infos")->getValue()), TRUE);
-            if (isset($arr['name']) && isset($arr['creationTokens']) && is_array($arr['creationTokens'])) {
+            if (isset($arr['name']) && isset($arr['showRes']) && isset($arr['creationTokens']) && is_array($arr['creationTokens'])) {
                 $this->infos = $arr;
             }
         }
@@ -94,6 +95,22 @@ abstract class CookiesController extends Controller {
      */
     public function changeName(String $name) {
         $this->infos['name'] = $name;
+    }
+
+    /**
+     * Renvoie le booléen stocké
+     * @return String
+     */
+    public function getShowRes() {
+        return $this->infos['showRes'];
+    }
+
+    /**
+     * Change le booléen stocké
+     * @param String $name
+     */
+    public function changeShowRes(bool $b) {
+        $this->infos['showRes'] = $b;
     }
 
     /**

@@ -116,6 +116,11 @@ $app->get('/delete/liste/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}', fun
     return $c->deleteListe($request, $response, $args);
 })->setName('deleteListe');
 
+$app->get('/showRes/{bool:[a-z]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ListeController($container);
+    return $c->showRes($request, $response, $args);
+})->setName('showRes');
+
 /**
  * Objets
  */
