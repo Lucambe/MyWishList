@@ -69,6 +69,11 @@ $app->get('/about', function (Request $request, Response $response, array $args)
     $this->view->render($response, 'about.phtml');
 })->setName('showAbout');
 
+$app->get('/account', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new AuthController($container);
+    return $c->logout($request, $response, $args);
+})->setName('showAccount');
+
 /**
  * Authentification
  */
@@ -91,6 +96,11 @@ $app->post('/login', function (Request $request, Response $response, array $args
     $c = new AuthController($container);
     return $c->login($request, $response, $args);
 })->setName('login');
+
+$app->get('/logout', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new AuthController($container);
+    return $c->logout($request, $response, $args);
+})->setName('logout');
 
 /**
  * Listes

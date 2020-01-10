@@ -19,13 +19,14 @@ class AuthController extends Controller {
             if(!password_verify($password, $user->password)) throw new Exception('Votre mot de passe est incorrect');
 
             $_SESSION['user'] = $user;
-            $response = $response->withRedirect($this->router->pathFor('account'));
+
+            $response = $response->withRedirect($this->router->pathFor('showAccount'));
         }  catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', 'Aucun compte associé à cet identifiant n\'a été trouvé.');
-            $response = $response->withRedirect($this->router->pathFor('login'));
+            $response = $response->withRedirect($this->router->pathFor('showLogin'));
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('login'));
+            $response = $response->withRedirect($this->router->pathFor('showLogin'));
         }
         return $response;
     }
@@ -51,16 +52,18 @@ class AuthController extends Controller {
 
 
             $this->flash->addMessage('success', "$pseudo, votre compte a été créé! Vous pouvez dès à présent vous connecter.");
-            $response = $response->withRedirect($this->router->pathFor('login'));
+            $response = $response->withRedirect($this->router->pathFor('showLogin'));
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('register'));
+            $response = $response->withRedirect($this->router->pathFor('showRegister'));
         }
         return $response;
     }
 
     public function logout(Request $request, Response $response, array $args): Response {
-        return $response;
+        unset($_SESSION['user']);
+        $this->flash->addMessage('success', 'Vous avez été deconnecté');
+        return $response->withRedirect($this->router->pathFor('home'));
     }
 
     public function delete(Request $request, Response $response, array $args): Response {
