@@ -26,9 +26,9 @@
                     <a class="nav-link" href="<?= $router->pathFor('showCreateListe') ?>">Créer une liste</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Espace membres</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= is_null($user) ? 'Espace membres': $user->pseudo ?></a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <?php if(isset($_SESSION['user'])): ?>
+                        <?php if(!is_null($user)): ?>
                             <a class="dropdown-item" href="<?= $router->pathFor('showAccount') ?>">Modifier mon compte</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="<?= $router->pathFor('logout') ?>">Déconnexion</a>

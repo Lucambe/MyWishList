@@ -43,7 +43,8 @@ $container = $app->getContainer();
 $container['view'] = function ($container) {
     $vars = [
         "rootUri" => $container->request->getUri()->getBasePath(),
-        "router" => $container->router
+        "router" => $container->router,
+        "user" => isset($_SESSION['user']) ? $_SESSION['user'] : null
     ];
     $renderer = new PhpRenderer(__DIR__ . '/src/views', $vars);
     $renderer->setLayout("layout.phtml");
@@ -66,8 +67,8 @@ $app->get('/', function (Request $request, Response $response, array $args) use 
  * Pages annexe
  */
 $app->get('/account', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new AuthController($container);
-    return $c->logout($request, $response, $args);
+    $c = new PagesController($container);
+    return $c->showAccount($request, $response, $args);
 })->setName('showAccount');
 
 /**

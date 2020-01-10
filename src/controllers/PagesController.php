@@ -41,4 +41,11 @@ class PagesController extends Controller {
         ]);
         return $response;
     }
+
+    public function showAccount(Request $request, Response $response, array $args): Response {
+        $this->view->render($response, 'register.phtml', [
+            "flash" => $this->flash->getMessages()
+        ]);
+        return $response;
+    }
 }
