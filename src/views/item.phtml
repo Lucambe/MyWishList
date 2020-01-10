@@ -1,5 +1,4 @@
 <?php if ($reservation->isEmpty() && $infos["canSee"] && !$infos["haveExpired"]): ?>
-    <!-- Modal Réserver -->
     <div class="modal fade" id="reserver" tabindex="-1" role="dialog" aria-labelledby="reserverLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -32,10 +31,9 @@
 <?php endif; ?>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
-            <h5 class="breadcrumb-item"><a href="<?= $router->pathFor('showListe', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a>
-            </h5>
-            <h5 class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></h5>
+            <li class="breadcrumb-item"><i class="fas fa-home"></i></li>
+            <li class="breadcrumb-item"><a href="<?= $router->pathFor('showListe', ['token' => $liste->token]) ?>"><?= $liste->titre ?></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><?= $item->nom ?></li>
         </ol>
     </nav>
     <div class="card mb-3">

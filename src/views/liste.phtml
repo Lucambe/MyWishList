@@ -1,6 +1,5 @@
 <?php if (!$infos["haveCreated"] && !$infos["haveExpired"]): ?>
-    <!-- Modal rediger un message -->
-    <div class="modal fade" id="redigerMessage" tabindex="-1" role="dialog" aria-labelledby="redigerMessageLabel" aria-hidden="true">
+    <div class="modal fade" id="redigerMessage" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -32,11 +31,11 @@
 <?php endif; ?>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <h5 class="breadcrumb-item"><i class="fas fa-home"></i></h5>
-            <h5 class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></h5>
-            <div class="ml-auto">
+            <li class="breadcrumb-item"><i class="fas fa-home"></i></li>
+            <li class="breadcrumb-item active" aria-current="page"><?= $liste->titre ?></li>
+            <li class="ml-auto">
                 <?php if (!$infos["haveCreated"] && !$infos["haveExpired"]): ?>
-                    <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage" role="button">
+                    <button class="ml-auto btn btn-primary btn-sm" data-toggle="modal" data-target="#redigerMessage">
                         Rédiger un message
                     </button>
                 <?php endif; ?>
@@ -45,7 +44,7 @@
                         Administrer la liste
                     </a>
                 <?php endif; ?>
-            </div>
+            </li>
         </ol>
     </nav>
     <div class="card text-center mb-2">
