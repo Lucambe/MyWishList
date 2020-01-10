@@ -11,9 +11,9 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\PhpRenderer;
 
-session_start();
-
 require_once(__DIR__ . '/vendor/autoload.php');
+
+session_start();
 
 try {
     Database::connect();
