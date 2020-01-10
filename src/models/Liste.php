@@ -28,4 +28,15 @@ class Liste extends Model {
     public function haveExpired(): bool {
         return new DateTime() > new DateTime($this->expiration);
     }
+
+    /**
+     * Permet de savoir si la liste est publique
+     *
+     * @return bool
+     * @throws \Exception
+     */
+
+    public function isPublic(): bool {
+        return $this->public;
+    }
 }

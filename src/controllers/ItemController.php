@@ -14,6 +14,7 @@ use Slim\Http\Response;
  * Class ItemController
  * @author Jules Sayer <jules.sayer@protonmail.com>
  * @author Anthony Pernot <anthony.pernot9@etu.univ-lorraine.fr>
+ * @author Nathan Chevalier <nathan.chevalier2@etu.univ-lorraine.fr>
  * @package mywishlist\controllers
  */
 class ItemController extends CookiesController {

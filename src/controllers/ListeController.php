@@ -15,6 +15,7 @@ use function mywishlist\models\Liste;
  * Class ListeController
  * @author Jules Sayer <jules.sayer@protonmail.com>
  * @author Anthony Pernot <anthony.pernot9@etu.univ-lorraine.fr>
+ * @author Nathan Chevalier <nathan.chevalier2@etu.univ-lorraine.fr>
  * @package mywishlist\controllers
  */
 class ListeController extends CookiesController {
@@ -88,6 +89,42 @@ class ListeController extends CookiesController {
 
         $response = $this->createResponseCookie($response);
         $this->flash->addMessage('success', "Le mode d'affichage a été changé. Vous pouvez désormais voir si un objet a été réservé sur les listes que vous avez créé à partir de votre administration.");
+        $response = $response->withRedirect($this->router->pathFor('home'));
+        return $response;
+    }
+
+    /**
+     * Fonction de modification du booleen de la liste la rendant publique ou non
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function showPub(Request $request, Response $response, array $args): Response {
+        $this->loadCookiesFromRequest($request);
+        $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+        $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+
+        $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
+
+        if($liste->isPublic()){
+            $liste->public = 0;
+            $liste->save();
+            $response = $this->createResponseCookie($response);
+            $this->flash->addMessage('success', "Votre liste est désormais privée et ne peut être accédée que part le lien.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+            return $response;
+        }else{
+            $liste->public = 1;
+            $liste->save();
+            $response = $this->createResponseCookie($response);
+            $this->flash->addMessage('success', "Votre liste est désormais visible par tout le monde");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+            return $response;
+        }
+
+        $response = $this->createResponseCookie($response);
+        $this->flash->addMessage('success', "Votre liste est désormais visible par tout le monde");
         $response = $response->withRedirect($this->router->pathFor('home'));
         return $response;
     }

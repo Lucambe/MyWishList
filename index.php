@@ -121,6 +121,11 @@ $app->get('/showRes/{bool:[a-z]+}', function (Request $request, Response $respon
     return $c->showRes($request, $response, $args);
 })->setName('showRes');
 
+$app->get('/showPub/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ListeController($container);
+    return $c->showPub($request, $response, $args);
+})->setName('showPub');
+
 /**
  * Objets
  */
