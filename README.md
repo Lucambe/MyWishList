@@ -64,7 +64,7 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 - [ ] *Créer un compte*
 - [ ] *S'authentifier*
 - [ ] *Modifier son compte*
-- [ ] *Rendre une liste publique*
+- [x] *Rendre une liste publique* (Nathan)
 - [ ] *Afficher les listes de souhaits publiques*
 - [ ] *Créer une cagnotte sur un item*
 - [ ] *Participer à une cagnotte*
