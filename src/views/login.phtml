@@ -1,16 +1,27 @@
-<form method="POST" action="<?= $router->pathFor('showLogin') ?>">
-    <div class="modal-body">
-        <div class="form-group">
-            <label for="inputNick">Entrez votre pseudo</label>
-            <input type="text" name="nick" class="form-control" id="inputNick" placeholder="Xavier">
-        </div>
-        <div class="form-group">
-            <label for="inputPassword">Entrez votre mot de passe</label>
-            <input type="text" name="password" class="form-control" id="inputPassword">
-        </div>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Connexion</h4>
+        <form method="POST" action="<?= $router->pathFor('showRegister') ?>">
+            <div class="form-group">
+                <label for="pseudo">Pseudonyme / Adresse e-mail</label>
+                <div class="input-group">
+                    <input id="pseudo" type="text" class="form-control" name="id" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Mot de passe</label>
+                <input id="password" type="password" class="form-control" name="password" required>
+            </div>
+
+            <div class="form-group m-0">
+                <button type="submit" class="btn btn-primary btn-block">
+                    Se connecter
+                </button>
+            </div>
+            <div class="mt-4 text-center">
+                Vous n'avez pas de compte? <a href="<?= $router->pathFor('showRegister') ?>">Inscrivez-vous!</a>
+            </div>
+        </form>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-        <button type="submit" class="btn btn-primary">Se connecter</button>
-    </div>
-</form>
+</div>
