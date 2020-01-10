@@ -61,8 +61,8 @@ Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
 - [x] *Consulter les réservations et messages d'une de ses listes après échéance* (Jules)
 
 ### Extensions
-- [ ] *Créer un compte*
-- [ ] *S'authentifier*
+- [x] *Créer un compte* (Jules)
+- [x] *S'authentifier* (Jules)
 - [ ] *Modifier son compte*
 - [x] *Rendre une liste publique* (Nathan)
 - [ ] *Afficher les listes de souhaits publiques*

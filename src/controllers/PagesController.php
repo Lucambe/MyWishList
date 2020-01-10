@@ -10,7 +10,7 @@ use Slim\Http\Response;
  * @author Jules Sayer <jules.sayer@protonmail.com>
  * @package mywishlist\controllers
  */
-class HomeController extends Controller {
+class PagesController extends Controller {
 
     /**
      * Appel home.phtml, permet d'afficher les accueils
@@ -23,6 +23,20 @@ class HomeController extends Controller {
      */
     public function showHome(Request $request, Response $response, array $args): Response {
         $this->view->render($response, 'home.phtml', [
+            "flash" => $this->flash->getMessages()
+        ]);
+        return $response;
+    }
+
+    public function showLogin(Request $request, Response $response, array $args): Response {
+        $this->view->render($response, 'login.phtml', [
+            "flash" => $this->flash->getMessages()
+        ]);
+        return $response;
+    }
+
+    public function showRegister(Request $request, Response $response, array $args): Response {
+        $this->view->render($response, 'register.phtml', [
             "flash" => $this->flash->getMessages()
         ]);
         return $response;

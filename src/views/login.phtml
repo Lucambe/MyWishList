@@ -1,7 +1,23 @@
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">Connexion</h4>
-        <form method="POST" action="<?= $router->pathFor('showRegister') ?>">
+        <?php if (isset($flash['error'])) foreach ($flash['error'] as $m): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Mince!</strong> <?= $m ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <?php endforeach; ?>
+        <?php if (isset($flash['success'])) foreach ($flash['success'] as $m): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Super!</strong> <?= $m ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <?php endforeach; ?>
+        <form method="POST" action="<?= $router->pathFor('login') ?>">
             <div class="form-group">
                 <label for="pseudo">Pseudonyme / Adresse e-mail</label>
                 <div class="input-group">

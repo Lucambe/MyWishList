@@ -1,9 +1,10 @@
 <?php
 
 use mywishlist\config\Database;
-use mywishlist\controllers\HomeController;
+use mywishlist\controllers\AuthController;
 use mywishlist\controllers\ItemController;
 use mywishlist\controllers\ListeController;
+use mywishlist\controllers\PagesController;
 use Slim\App;
 use Slim\Flash\Messages;
 use Slim\Http\Request;
@@ -57,7 +58,7 @@ $container['flash'] = function () {
  * Accueil
  */
 $app->get('/', function (Request $request, Response $response, array $args) use ($container) {
-    $c = new HomeController($container);
+    $c = new PagesController($container);
     return $c->showHome($request, $response, $args);
 })->setName('home');
 
@@ -71,13 +72,25 @@ $app->get('/about', function (Request $request, Response $response, array $args)
 /**
  * Authentification
  */
-$app->get('/register', function (Request $request, Response $response, array $args) {
-    $this->view->render($response, 'register.phtml');
+$app->get('/register', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new PagesController($container);
+    return $c->showRegister($request, $response, $args);
 })->setName('showRegister');
 
-$app->get('/login', function (Request $request, Response $response, array $args) {
-    $this->view->render($response, 'login.phtml');
+$app->get('/login', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new PagesController($container);
+    return $c->showLogin($request, $response, $args);
 })->setName('showLogin');
+
+$app->post('/register', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new AuthController($container);
+    return $c->register($request, $response, $args);
+})->setName('register');
+
+$app->post('/login', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new AuthController($container);
+    return $c->login($request, $response, $args);
+})->setName('login');
 
 /**
  * Listes
