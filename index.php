@@ -65,10 +65,6 @@ $app->get('/', function (Request $request, Response $response, array $args) use 
 /**
  * Pages annexe
  */
-$app->get('/about', function (Request $request, Response $response, array $args) use ($container) {
-    $this->view->render($response, 'about.phtml');
-})->setName('showAbout');
-
 $app->get('/account', function (Request $request, Response $response, array $args) use ($container) {
     $c = new AuthController($container);
     return $c->logout($request, $response, $args);
