@@ -27,7 +27,9 @@ En insérant:
 
 ## Utilisation
 
-Lancez un serveur XAMP, importez la BDD et connectez-vous sur le site.
+Lancez un serveur XAMP, importez le fichier de création de la BDD ([sql/mywihlist.sql](https://github.com/Wilders/MyWishList/blob/master/sql/mywishlist.sql)) et connectez-vous sur le site.
+OU
+La [dernière release](https://github.com/Wilders/MyWishList/releases) est disponible [ici](https://webetu.iutnc.univ-lorraine.fr/www/sayer6u/wishlist/)
 
 ## Disparités avec le sujet
 
