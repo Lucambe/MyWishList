@@ -68,8 +68,8 @@ La [dernière release](https://github.com/Wilders/MyWishList/releases) est dispo
 - [x] *Créer un compte* (Jules)
 - [x] *S'authentifier* (Jules)
 - [ ] *Modifier son compte*
-- [x] *Rendre une liste publique* (Nathan)
-- [ ] *Afficher les listes de souhaits publiques*
+- [x] *Rendre une liste publique* (Nathan, Jules)
+- [x] *Afficher les listes de souhaits publiques* (Jules)
 - [ ] *Créer une cagnotte sur un item*
 - [ ] *Participer à une cagnotte*
 - [ ] *Uploader une image*

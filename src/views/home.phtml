@@ -14,9 +14,34 @@
         </button>
     </div>
 <?php endforeach; ?>
-<div class="jumbotron my-2">
-    <h1 class="display-4">Bienvenue sur MyWishList!</h1>
-    <p class="lead">Ce projet a été réalisé dans le cadre du module de Prog. Web/Serveur @IUT-NC 2019.</p>
-    <hr class="my-4">
-    <p>Pour avoir plus d'infos sur le projet et notre groupe RDV dans la section "A propos" <i class="fas fa-smile-beam"></i></p>
+<div class="row">
+    <div class="col">
+        <div class="jumbotron my-2">
+            <p class="display-4">Bienvenue sur MyWishList!</p>
+            <p class="lead">Ce projet a été réalisé dans le cadre du module de Prog. Web/Serveur @IUT-NC 2019.</p>
+        </div>
+    </div>
+    <div class="col">
+        <?php if(!empty($listes)): ?>
+            <p class="display-4 text-center">Listes publique:</p>
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Date d'expiration</th>
+                    <th scope="col">Accéder à la liste</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($listes as $liste): ?>
+                    <tr>
+                        <td><?= $liste->titre ?></td>
+                        <td><?= date("d/m/Y", strtotime($liste->expiration)) ?></td>
+                        <td><a class="btn btn-primary" href="<?= $router->pathFor('showListe', ['token' => $liste->token]) ?>">Accéder à la liste</a></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
 </div>

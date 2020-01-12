@@ -2,6 +2,9 @@
 
 namespace mywishlist\controllers;
 
+use DateTime;
+use Exception;
+use mywishlist\models\Liste;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -22,9 +25,12 @@ class PagesController extends Controller {
      * @return Response
      */
     public function showHome(Request $request, Response $response, array $args): Response {
-        $this->view->render($response, 'home.phtml', [
-            "flash" => $this->flash->getMessages()
-        ]);
+        try {
+            $this->view->render($response, 'home.phtml', [
+                "flash" => $this->flash->getMessages(),
+                "listes" => Liste::where('public', '=', 1)->whereDate('expiration', '>=', new DateTime())->orderBy('expiration', 'ASC')->get()
+            ]);
+        } catch (Exception $e) {}
         return $response;
     }
 
