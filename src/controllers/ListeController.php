@@ -94,42 +94,6 @@ class ListeController extends CookiesController {
     }
 
     /**
-     * Fonction de modification du booleen de la liste la rendant publique ou non
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     */
-    public function showPub(Request $request, Response $response, array $args): Response {
-        $this->loadCookiesFromRequest($request);
-        $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
-        $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
-
-        $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
-
-        if($liste->isPublic()){
-            $liste->public = 0;
-            $liste->save();
-            $response = $this->createResponseCookie($response);
-            $this->flash->addMessage('success', "Votre liste est désormais privée et ne peut être accédée que part le lien.");
-            $response = $response->withRedirect($this->router->pathFor('home'));
-            return $response;
-        }else{
-            $liste->public = 1;
-            $liste->save();
-            $response = $this->createResponseCookie($response);
-            $this->flash->addMessage('success', "Votre liste est désormais visible par tout le monde");
-            $response = $response->withRedirect($this->router->pathFor('home'));
-            return $response;
-        }
-
-        $response = $this->createResponseCookie($response);
-        $this->flash->addMessage('success', "Votre liste est désormais visible par tout le monde");
-        $response = $response->withRedirect($this->router->pathFor('home'));
-        return $response;
-    }
-
-    /**
      * Permet d'ajouter un message publique à une liste
      *
      * @param Request $request
@@ -193,7 +157,7 @@ class ListeController extends CookiesController {
             $liste->expiration = $dateExp;
             $liste->token = bin2hex(openssl_random_pseudo_bytes(32));
             $liste->creationToken = bin2hex(openssl_random_pseudo_bytes(12));
-            $liste->validated = false;
+            $liste->public = 0;
             $liste->save();
 
             $this->addCreationToken($liste->creationToken);
@@ -224,6 +188,7 @@ class ListeController extends CookiesController {
             $date = $request->getParsedBodyParam('newDate');
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $public = !is_null($request->getParsedBodyParam('public')) ? 1 : 0;
 
             if (!isset($titre, $description, $date, $token, $creationToken)) throw new Exception("Un des paramètres est manquant.");
             if (mb_strlen($titre, 'utf8') < 4) throw new Exception("Le titre de la liste doit comporter au minimum 4 caractères.");
@@ -234,6 +199,7 @@ class ListeController extends CookiesController {
             $liste->titre = $titre;
             $liste->description = $description;
             $liste->expiration = $date;
+            $liste->public = $public;
             $liste->save();
 
             $this->flash->addMessage('success', "Votre modification a été enregistrée!");

@@ -91,11 +91,6 @@
         <?php else: ?>
             <a class="btn btn-sm btn-primary btn-block mt-2" href="<?= $router->pathFor('showRes', ['bool' => "true"]) ?>">Afficher les réservations avant échéance</a>
         <?php endif; ?>
-        <?php if ($liste->public): ?>
-            <a class="btn btn-sm btn-primary btn-block mt-2" href="<?= $router->pathFor('showPub', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>">Rendre la liste privée</a>
-        <?php else: ?>
-            <a class="btn btn-sm btn-primary btn-block mt-2" href="<?= $router->pathFor('showPub', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>">Rendre la liste publique</a>
-        <?php endif; ?>
     </div>
     <div class="col-9">
         <div class="tab-content" id="v-pills-tabContent">
@@ -117,6 +112,12 @@
                             <div class="form-group">
                                 <label for="inputDesc0">Description</label>
                                 <textarea class="form-control" id="inputDesc0" rows="3" name="newDescription"><?= $liste->description ?></textarea>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="public" name="public" <?php if($liste->public): ?> checked <?php endif; ?>>
+                                    <label class="custom-control-label" for="public">Rendre la liste public</label>
+                                </div>
                             </div>
                             Les champs marqués d'un astérisque sont obligatoires.
                             <button type="submit" class="btn btn-lg btn-primary float-right">Envoyer</button>
