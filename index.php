@@ -174,6 +174,12 @@ $app->post('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[
     return $c->updateItem($request, $response, $args);
 })->setName('updateItem');
 
+$app->post('/uploadImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->uploadImgItem($request, $response, $args);
+})->setName('uploadImgItem');
+
+
 $app->get('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}/deleteImage', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
     return $c->deleteImgItem($request, $response, $args);

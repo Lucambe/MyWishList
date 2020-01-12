@@ -272,4 +272,46 @@ class ItemController extends CookiesController {
         }
         return $response;
     }
+
+    public function uploadImgItem(Request $request, Response $response, array $args): Response {
+        try{
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
+            $file = $args['image'];
+
+            if (mb_strlen($file['name'], 'utf8') == 0) $file['name'] = "default.jpg";
+           
+            $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
+            $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
+            if (Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
+           
+            $chemin = ' /public/images/';
+            $direction = $chemin . basename($_FILES['image']['name']);
+
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $direction)) {
+                
+                $item->img = $_FILES['image']['name'];
+                $item->save();
+                chmod("public/images/".$_FILES['image']["name"],0600);
+
+                $this->flash->addMessage('success', "L'image de votre objet a été enregistrée sur le serveur !");
+                $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));       
+            } else {
+                $this->flash->addMessage('error', "L'image de votre objet n'a été enregistrée sur le serveur !");
+                $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));       
+            }     
+
+        }catch (ModelNotFoundException $e) {
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer l\'image de cet objet.');
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
+        } catch (Exception $e) {
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
+        }
+        return $response;
+    }
+
+
 }

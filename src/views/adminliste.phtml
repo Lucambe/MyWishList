@@ -1,4 +1,37 @@
 <?php foreach ($items as $item): if ($item->reservation()->get()->isEmpty()): ?>
+     <!-- Modal Upload Image -->
+     <div class="modal fade" id="uploadImage<?= $item->id ?>" tabindex="-1" role="dialog" aria-labelledby="uploadImgLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadImgLabel"><?= $item->nom ?> - Upload d'image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                    <form enctype="multipart/form-data" method="POST" action="<?= $router->pathFor('uploadImgItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>" >
+                         <div class="modal-body">
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <label class="custom-file-label" for="customFile">Choisissez une image</label>
+                                    <input type="file" id="customFile" name="image" required>
+                                </div>
+                            </div>
+                            <?php if(isset($_FILES['image'])): ?>
+                            <div class="form-group">
+                                    <label class="labelFileName" ><?php echo "Nom du fichier : ".$_FILES['image']['name']; ?></label>
+                            </div>
+                            <?php endif; ?>
+                         </div>
+                         <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                              <button type="submit" class="btn btn-primary">Appliquer</button>
+                         </div>
+                    </form>
+                
+             </div>
+        </div>
+    </div>
     <!-- Modal Modification -->
     <div class="modal fade" id="edit<?= $item->id ?>" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -17,6 +50,7 @@
                             <img class="img-fluid img-thumbnail mx-auto d-block" src="<?= $rootUri ?>/public/images/<?= $item->img ?>" alt="Image de l'objet">
                         <?php endif; ?>
                         <div class="form-group mt-2 text-center">
+                            <a class="btn btn-sm btn-primary" data-toggle="modal" href="#uploadImage<?= $item->id ?>" role="button" data-dismiss="modal" >Charger une image</a>
                             <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#editImage<?= $item->id ?>" role="button" aria-expanded="false" aria-controls="editImage<?= $item->id ?>">Modifier l'image</a>
                             <a href="#" class="btn btn-sm btn-danger" data-toggle="popover" title="<i class='fas fa-exclamation-triangle'></i> Êtes-vous sûr?" data-placement="bottom" data-trigger="focus" data-content="<div class='btn-group btn-group-sm' role='group'><a class='btn btn-sm btn-danger' href='<?= $router->pathFor('deleteImageItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>'>Confirmer</a><a class='btn btn-sm btn-primary' href='#'>Annuler</a></div>">
                                 Supprimer l'image
