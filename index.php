@@ -71,6 +71,16 @@ $app->get('/account', function (Request $request, Response $response, array $arg
     return $c->showAccount($request, $response, $args);
 })->setName('showAccount');
 
+$app->post('/update/account', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new AuthController($container);
+    return $c->updateAccount($request, $response, $args);
+})->setName('updateAccount');
+
+$app->post('/update/password', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new AuthController($container);
+    return $c->updatePassword($request, $response, $args);
+})->setName('updatePassword');
+
 /**
  * Authentification
  */

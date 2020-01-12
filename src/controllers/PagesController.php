@@ -2,6 +2,7 @@
 
 namespace mywishlist\controllers;
 
+use BadMethodCallException;
 use DateTime;
 use Exception;
 use mywishlist\models\Liste;
@@ -34,24 +35,67 @@ class PagesController extends Controller {
         return $response;
     }
 
+    /**
+     * Affiche la page de connexion
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function showLogin(Request $request, Response $response, array $args): Response {
-        $this->view->render($response, 'login.phtml', [
-            "flash" => $this->flash->getMessages()
-        ]);
+        try {
+            if(isset($_SESSION['user'])) throw new BadMethodCallException("Vous êtes déjà connecté");
+            $this->view->render($response, 'login.phtml', [
+                "flash" => $this->flash->getMessages()
+            ]);
+        } catch (BadMethodCallException $e) {
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
         return $response;
     }
 
+    /**
+     * Affiche la page d'inscription
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function showRegister(Request $request, Response $response, array $args): Response {
-        $this->view->render($response, 'register.phtml', [
-            "flash" => $this->flash->getMessages()
-        ]);
+        try {
+            if (isset($_SESSION['user'])) throw new BadMethodCallException("Vous êtes déjà connecté");
+            $this->view->render($response, 'register.phtml', [
+                "flash" => $this->flash->getMessages()
+            ]);
+        } catch (BadMethodCallException $e) {
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
         return $response;
     }
 
+    /**
+     * Affiche la page de modification
+     * du compte
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function showAccount(Request $request, Response $response, array $args): Response {
-        $this->view->render($response, 'register.phtml', [
-            "flash" => $this->flash->getMessages()
-        ]);
+        try {
+            if (!isset($_SESSION['user'])) throw new BadMethodCallException("Vous devez être connecté");
+            $this->view->render($response, 'account.phtml', [
+                "flash" => $this->flash->getMessages()
+            ]);
+        } catch (BadMethodCallException $e) {
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
         return $response;
     }
 }

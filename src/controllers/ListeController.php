@@ -82,6 +82,16 @@ class ListeController extends CookiesController {
         return $response;
     }
 
+    /**
+     * Modifie si l'utilisateur qui a créé
+     * une liste peut voir les reservation
+     * avant échéance
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function showRes(Request $request, Response $response, array $args): Response {
         $this->loadCookiesFromRequest($request);
         $bool = filter_var($args['bool'], FILTER_VALIDATE_BOOLEAN);

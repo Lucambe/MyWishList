@@ -67,7 +67,7 @@ La [dernière release](https://github.com/Wilders/MyWishList/releases) est dispo
 ### Extensions
 - [x] *Créer un compte* (Jules)
 - [x] *S'authentifier* (Jules)
-- [ ] *Modifier son compte*
+- [x] *Modifier son compte* (Jules)
 - [x] *Rendre une liste publique* (Nathan, Jules)
 - [x] *Afficher les listes de souhaits publiques* (Jules)
 - [ ] *Créer une cagnotte sur un item*
