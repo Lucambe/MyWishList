@@ -4,6 +4,7 @@ namespace mywishlist\controllers;
 
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use mywishlist\models\Cagnotte;
 use mywishlist\models\Item;
 use mywishlist\models\Liste;
 use mywishlist\models\Reservation;
@@ -124,6 +125,7 @@ class ItemController extends CookiesController {
             $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
             $img = filter_var($request->getParsedBodyParam('picture'), FILTER_SANITIZE_STRING);
             $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $cagnotte = !is_null($request->getParsedBodyParam('cagnotte')) ? 1 : 0;
 
             if (mb_strlen($nom, 'utf8') < 2) throw new Exception("Le nom doit comporter au minimum 2 caractères");
             if ($prix < 0) throw new Exception("Le prix ne peut pas être négatif");
@@ -131,6 +133,7 @@ class ItemController extends CookiesController {
             if (!filter_var($img, FILTER_VALIDATE_URL)) {
                 if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $request->getUri()->getBasePath() . "/public/images/" . $img)) throw new Exception("Le lien n'est pas bon et/ou l'image voulue n'existe pas dans le dossier /public/images/");
             }
+
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
 
@@ -141,6 +144,14 @@ class ItemController extends CookiesController {
             $item->img = $img;
             $item->url = $url;
             $item->tarif = $prix;
+
+            if ($cagnotte){
+                $c = new Cagnotte();
+                $c->montant=$prix;
+                $c->save();
+                $item->id_cagnotte = $c->id;
+            }
+
             $item->save();
 
             $this->flash->addMessage('success', "Votre item a été enregistrée !");
@@ -207,6 +218,7 @@ class ItemController extends CookiesController {
             $prix = filter_var($request->getParsedBodyParam('prix'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
             $img = filter_var($request->getParsedBodyParam('picture'), FILTER_SANITIZE_STRING);
             $url = filter_var($request->getParsedBodyParam('url'), FILTER_SANITIZE_URL);
+            $cagnotte = !is_null($request->getParsedBodyParam('cagnotte')) ? 1 : 0;
 
             if (mb_strlen($prix, 'utf8') < 2) throw new Exception("Le nom doit comporter au moins 1 caractère");
             if ($prix < 0) throw new Exception("Le prix ne peut pas être négatif");
@@ -218,7 +230,12 @@ class ItemController extends CookiesController {
             $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
             if (Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
-
+            if ($cagnotte && is_null($item->id_cagnotte)){
+                $c = new Cagnotte();
+                $c->montant=$prix;
+                $c->save();
+                $item->id_cagnotte = $c->id;
+            }
             $item->nom = $nom;
             $item->descr = $description;
             $item->tarif = $prix;
