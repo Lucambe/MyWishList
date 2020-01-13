@@ -78,6 +78,18 @@
                             <label for="inputPrice<?= $item->id ?>">Prix*</label>
                             <input type="number" step="0.01" min="0" class="form-control" id="inputPrice<?= $item->id ?>" name="prix" value="<?= $item->tarif ?>" required>
                         </div>
+                        <?php if (is_null($item->id_cagnotte)) : ?>
+                        <div class="form-group">
+                            <input type="checkbox" id="cagnotte" name="cagnotte"</input>
+                            <label >Ajouter une cagnotte</label>
+                        </div>
+                        <div class="font-weight-bold"><p class="text-danger">Une cagnotte ne peut plus être supprimée une fois créée !</p></div>
+                        <?php else : ?>
+                        <div class="form-group">
+                            <input type="checkbox" id="cagnotte" disabled name="cagnotte" checked</input>
+                            <label class="font-weight-bold"><p class="text-danger">Une cagnotte existe déjà pour cet item.</p></label>
+                        </div>
+                        <?php endif; ?>
                         Les champs marqués d'un astérisque sont obligatoires.
                     </div>
                     <div class="modal-footer">
@@ -150,7 +162,7 @@
                             <div class="form-group">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" id="public" name="public" <?php if($liste->public): ?> checked <?php endif; ?>>
-                                    <label class="custom-control-label" for="public">Rendre la liste public</label>
+                                    <label class="custom-control-label" for="public">Rendre la liste publique</label>
                                 </div>
                             </div>
                             Les champs marqués d'un astérisque sont obligatoires.
@@ -186,6 +198,11 @@
                                 <label for="inputDesc">Description</label>
                                 <textarea class="form-control" id="inputDesc" rows="3" name="descr"></textarea>
                             </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="cagnotte" name="cagnotte"</input>
+                                <label >Ajouter une cagnotte</label>
+                            </div>
+                            <div class="font-weight-bold"><p class="text-danger">Une cagnotte ne peut plus être supprimée une fois créée !</p></div>
                             Les champs marqués d'un astérisque sont obligatoires.
                             <button type="submit" class="btn btn-lg btn-primary float-right">Envoyer</button>
                         </form>
