@@ -11,20 +11,15 @@
                 </div>
                     <form enctype="multipart/form-data" method="POST" action="<?= $router->pathFor('uploadImgItem', ['token' => $liste->token, 'creationToken' => $liste->creationToken, 'id' => $item->id]) ?>" >
                          <div class="modal-body">
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
+                            <label class="col-form-label-lg">Choisissez un fichier :</label>
                                 <div class="custom-file">
-                                    <label class="custom-file-label" for="customFile">Choisissez une image</label>
-                                    <input type="file" id="customFile" name="image" required>
+                                    <input type="file" name="image" class="custom-file-label" required>
                                 </div>
                             </div>
-                            <?php if(isset($_FILES['image'])): ?>
-                            <div class="form-group">
-                                    <label class="labelFileName" ><?php echo "Nom du fichier : ".$_FILES['image']['name']; ?></label>
-                            </div>
-                            <?php endif; ?>
                          </div>
                          <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                              <button type="button" class="btn btn-secondary" data-toggle="modal" href="#edit<?= $item->id ?>" role="button" data-dismiss="modal">Retour</button>
                               <button type="submit" class="btn btn-primary">Appliquer</button>
                          </div>
                     </form>

@@ -30,6 +30,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <?php if(!is_null($user)): ?>
                             <a class="dropdown-item" href="<?= $router->pathFor('showAccount') ?>">Modifier mon compte</a>
+                             <a class="dropdown-item" href="<?= $router->pathFor('showAdminListe', ['token' => $liste->token, 'creationToken' => $liste->creationToken]) ?>">Espace Administration</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="<?= $router->pathFor('logout') ?>">Déconnexion</a>
                         <?php else: ?>
