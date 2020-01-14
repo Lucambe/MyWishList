@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\Cagnotte;
 use mywishlist\models\Item;
 use mywishlist\models\Liste;
+use mywishlist\models\Participe;
 use mywishlist\models\Reservation;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -118,13 +119,18 @@ class ItemController extends CookiesController {
             if (mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères");
 
             $liste = Liste::where('token', '=', $token)->firstOrFail();
-
+            $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
 
             if (in_array($liste->token, $this->getCreationTokens())) throw new Exception("Le créateur de la liste ne peut pas participer à la cagnotte.");
             if ($liste->haveExpired()) throw new Exception("Cette liste a déjà expiré, il n'est plus possible de participer à la cagnotte.");
+            if (is_null($item->id_cagnotte))throw new Exception("Cet item n'a pas de cagnotte.");
 
-            $p = new Participation();
-            $p->item_id = $item_id;
+            $c = Cagnotte::where('id','=',$item->id_cagnotte)->firstOrFail();
+            $c->recolte += $montant;
+            $c->save();
+
+            $p = new Participe();
+            $p->id_cagnotte = $item->id_cagnotte;
             $p->message = $message;
             $p->nom = $name;
             $p->montant = $montant;
@@ -132,7 +138,7 @@ class ItemController extends CookiesController {
 
             $this->changeName($name);
             $response = $this->createResponseCookie($response);
-            $this->flash->addMessage('success', "$name, votre participation a été ajoutée !");
+            $this->flash->addMessage('success', "$name, Votre participation a été ajoutée !");
             $response = $response->withRedirect($this->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', 'Nous n\'avons pas pu trouver cet objet.');

@@ -180,6 +180,10 @@ $app->post('/uploadImg/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{i
     return $c->uploadImgItem($request, $response, $args);
 })->setName('uploadImgItem');
 
+$app->post('/add/participant/{token:[a-zA-Z0-9]+}/{id:[0-9]+}', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new ItemController($container);
+    return $c->addParticipation($request, $response, $args);
+})->setName('addParticipation');
 
 $app->get('/update/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0-9]+}/deleteImage', function (Request $request, Response $response, array $args) use ($container) {
     $c = new ItemController($container);
@@ -190,6 +194,8 @@ $app->get('/delete/item/{token:[a-zA-Z0-9]+}/{creationToken:[a-zA-Z0-9]+}/{id:[0
     $c = new ItemController($container);
     return $c->deleteItem($request, $response, $args);
 })->setName('deleteItem');
+
+
 
 // Run app
 $app->run();
