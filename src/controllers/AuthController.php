@@ -205,12 +205,18 @@ class AuthController extends Controller {
             $participe = Participe::where('id_user','=', $user->id)->first();
             $cagnotte = Cagnotte::where('id','=', $participe->id_cagnotte)->first();
 
-            if($user->exists()) $user->delete();
+
+            $user->delete();             
             session_destroy();
+            $this->flash->addMessage('success', "Votre compte personnel a été supprimé avec succès.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
 
             /*
-            if($cagnotte->exists())
-             $cagnotte->delete();
+            if($cagnotte->exists()){
+               $cagnotte->delete();
+            }else{
+               session_destroy(); 
+            }
             if($item->exists()) 
              $item->delete();
             if($liste->exists())
@@ -223,8 +229,8 @@ class AuthController extends Controller {
              $reserv->delete();
             */
 
-            $this->flash->addMessage('success', "Votre compte personnel a été supprimé avec succès.");
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            
+            
         }catch (BadMethodCallException $e) {
             $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('showAccount'));
