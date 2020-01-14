@@ -106,6 +106,43 @@ class ItemController extends CookiesController {
         return $response;
     }
 
+    public function addParticipation(Request $request, Response $response, array $args): Response {
+        try {
+            $name = filter_var($request->getParsedBodyParam('name'), FILTER_SANITIZE_STRING);
+            $message = filter_var($request->getParsedBodyParam('message'), FILTER_SANITIZE_STRING);
+            $item_id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
+            $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
+            $montant = filter_var($request->getParsedBodyParam('montant'), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+            if (mb_strlen($name, 'utf8') < 2) throw new Exception("Votre nom doit comporter au minimum 2 caractères");
+
+            $liste = Liste::where('token', '=', $token)->firstOrFail();
+
+
+            if (in_array($liste->token, $this->getCreationTokens())) throw new Exception("Le créateur de la liste ne peut pas participer à la cagnotte.");
+            if ($liste->haveExpired()) throw new Exception("Cette liste a déjà expiré, il n'est plus possible de participer à la cagnotte.");
+
+            $p = new Participation();
+            $p->item_id = $item_id;
+            $p->message = $message;
+            $p->nom = $name;
+            $p->montant = $montant;
+            $p->save();
+
+            $this->changeName($name);
+            $response = $this->createResponseCookie($response);
+            $this->flash->addMessage('success', "$name, votre participation a été ajoutée !");
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        } catch (ModelNotFoundException $e) {
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu trouver cet objet.');
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        } catch (Exception $e) {
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        }
+        return $response;
+    }
+
     /**
      * Cette fonction permet de
      * créer un item en vérifiant le prix,

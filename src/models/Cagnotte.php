@@ -10,4 +10,7 @@ class Cagnotte extends Model
     protected $table = "cagnotte";
     protected $primaryKey = "id";
 
+    public function is_full(){
+        return $this->recolte < $this->montant;
+    }
 }

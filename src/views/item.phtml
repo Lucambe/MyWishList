@@ -78,6 +78,11 @@
                                 Réserver
                             </button>
                         <?php endif; ?>
+                        <?php if (!is_null($item->id_cagnotte)):?>
+                            <button type="submit" class="btn btn-warning">Particier à la cagnotte</button>
+                        <?php else: ?>
+                            <button type="submit" class="btn btn-warning" disabled >Particier à la cagnotte</button>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
