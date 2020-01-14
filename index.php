@@ -105,6 +105,11 @@ $app->post('/login', function (Request $request, Response $response, array $args
     return $c->login($request, $response, $args);
 })->setName('login');
 
+$app->post('/delete/account', function (Request $request, Response $response, array $args) use ($container) {
+    $c = new AuthController($container);
+    return $c->deleteAccount($request, $response, $args);
+})->setName('deleteAccount');
+
 $app->get('/logout', function (Request $request, Response $response, array $args) use ($container) {
     $c = new AuthController($container);
     return $c->logout($request, $response, $args);
