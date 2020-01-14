@@ -14,6 +14,33 @@
         </button>
     </div>
 <?php endforeach; ?>
+   <!-- Modal Suppression Compte -->
+   <div class="modal fade" id="suppAccount<?= $user->pseudo ?>" tabindex="-1" role="dialog" aria-labelledby="suppAccountLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="suppAccountLabel"><?= $user->pseudo ?> - Suppression de compte</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                    <form method="POST" action="<?= $router->pathFor('deleteAccount') ?>" >
+                         <div class="modal-body">
+                                <input id="pseudo" type="text" class="form-control" name="pseudo" value="<?= $_SESSION['user']->pseudo ?>" disabled>
+                                <blockquote class="blockquote text-center">
+                                    <p class="mb-0">Êtes-vous sûr de supprimer votre compte ? </p><br>
+                                    <footer class="blockquote-footer">La suppression de votre compte entraîne la suppression des listes, des items et images, des participations uniquement avant échéance et de tous les messages</footer>
+                                </blockquote>
+                         </div>
+                         <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-toggle="modal" role="button" data-dismiss="modal">Fermer</button>
+                              <button type="submit" class="btn btn-primary">Poursuivre</button>
+                         </div>
+                    </form>
+                
+             </div>
+        </div>
+    </div>
 <div class="row">
     <div class="col">
         <div class="card">
@@ -75,5 +102,12 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>   
 </div>
+<div class="card">
+    <div class="card body">
+        <a class="btn btn-danger" data-toggle="modal" href="#suppAccount<?= $user->pseudo ?>" role="button"  aria-controls="collapseExample"> Supprimer son compte </a>
+    </div>
+</div><!--aria-expanded="false"
+<a class="btn btn-sm btn-primary" data-toggle="modal" href="#uploadImage<?= $item->id ?>" role="button" data-dismiss="modal" >
+-->

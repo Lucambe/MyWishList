@@ -187,4 +187,25 @@ class AuthController extends Controller {
         return $response;
     }
 
+    public function deleteAccount(Request $request, Response $response, array $args): Response {
+        try{
+            if(!isset($_SESSION['user'])) throw new BadMethodCallException("Vous devez être connecté pour faire ça");
+
+            $user = User::where('id','=',$_SESSION['user']->id)->firstOrFail();
+            $liste = Liste::where('user_id','=',$user->id)->firstOrFail();
+            $item = Item::where('liste_id','=',$liste->no)->firstOrFail();
+            $message = Message::where('idListe','=',$liste->no)->firstOrFail();
+            $reserv = Reservation::where('liste_id','=',$liste->no)->firstOrFail();
+            $participe = Participe::where('id_user','=', $user->id)->firstOrFail();
+
+        }catch (BadMethodCallException $e) {
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('home'));
+        } catch (Exception $e) {
+            $this->flash->addMessage('error', $e->getMessage());
+            $response = $response->withRedirect($this->router->pathFor('showAccount'));
+        }
+        return $response;
+    }
+
 }
