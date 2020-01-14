@@ -18,7 +18,7 @@ class Item extends Model {
         return $this->belongsTo('\mywishlist\models\Liste', 'no');
     }
 
-    public function reservations() {
+    public function reservation() {
         return $this->hasOne('\mywishlist\models\Reservation', 'item_id');
     }
 }

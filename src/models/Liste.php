@@ -18,7 +18,7 @@ class Liste extends Model {
         return $this->hasMany('\mywishlist\models\Message', 'idListe');
     }
 
-    public function reservations() {
+    public function reservation() {
         return $this->hasMany('\mywishlist\models\Reservation', 'liste_id');
     } 
 
