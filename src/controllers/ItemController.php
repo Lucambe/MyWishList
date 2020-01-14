@@ -10,6 +10,7 @@ use mywishlist\models\Liste;
 use mywishlist\models\Reservation;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Http\UploadedFile;
 
 /**
  * Class ItemController
@@ -295,43 +296,63 @@ class ItemController extends CookiesController {
             $token = filter_var($args['token'], FILTER_SANITIZE_STRING);
             $creationToken = filter_var($args['creationToken'], FILTER_SANITIZE_STRING);
             $item_id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
-            $file = $request->getParsedBodyParam('image');
+            $file = $request->getUploadedFiles();
 
-            $extensionAutorize = array('image/jpg','image/jpeg','image/gif','image/png');
+            $chemin = __DIR__.'/public/images/';
+            $nameFile = basename($file['image']->getClientFilename());
+            $direction = $chemin . $nameFile ;
 
-            if (mb_strlen($_FILES['image']['name'], 'utf8') == 0) $file['name'] = "default.jpg";
-            if(in_array($_FILES['image']['type'], $extensionAutorize)) throw new Exception('Votre fichier n\'est pas autorisé. Insérez une image valide.');
+            //$extensionAutorize = array('jpg','jpeg','gif','png');
+
+            if (mb_strlen($file['image']->getClientFilename(), 'utf8') == 0) $nameFile = "default.jpg";
+
+            //if(in_array($file['image']->getClientMediaType(), $extensionAutorize)) throw new Exception('Votre fichier n\'est pas autorisé. Insérez une image valide.');
+
+            /*
+                if(mime_content_type($file['image']->getClientMediaType())!='image/jpg' || mime_content_type($file['image']->getClientMediaType())!='image/jpeg' 
+                    || mime_content_type($file['image']->getClientMediaType())!='image/png' || mime_content_type($file['image']->getClientMediaType())!='image/gif' )
+                    throw new Exception('Votre fichier n\'est pas autorisé. Insérez une image valide.');
+            */
 
             $liste = Liste::where(['token' => $token, 'creationToken' => $creationToken])->firstOrFail();
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
             if (Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
-           
-            $chemin = __DIR__.'/public/images/';
-            $direction = $chemin . basename($_FILES['image']['name']);
 
-
-            //if (move_uploaded_file($_FILES['image']['tmp_name'], $direction)) {
-                
-                $item->img = basename($_FILES['image']['name']);
+            if ($file['image']->getError() === UPLOAD_ERR_OK) {  
+                $item->img = $nameFile;
                 $item->save();
-                move_uploaded_file($_FILES['image']['tmp_name'], $direction);
+
+                $this->moveUploadedFile($chemin, $file['image']);
                 chmod( $direction , 0600);
+
+                // move_uploaded_file($_FILES['image']['tmp_name'], $direction);
+                
 
                 $this->flash->addMessage('success', "L'image de votre objet a été enregistrée sur le serveur !");
                 $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));       
-           /* } else {
-                $this->flash->addMessage('error', "L'image de votre objet n'a été enregistrée sur le serveur !");
-                $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));       
-            } */    
+            } else {
+                $this->flash->addMessage('error', "L'image de votre objet n'a pas été enregistrée sur le serveur !");
+                $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));         
+            }
 
         }catch (ModelNotFoundException $e) {
-            $this->flash->addMessage('error', 'Nous n\'avons pas pu supprimer l\'image de cet objet.');
+            $this->flash->addMessage('error', 'Nous n\'avons pas pu ajouter d\'image de cet objet.');
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));
         }
         return $response;
+    }
+
+    function moveUploadedFile($directory, UploadedFile $uploadedFile){
+        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+        $basename = bin2hex(random_bytes(8));
+        $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+        return $filename;
     }
 
 

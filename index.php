@@ -53,6 +53,7 @@ $container['view'] = function ($container) {
 $container['flash'] = function () {
     return new Messages();
 };
+$container['upload_directory'] = __DIR__ . '/public/images/';
 
 
 /**

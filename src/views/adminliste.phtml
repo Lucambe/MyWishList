@@ -17,14 +17,9 @@
                                     <input type="file" name="image" class="custom-file-label" required>
                                 </div>
                             </div>
-                            <?php if(isset($_FILES['image'])): ?>
-                            <div class="form-group">
-                                    <label class="labelFileName" ><?php echo "Nom du fichier : ".$_FILES['image']['name']; ?></label>
-                            </div>
-                            <?php endif; ?>
                          </div>
                          <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-toggle="modal" href="#edit<?= $item->id ?>" role="button" data-dismiss="modal">Fermer</button>
+                              <button type="button" class="btn btn-secondary" data-toggle="modal" href="#edit<?= $item->id ?>" role="button" data-dismiss="modal">Retour</button>
                               <button type="submit" class="btn btn-primary">Appliquer</button>
                          </div>
                     </form>
