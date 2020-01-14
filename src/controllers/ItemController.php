@@ -335,8 +335,20 @@ class ItemController extends CookiesController {
             $item_id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
             $file = $request->getUploadedFiles();
 
+            /**
+             * Apparemment, c'est une erreur de paramètre pour la méthode moveUploadedFile
+             * D'après la doc de slim 3 pour la gestion des uploads de fichier, la méthode
+             * gère son extension, un nom de fichier hashé et insère dans un répertoire
+             * 
+             * Vu le message d'erreur et le code source, ça soulève un exception
+             * InvalidArgumentException. Problème de chemin ? mauvaise gestion du If ?
+             * 
+             */
+
+
             $chemin = __DIR__.'/public/images/';
             $nameFile = basename($file['image']->getClientFilename());
+            $typeFile = $file['image']->getClientMediaType();
             $direction = $chemin . $nameFile ;
 
             //$extensionAutorize = array('jpg','jpeg','gif','png');
@@ -346,8 +358,7 @@ class ItemController extends CookiesController {
             //if(in_array($file['image']->getClientMediaType(), $extensionAutorize)) throw new Exception('Votre fichier n\'est pas autorisé. Insérez une image valide.');
 
             /*
-                if(mime_content_type($file['image']->getClientMediaType())!='image/jpg' || mime_content_type($file['image']->getClientMediaType())!='image/jpeg' 
-                    || mime_content_type($file['image']->getClientMediaType())!='image/png' || mime_content_type($file['image']->getClientMediaType())!='image/gif' )
+                if(mime_content_type($typeFile)!='image/jpg' || mime_content_type($typeFile)!='image/jpeg' || mime_content_type($typeFile)!='image/png' || mime_content_type($typeFile)!='image/gif')
                     throw new Exception('Votre fichier n\'est pas autorisé. Insérez une image valide.');
             */
 
@@ -355,7 +366,20 @@ class ItemController extends CookiesController {
             $item = Item::where(['id' => $item_id, 'liste_id' => $liste->no])->firstOrFail();
             if (Reservation::where('item_id', '=', $item_id)->exists()) throw new Exception("Cet objet est déjà reservé, il ne peut donc pas être modifié.");
 
-            if ($file['image']->getError() === UPLOAD_ERR_OK) {  
+
+                $item->img = $nameFile;
+                $item->save();
+
+                $this->moveUploadedFile($chemin, $file['image']);
+                chmod( $direction , 0600);
+
+                // move_uploaded_file($_FILES['image']['tmp_name'], $direction);
+                
+
+                $this->flash->addMessage('success', "L'image de votre objet a été enregistrée sur le serveur !");
+                $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));  
+
+            /**if ($file['image']->getError() === UPLOAD_ERR_OK) {  
                 $item->img = $nameFile;
                 $item->save();
 
@@ -370,7 +394,7 @@ class ItemController extends CookiesController {
             } else {
                 $this->flash->addMessage('error', "L'image de votre objet n'a pas été enregistrée sur le serveur !");
                 $response = $response->withRedirect($this->router->pathFor('showAdminListe', ['token' => $token, 'creationToken' => $creationToken]));         
-            }
+            }*/
 
         }catch (ModelNotFoundException $e) {
             $this->flash->addMessage('error', 'Nous n\'avons pas pu ajouter d\'image de cet objet.');
