@@ -14,6 +14,7 @@ class Participe extends Model {
     }
 
     public function user() {
-        return $this->hasOne('\mywishlist\models\User', 'user_id');
+        return $this->hasOne('\mywishlist\models\User', 'id');
     }
+
 }

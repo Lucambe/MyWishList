@@ -26,7 +26,6 @@
                 </div>
                     <form method="POST" action="<?= $router->pathFor('deleteAccount') ?>" >
                          <div class="modal-body">
-                                <input id="pseudo" type="text" class="form-control" name="pseudo" value="<?= $_SESSION['user']->pseudo ?>" disabled>
                                 <blockquote class="blockquote text-center">
                                     <p class="mb-0">Êtes-vous sûr de supprimer votre compte ? </p><br>
                                     <footer class="blockquote-footer">La suppression de votre compte entraîne la suppression des listes, des items et images, des participations uniquement avant échéance et de tous les messages</footer>

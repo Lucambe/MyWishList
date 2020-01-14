@@ -13,4 +13,13 @@ class Cagnotte extends Model
     public function is_full(){
         return $this->recolte < $this->montant;
     }
+
+    public function participe() {
+        return $this->hasOne('\mywishlist\models\Participe', 'id_cagnotte');
+    }
+
+    public function item() {
+        return $this->hasOne('\mywishlist\models\Item', 'id_cagnotte');
+    }
+
 }

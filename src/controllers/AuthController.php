@@ -6,6 +6,12 @@ use BadMethodCallException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\models\User;
+use mywishlist\models\Liste;
+use mywishlist\models\Item;
+use mywishlist\models\Reservation;
+use mywishlist\models\Message;
+use mywishlist\models\Participe;
+use mywishlist\models\Cagnotte;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -189,18 +195,39 @@ class AuthController extends Controller {
 
     public function deleteAccount(Request $request, Response $response, array $args): Response {
         try{
-            if(!isset($_SESSION['user'])) throw new BadMethodCallException("Vous devez être connecté pour faire ça");
+            if(!isset($_SESSION['user'])) throw new BadMethodCallException("Vous devez être connecté pour faire ça.");
 
-            $user = User::where('id','=',$_SESSION['user']->id)->firstOrFail();
-            $liste = Liste::where('user_id','=',$user->id)->firstOrFail();
-            $item = Item::where('liste_id','=',$liste->no)->firstOrFail();
-            $message = Message::where('idListe','=',$liste->no)->firstOrFail();
-            $reserv = Reservation::where('liste_id','=',$liste->no)->firstOrFail();
-            $participe = Participe::where('id_user','=', $user->id)->firstOrFail();
+            $user = User::where('id','=',$_SESSION['user']->id)->first();
+            $liste = Liste::where('user_id','=',$user->id)->first();
+            $item = Item::where('liste_id','=',$liste->no)->get();
+            $message = Message::where('idListe','=',$liste->no)->get();
+            $reserv = Reservation::where('liste_id','=',$liste->no)->get();
+            $participe = Participe::where('id_user','=', $user->id)->first();
+            $cagnotte = Cagnotte::where('id','=', $participe->id_cagnotte)->first();
 
+            if($user->exists()) $user->delete();
+            session_destroy();
+
+            /*
+            if($cagnotte->exists())
+             $cagnotte->delete();
+            if($item->exists()) 
+             $item->delete();
+            if($liste->exists())
+             $liste->delete();
+            if($participe->exists())
+             $participe->delete();
+            if($message->exists())
+             $message->delete();
+            if($reserv->exists())
+             $reserv->delete();
+            */
+
+            $this->flash->addMessage('success', "Votre compte personnel a été supprimé avec succès.");
+            $response = $response->withRedirect($this->router->pathFor('home'));
         }catch (BadMethodCallException $e) {
             $this->flash->addMessage('error', $e->getMessage());
-            $response = $response->withRedirect($this->router->pathFor('home'));
+            $response = $response->withRedirect($this->router->pathFor('showAccount'));
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             $response = $response->withRedirect($this->router->pathFor('showAccount'));
