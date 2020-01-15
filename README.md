@@ -41,6 +41,12 @@ Deux comptes pré-créés:
 
 Quelques listes, objets, messages, réservations pré-crées.
 
+Quelques exemple de liste:
+https://webetu.iutnc.univ-lorraine.fr/www/sayer6u/wishlist/l/c3c0bcd3edf3155aca70693123b92acc94ec6a646513daa3749b53f153173d54
+https://webetu.iutnc.univ-lorraine.fr/www/sayer6u/wishlist/l/nosecure2/admin/nosecure2
+
+...
+
 ## Disparités avec le sujet
 
 - [x] *Nous utilisons Slim 3*
