@@ -33,6 +33,14 @@ OU
 
 Vous pouvez directement accéder à la [dernière release](https://github.com/Wilders/MyWishList/releases/latest), [disponible ici](https://webetu.iutnc.univ-lorraine.fr/www/sayer6u/wishlist/)
 
+## Jeu de données pour tester
+
+Deux comptes pré-créés:
+- root:azerty123
+- user:azerty123
+
+Quelques listes, objets, messages, réservations pré-crées.
+
 ## Disparités avec le sujet
 
 - [x] *Nous utilisons Slim 3*
