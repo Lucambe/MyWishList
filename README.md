@@ -31,7 +31,7 @@ Lancez un serveur XAMP, importez le fichier de création de la BDD ([sql/mywihli
 
 OU
 
-La [dernière release](https://github.com/Wilders/MyWishList/releases) est disponible [ici](https://webetu.iutnc.univ-lorraine.fr/www/sayer6u/wishlist/)
+Vous pouvez directement accéder à la [dernière release](https://github.com/Wilders/MyWishList/releases/latest), [disponible ici](https://webetu.iutnc.univ-lorraine.fr/www/sayer6u/wishlist/)
 
 ## Disparités avec le sujet
 
